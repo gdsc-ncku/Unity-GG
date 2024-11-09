@@ -6,8 +6,22 @@ using UnityEngine;
 */
 public abstract class Weapon : MonoBehaviour
 {
-    public abstract void RightClick();
-    public abstract void LeftClick();
-    public abstract void MiddleClick();
-    public abstract void RClick();
+    #region °ò¥»«öÁä
+    public virtual void RightClick()
+    {
+        Debug.LogError($"{GetType().Name} havn't define right click logic");
+    }
+    public virtual void LeftClick()
+    {
+        Debug.LogError($"{GetType().Name} havn't define left click logic");
+    }
+    public virtual void MiddleClick()
+    {
+        Debug.LogError($"{GetType().Name} havn't define middle click logic");
+    }
+    public virtual void RClick()
+    {
+        Debug.LogError($"{GetType().Name} havn't define r click logic");
+    }
+    #endregion
 }
