@@ -63,6 +63,11 @@ public class PlayerManager : MonoBehaviour
     #region ªì©l¤Æ
     private void Awake()
     {
+        Initialize();
+    }
+
+    private void Initialize()
+    {
         if (_instance == null)
         {
             _instance = this;
@@ -71,14 +76,10 @@ public class PlayerManager : MonoBehaviour
         else
         {
             Debug.LogError("Duplicate creating PlayerManager Instance");
-            Destroy(this);
+            Destroy(gameObject);
         }
-        Initialize();
-    }
 
-    private void Initialize()
-    {
-        _rb = gameObject.GetComponent<Rigidbody>();
+        _rb = _instance.GetComponent<Rigidbody>();
     }
     #endregion
 }
