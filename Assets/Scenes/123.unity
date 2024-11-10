@@ -138,6 +138,8 @@ GameObject:
   - component: {fileID: 392777029}
   - component: {fileID: 392777030}
   - component: {fileID: 392777031}
+  - component: {fileID: 392777033}
+  - component: {fileID: 392777032}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -238,13 +240,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 392777024}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0d318e3ae7581c4d9b7fe1238386516, type: 3}
+  m_Script: {fileID: 11500000, guid: 44dbea31d35bf9c43ad6c0db4397034a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveForce: 1
-  rotationSpeed: 100
+  player: {fileID: 0}
+  sprintForce: 100
+  sprintDuration: 1
 --- !u!114 &392777030
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -272,8 +275,8 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 392777029}
-        m_TargetAssemblyTypeName: Player, Assembly-CSharp
+      - m_Target: {fileID: 392777033}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
         m_MethodName: Sprint
         m_Mode: 1
         m_Arguments:
@@ -290,8 +293,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 392777029}
         m_TargetAssemblyTypeName: Player, Assembly-CSharp
-        m_MethodName: Move_a
-        m_Mode: 1
+        m_MethodName: Move
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -300,56 +303,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_ActionId: 73c1b52e-dea4-4a4d-8f9a-75e43e0d7ebc
-    m_ActionName: Player/move_a[/Keyboard/a]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 392777029}
-        m_TargetAssemblyTypeName: Player, Assembly-CSharp
-        m_MethodName: Move_s
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 09a304ba-876e-4abd-b911-7195fc71f962
-    m_ActionName: Player/move_s[/Keyboard/s]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 392777029}
-        m_TargetAssemblyTypeName: Player, Assembly-CSharp
-        m_MethodName: Move_d
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 45399957-786c-4d53-93e5-0ad32a313fec
-    m_ActionName: Player/move_d[/Keyboard/d]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 392777029}
-        m_TargetAssemblyTypeName: Player, Assembly-CSharp
-        m_MethodName: Move_w
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 165f0d4a-f60f-49f0-8de4-35d31c205340
-    m_ActionName: Player/move_w[/Keyboard/w]
+    m_ActionId: 601a5bad-5ce7-48e7-a603-c40ef322d764
+    m_ActionName: Player/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -380,8 +335,38 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 80
   m_CollisionDetection: 0
+--- !u!114 &392777032
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 392777024}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44dbea31d35bf9c43ad6c0db4397034a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 392777024}
+  sprintForce: 100
+  sprintDuration: 1
+--- !u!114 &392777033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 392777024}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f386e58f33cf4b745aeb05bed2f78746, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 20
+  maxSpeed: 15
+  mouseSensitivity: 100
 --- !u!1 &526026429
 GameObject:
   m_ObjectHideFlags: 0
