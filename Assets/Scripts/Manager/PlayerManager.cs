@@ -3,8 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+public enum PlayerStatus
+{
+    move,
+    sprint
+}
+
 public class PlayerManager : MonoBehaviour
 {
+    [SerializeField] int sprintFrame;
     #region 建立單例模式
     static private PlayerManager _instance = null;
     public static PlayerManager instance
@@ -60,6 +67,10 @@ public class PlayerManager : MonoBehaviour
     }
     #endregion
 
+    #region 狀態機
+    public PlayerStatus playerStatus;
+    #endregion
+
     #region 初始化
     private void Awake()
     {
@@ -80,6 +91,24 @@ public class PlayerManager : MonoBehaviour
         }
 
         _rb = _instance.GetComponent<Rigidbody>();
+        playerStatus = PlayerStatus.move;
     }
     #endregion
+
+    //暫放，之後要搬到Player movement中
+    //StartCoroutine(debug());
+    public IEnumerator Sprint(Vector3 forward, float sprintDistance)
+    {
+        PlayerManager.instance.playerStatus = PlayerStatus.sprint;
+        rb.velocity = Vector3.zero;
+        yield return new WaitForFixedUpdate();
+        PlayerManager.instance.rb.AddForce(2 * rb.mass * sprintDistance / (Time.fixedDeltaTime * sprintFrame) * forward, ForceMode.Impulse);
+        for (int i = 0; i < sprintFrame; i++)
+        {
+            yield return new WaitForFixedUpdate();
+        }
+        rb.velocity = Vector3.zero;
+        PlayerManager.instance.playerStatus = PlayerStatus.move;
+        yield break;
+    }
 }

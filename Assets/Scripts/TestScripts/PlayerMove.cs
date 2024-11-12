@@ -64,7 +64,7 @@ public class PlayerMove : MonoBehaviour
 
         // 更新垂直旋轉，限制上下角度
         xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f); // 限制視角在-90到90度之間
+        xRotation = Mathf.Clamp(xRotation, -70f, 70f); // 限制視角在-70到70度之間
 
         // 更新攝影機的旋轉
         Camera.main.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
@@ -83,13 +83,13 @@ public class PlayerMove : MonoBehaviour
         // 根據輸入計算移動方向
         Vector3 moveDirection = forward * inputVector.y + right * inputVector.x;
 
-        if (inputVector != Vector2.zero && Vector3.Distance(playerRigibody.velocity, Vector3.zero) < maxSpeed)
+        if (PlayerManager.instance.playerStatus == PlayerStatus.move && inputVector != Vector2.zero && Vector3.Distance(playerRigibody.velocity, Vector3.zero) < maxSpeed)
         {
-            playerRigibody.AddForce(moveDirection.normalized * speed, ForceMode.Force);
+            playerRigibody.velocity = moveDirection.normalized * maxSpeed;
         }
-        else if(inputVector == Vector2.zero)
+        else if(PlayerManager.instance.playerStatus == PlayerStatus.move && inputVector == Vector2.zero)
         {
-            playerRigibody.velocity = Vector3.zero;
+            playerRigibody.velocity = new Vector3(0, playerRigibody.velocity.y, 0);
         }
     }
 }
