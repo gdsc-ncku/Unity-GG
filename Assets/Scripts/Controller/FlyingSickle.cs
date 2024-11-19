@@ -18,7 +18,7 @@ public enum FlyingStatus
     drop
 }
 
-public class FlyingSickle : MonoBehaviour
+public class FlyingSickle : Weapon
 {
     //instance mode
     private static FlyingSickle _flyingSickle;
@@ -72,9 +72,13 @@ public class FlyingSickle : MonoBehaviour
     public float sickleSpeed = 5f;
     public bool hasTarget = false;
 
-    [Header("掉落")]
-    private Rigidbody rb = null;
-    private Collider coll;
+    [Header("掉落相關")]
+    private Rigidbody rb;
+    //private Collider coll;
+    private MeshCollider coll;
+
+    [Header("穿透相關")]
+    [SerializeField] private bool isLastFlyingBack = false;   //紀錄是否為右鍵觸發的返回，如果是 無法穿透
 
     // Update is called once per frame
     void FixedUpdate()
@@ -87,19 +91,15 @@ public class FlyingSickle : MonoBehaviour
         //飛鐮追蹤
         if (hasTarget)
         {
-            Track();
+            Tracking();
         }
         else if(status == FlyingStatus.back)
         {
-            Back();
+            Backing();
         }
         else if(status == FlyingStatus.hold)
         {
-            Hold();
-        }
-        else if(status == FlyingStatus.drop)
-        {
-            Drop();
+            Holding();
         }
     }
 
@@ -107,7 +107,7 @@ public class FlyingSickle : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            status = FlyingStatus.hold;
+            EnterHold();
         }
     }
 
@@ -123,16 +123,24 @@ public class FlyingSickle : MonoBehaviour
         playerCamera = _player;
 
         //init
-        status = FlyingStatus.hold;
-        coll = flyingSickle.GetComponent<Collider>();
+        //coll = flyingSickle.GetComponent<Collider>();
+        coll = flyingSickle.GetComponent<MeshCollider>();
+        coll.isTrigger = true;
+
+        rb = flyingSickle.GetComponent<Rigidbody>();
+        rb.useGravity = false;
+        EnterHold();
     }
 
-    public void RightClick()
+    /// <summary>
+    /// 右鍵觸發
+    /// </summary>
+    /// <param name="type"></param>
+    public override void RightClick(ClickType type)
     {
-        if (status != FlyingStatus.drop)
+        if (status != FlyingStatus.drop && type == ClickType.push)
         {
-            hasTarget = false;
-            status = FlyingStatus.back;
+            EnterBack(isLastFlyingBack = false);
         }
     }
 
@@ -140,14 +148,14 @@ public class FlyingSickle : MonoBehaviour
     /// 左鍵觸發
     /// </summary>
     /// <param name="type">0, 1, 2 分別是點擊、按住、放開</param>
-    public void LeftClick(int type)
+    public override void LeftClick(ClickType type)
     {
         //按下
-        if(type == 0)
+        if(type == ClickType.push)
         {
             ChoosePoint(false);
         }
-        else if(type == 2)
+        else if(type == ClickType.release)
         {
             //放開
             ChoosePoint(true);
@@ -155,6 +163,9 @@ public class FlyingSickle : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 中鍵滾動偵測
+    /// </summary>
     public void MiddleScroll()
     {
         // 根據滑鼠滾輪更新深度
@@ -166,6 +177,9 @@ public class FlyingSickle : MonoBehaviour
         targetHeart.rectTransform.sizeDelta = new Vector2(targetSize, targetSize);
     }
 
+    /// <summary>
+    /// 飛鐮旋轉的函數
+    /// </summary>
     private void SelfRotate()
     {
         if(status > FlyingStatus.hold && status < FlyingStatus.drop)
@@ -176,19 +190,19 @@ public class FlyingSickle : MonoBehaviour
         }
     }
 
-    private void Hold()
+    /// <summary>
+    /// 飛鐮抓在手上的函數
+    /// </summary>
+    private void Holding()
     {
-        if (rb != null)
-        {
-            Destroy(rb);
-            coll.isTrigger = true;
-        }
-    
         flyingSickle.transform.position = keepPosition.position;
         flyingSickle.transform.eulerAngles = keepPosition.eulerAngles;
     }
 
-    private void Back()
+    /// <summary>
+    /// 飛鐮回歸的函數
+    /// </summary>
+    private void Backing()
     {
         // 飛鐮移動到目標點
         flyingSickle.transform.position = Vector3.MoveTowards(flyingSickle.transform.position, keepPosition.position, sickleSpeed * Time.deltaTime);
@@ -198,8 +212,11 @@ public class FlyingSickle : MonoBehaviour
         {
             lockPoint.Clear();
 
+            //重置穿透相關的變數
+            isLastFlyingBack = false;   //更新返回觸發來源的狀態
+
             // 進入下個狀態
-            status = FlyingStatus.hold;
+            EnterHold();
         }
     }
 
@@ -207,7 +224,7 @@ public class FlyingSickle : MonoBehaviour
     /// 追蹤玩家設定的點
     /// 開始執行後 必定清空queue
     /// </summary>
-    private void Track()
+    private void Tracking()
     {
         // 飛鐮移動到目標點
         flyingSickle.transform.position = Vector3.MoveTowards(flyingSickle.transform.position, currentTarget, sickleSpeed * Time.deltaTime);
@@ -225,11 +242,12 @@ public class FlyingSickle : MonoBehaviour
                 // 如果目標點設置沒有到返回的程度 那代表來不及設置 飛鐮掉落
                 if (status != FlyingStatus.back)
                 {
-                    lockPoint.Clear();
-                    status = FlyingStatus.drop;
+                    EnterDrop();
+                }else if(status == FlyingStatus.back)
+                {
+                    //最後一段飛行回歸
+                    EnterBack(isLastFlyingBack=true);
                 }
-
-                hasTarget = false;
             }
         }
     }
@@ -290,13 +308,64 @@ public class FlyingSickle : MonoBehaviour
     /// <summary>
     /// 處理掉落
     /// </summary>
-    private void Drop()
+    private void EnterDrop()
     {
-        if(rb == null)
-        {
-            rb = flyingSickle.AddComponent<Rigidbody>();
+        status = FlyingStatus.drop;
+        hasTarget = false;
 
+        if(lockPoint.Count > 0)
+        {
+            lockPoint.Clear();
+        }
+
+        if(rb.useGravity == false)
+        {
+            rb.useGravity = true;
             coll.isTrigger = false;
+        }
+    }
+
+    /// <summary>
+    /// 進入抓住狀態
+    /// </summary>
+    private void EnterHold()
+    {
+        status = FlyingStatus.hold;
+        hasTarget = false;
+
+        if (lockPoint.Count > 0)
+        {
+            lockPoint.Clear();
+        }
+
+        //處理碰撞相關
+        if (rb.useGravity == true)
+        {
+            rb.useGravity = false;
+            coll.isTrigger = true;
+        }
+    }
+
+    private void EnterBack(bool isLastFlying)
+    {
+        hasTarget = false;
+        status = FlyingStatus.back;
+
+        if(isLastFlying == true)
+        {
+            isLastFlyingBack = true;
+        }
+
+        if (lockPoint.Count > 0)
+        {
+            lockPoint.Clear();
+        }
+
+        //處理碰撞相關
+        if (rb.useGravity == true)
+        {
+            rb.useGravity = false;
+            coll.isTrigger = true;
         }
     }
 
@@ -305,7 +374,18 @@ public class FlyingSickle : MonoBehaviour
         if(collision.gameObject.tag == "Player")
         {
             //收回
-            status = FlyingStatus.hold; 
+            EnterHold();
+        }
+    }
+
+    private void OnTriggerEnter(Collider collision)
+    {
+        if (collision.gameObject.tag == "Enviroument" && isLastFlyingBack == false)
+        {
+            Debug.Log("touch object");
+
+            //碰撞任意物體後掉落
+            EnterDrop();
         }
     }
 }

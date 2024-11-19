@@ -1,18 +1,29 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// æŒ‰éµè§¸ç™¼çš„ç‹€æ…‹
+/// æŒ‰ä¸‹ã€æŒ‰ä½ã€é¬†é–‹
+/// </summary>
+public enum ClickType
+{
+    push,
+    hold,
+    release
+}
+
 /*
- * ©w¸q°ò¥»Weapon function
- * ¨ÏWeaponManager©I¥s®É¥i¥H²Î¤@function¦WºÙ¡A¤£»İÃB¥~¥Îif¥h§PÂ_¸Ó¥Î­ş­ÓªZ¾¹¤ºªºfunction
+ * å®šç¾©åŸºæœ¬Weapon function
+ * ä½¿WeaponManagerå‘¼å«æ™‚å¯ä»¥çµ±ä¸€functionåç¨±ï¼Œä¸éœ€é¡å¤–ç”¨ifå»åˆ¤æ–·è©²ç”¨å“ªå€‹æ­¦å™¨å…§çš„function
 */
 public abstract class Weapon : MonoBehaviour
 {
-    #region °ò¥»«öÁä
-    public virtual void RightClick(InputAction.CallbackContext callback)
+    #region åŸºæœ¬æŒ‰éµ
+    public virtual void RightClick(ClickType type)
     {
         Debug.LogError($"{GetType().Name} havn't define right click logic");
     }
-    public virtual void LeftClick(InputAction.CallbackContext callback)
+    public virtual void LeftClick(ClickType type)
     {
         Debug.LogError($"{GetType().Name} havn't define left click logic");
     }

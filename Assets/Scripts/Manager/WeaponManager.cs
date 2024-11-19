@@ -60,17 +60,17 @@ public class WeaponManager : MonoBehaviour
 
     private void Leftclick_canceled(InputAction.CallbackContext obj)
     {
-        FlyingSickle.Instance.LeftClick(2);
+        FlyingSickle.Instance.LeftClick(ClickType.release);
     }
 
     private void LeftClick(InputAction.CallbackContext context)
     {
-        FlyingSickle.Instance.LeftClick(0);
+        FlyingSickle.Instance.LeftClick(ClickType.push);
     }
 
     private void RightClick(InputAction.CallbackContext context)
     {
-        FlyingSickle.Instance.RightClick();
+        FlyingSickle.Instance.RightClick(ClickType.push);
     }
     #endregion
 }
