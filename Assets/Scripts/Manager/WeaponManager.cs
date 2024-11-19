@@ -50,12 +50,12 @@ public class WeaponManager : MonoBehaviour
     public void UseFlyingSickle()
     {
         FlyingSickle.Instance.InitWeapon(keepPosition, playerCamera);
-        inputActions = PlayerMove.Instance.inputActions;
+        inputActions = PlayerManager.instance.playerControl;
 
         inputActions.player.leftclick.performed += FlyingSickle.Instance.LeftClickPerformed;
         inputActions.player.leftclick.canceled += FlyingSickle.Instance.LeftClickCanceled;
 
-        inputActions.player.rightclick.performed += FlyingSickle.Instance.RClickPerformed;
+        inputActions.player.rightclick.performed += FlyingSickle.Instance.RightClickPerformed;
     }
     #endregion
 }
