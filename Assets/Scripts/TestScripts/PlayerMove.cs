@@ -5,43 +5,15 @@ using UnityEngine.InputSystem;
 
 public class PlayerMove : MonoBehaviour
 {
-    //instance mode
-    private static PlayerMove _playerMove;
-    public static PlayerMove Instance
-    {
-        get
-        {
-            if (!_playerMove)
-            {
-                _playerMove = FindObjectOfType(typeof(PlayerMove)) as PlayerMove;
-                if (!_playerMove)
-                {
-                    Debug.LogError("No script");
-                }
-                else
-                {
-                    //init
-                }
-            }
-            return _playerMove;
-        }
-
-    }
-
     public float speed = 20f;
     public float maxSpeed = 15;
-    public GameObject player;
-
     private Rigidbody playerRigibody;
-
     public float mouseSensitivity = 100f; // 滑鼠靈敏度
-    private Transform playerTransform; // 角色的Transform
     private float xRotation = 0f; // 角色的垂直旋轉
 
     private void Awake()
     {
-        playerRigibody = player.GetComponent<Rigidbody>();
-        playerTransform = player.transform;
+        playerRigibody = GetComponent<Rigidbody>();
         Cursor.lockState = CursorLockMode.Locked; // 鎖定滑鼠
     }
 
@@ -64,11 +36,12 @@ public class PlayerMove : MonoBehaviour
         // 更新攝影機的旋轉
         Camera.main.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         // 更新角色的旋轉
-        playerTransform.Rotate(Vector3.up * mouseX);
+        transform.Rotate(Vector3.up * mouseX);
     }
 
     private void Movement()
     {
+        //此處耦合了(下層需要上層資料)，後續可思考是否將playerControl移到ScriptableObject來解耦合
         Vector2 inputVector = PlayerManager.instance.playerControl.player.move.ReadValue<Vector2>();
 
         // 獲取玩家的前方和右側方向
