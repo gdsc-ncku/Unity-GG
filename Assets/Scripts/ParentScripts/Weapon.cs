@@ -1,8 +1,9 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 /// <summary>
-/// «öÁäÄ²µoªºª¬ºA
-/// «ö¤U¡B«ö¦í¡BÃP¶}
+/// æŒ‰éµè§¸ç™¼çš„ç‹€æ…‹
+/// æŒ‰ä¸‹ã€æŒ‰ä½ã€é¬†é–‹
 /// </summary>
 public enum ClickType
 {
@@ -12,12 +13,12 @@ public enum ClickType
 }
 
 /*
- * ©w¸q°ò¥»Weapon function
- * ¨ÏWeaponManager©I¥s®É¥i¥H²Î¤@function¦WºÙ¡A¤£»İÃB¥~¥Îif¥h§PÂ_¸Ó¥Î­ş­ÓªZ¾¹¤ºªºfunction
+ * å®šç¾©åŸºæœ¬Weapon function
+ * ä½¿WeaponManagerå‘¼å«æ™‚å¯ä»¥çµ±ä¸€functionåç¨±ï¼Œä¸éœ€é¡å¤–ç”¨ifå»åˆ¤æ–·è©²ç”¨å“ªå€‹æ­¦å™¨å…§çš„function
 */
 public abstract class Weapon : MonoBehaviour
 {
-    #region °ò¥»«öÁä
+    #region åŸºæœ¬æŒ‰éµ
     public virtual void RightClick(ClickType type)
     {
         Debug.LogError($"{GetType().Name} havn't define right click logic");
@@ -26,11 +27,11 @@ public abstract class Weapon : MonoBehaviour
     {
         Debug.LogError($"{GetType().Name} havn't define left click logic");
     }
-    public virtual void MiddleClick()
+    public virtual void MiddleClick(InputAction.CallbackContext callback)
     {
         Debug.LogError($"{GetType().Name} havn't define middle click logic");
     }
-    public virtual void RClick()
+    public virtual void RClick(InputAction.CallbackContext callback)
     {
         Debug.LogError($"{GetType().Name} havn't define r click logic");
     }
