@@ -27,11 +27,11 @@ public abstract class Weapon : MonoBehaviour
     {
         Debug.LogError($"{GetType().Name} havn't define left click logic");
     }
-    public virtual void MiddleClick(InputAction.CallbackContext callback)
+    public virtual void MiddleClick(ClickType type)
     {
         Debug.LogError($"{GetType().Name} havn't define middle click logic");
     }
-    public virtual void RClick(InputAction.CallbackContext callback)
+    public virtual void RClick(ClickType type)
     {
         Debug.LogError($"{GetType().Name} havn't define r click logic");
     }
