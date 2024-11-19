@@ -18,20 +18,68 @@ public enum ClickType
 */
 public abstract class Weapon : MonoBehaviour
 {
-    #region 基本按鍵
-    public virtual void RightClick(ClickType type)
+    #region 右鍵設定
+    public virtual void RightClickStarted(InputAction.CallbackContext obj)
     {
         Debug.LogError($"{GetType().Name} havn't define right click logic");
     }
-    public virtual void LeftClick(ClickType type)
+    public virtual void RightClickPerformed(InputAction.CallbackContext obj)
+    {
+        Debug.LogError($"{GetType().Name} havn't define right click logic");
+    }
+
+    public virtual void RightClickCanceled(InputAction.CallbackContext obj)
+    {
+        Debug.LogError($"{GetType().Name} havn't define right click logic");
+    }
+    #endregion
+
+    #region 左鍵設定
+    public virtual void LeftClickStarted(InputAction.CallbackContext obj)
     {
         Debug.LogError($"{GetType().Name} havn't define left click logic");
     }
-    public virtual void MiddleClick(ClickType type)
+
+    public virtual void LeftClickPerformed(InputAction.CallbackContext obj)
+    {
+        Debug.LogError($"{GetType().Name} havn't define left click logic");
+    }
+
+    public virtual void LeftClickCanceled(InputAction.CallbackContext obj)
+    {
+        Debug.LogError($"{GetType().Name} havn't define left click logic");
+    }
+    #endregion
+
+    #region 中鍵設定
+    public virtual void MiddleClickStarted(InputAction.CallbackContext obj)
     {
         Debug.LogError($"{GetType().Name} havn't define middle click logic");
     }
-    public virtual void RClick(ClickType type)
+
+    public virtual void MiddleClickPerformed(InputAction.CallbackContext obj)
+    {
+        Debug.LogError($"{GetType().Name} havn't define middle click logic");
+    }
+
+    public virtual void MiddleClickCanceled(InputAction.CallbackContext obj)
+    {
+        Debug.LogError($"{GetType().Name} havn't define middle click logic");
+    }
+    #endregion
+
+    #region R鍵設定
+    public virtual void RClickStarted(InputAction.CallbackContext obj)
+    {
+        Debug.LogError($"{GetType().Name} havn't define r click logic");
+    }
+
+    public virtual void RClickPerformed(InputAction.CallbackContext obj)
+    {
+        Debug.LogError($"{GetType().Name} havn't define r click logic");
+    }
+
+    public virtual void RClickCanceled(InputAction.CallbackContext obj)
     {
         Debug.LogError($"{GetType().Name} havn't define r click logic");
     }

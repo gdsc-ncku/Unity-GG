@@ -52,25 +52,10 @@ public class WeaponManager : MonoBehaviour
         FlyingSickle.Instance.InitWeapon(keepPosition, playerCamera);
         inputActions = PlayerMove.Instance.inputActions;
 
-        inputActions.player.leftclick.performed += LeftClick;
-        inputActions.player.leftclick.canceled += Leftclick_canceled;
+        inputActions.player.leftclick.performed += FlyingSickle.Instance.LeftClickPerformed;
+        inputActions.player.leftclick.canceled += FlyingSickle.Instance.LeftClickCanceled;
 
-        inputActions.player.rightclick.performed += RightClick;
-    }
-
-    private void Leftclick_canceled(InputAction.CallbackContext obj)
-    {
-        FlyingSickle.Instance.LeftClick(ClickType.release);
-    }
-
-    private void LeftClick(InputAction.CallbackContext context)
-    {
-        FlyingSickle.Instance.LeftClick(ClickType.push);
-    }
-
-    private void RightClick(InputAction.CallbackContext context)
-    {
-        FlyingSickle.Instance.RightClick(ClickType.push);
+        inputActions.player.rightclick.performed += FlyingSickle.Instance.RClickPerformed;
     }
     #endregion
 }
