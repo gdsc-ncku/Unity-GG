@@ -5,48 +5,15 @@ using UnityEngine.InputSystem;
 
 public class PlayerMove : MonoBehaviour
 {
-    //instance mode
-    private static PlayerMove _playerMove;
-    public static PlayerMove Instance
-    {
-        get
-        {
-            if (!_playerMove)
-            {
-                _playerMove = FindObjectOfType(typeof(PlayerMove)) as PlayerMove;
-                if (!_playerMove)
-                {
-                    Debug.LogError("No script");
-                }
-                else
-                {
-                    //init
-                }
-            }
-            return _playerMove;
-        }
-
-    }
-
     public float speed = 20f;
     public float maxSpeed = 15;
-    public GameObject player;
-
     private Rigidbody playerRigibody;
-    public PlayerControl inputActions;
-
     public float mouseSensitivity = 100f; // 滑鼠靈敏度
-    private Transform playerTransform; // 角色的Transform
     private float xRotation = 0f; // 角色的垂直旋轉
 
     private void Awake()
     {
-        playerRigibody = player.GetComponent<Rigidbody>();
-        playerTransform = player.transform;
-
-        inputActions = new PlayerControl();
-        inputActions.Enable();
-
+        playerRigibody = GetComponent<Rigidbody>();
         Cursor.lockState = CursorLockMode.Locked; // 鎖定滑鼠
     }
 
@@ -69,12 +36,13 @@ public class PlayerMove : MonoBehaviour
         // 更新攝影機的旋轉
         Camera.main.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         // 更新角色的旋轉
-        playerTransform.Rotate(Vector3.up * mouseX);
+        transform.Rotate(Vector3.up * mouseX);
     }
 
     private void Movement()
     {
-        Vector2 inputVector = inputActions.player.move.ReadValue<Vector2>();
+        //此處耦合了(下層需要上層資料)，後續可思考是否將playerControl移到ScriptableObject來解耦合
+        Vector2 inputVector = PlayerManager.instance.playerControl.player.move.ReadValue<Vector2>();
 
         // 獲取玩家的前方和右側方向
         Vector3 forward = playerRigibody.transform.forward;
@@ -91,5 +59,20 @@ public class PlayerMove : MonoBehaviour
         {
             playerRigibody.velocity = new Vector3(0, playerRigibody.velocity.y, 0);
         }
+    }
+
+    public IEnumerator Sprint(Vector3 forward, float sprintDistance, int sprintFrame)
+    {
+        PlayerManager.instance.playerStatus = PlayerStatus.sprint;
+        PlayerManager.instance.rb.velocity = Vector3.zero;
+        yield return new WaitForFixedUpdate();
+        PlayerManager.instance.rb.AddForce(2 * PlayerManager.instance.rb.mass * sprintDistance / (Time.fixedDeltaTime * sprintFrame) * forward, ForceMode.Impulse);
+        for (int i = 0; i < sprintFrame; i++)
+        {
+            yield return new WaitForFixedUpdate();
+        }
+        PlayerManager.instance.rb.velocity = Vector3.zero;
+        PlayerManager.instance.playerStatus = PlayerStatus.move;
+        yield break;
     }
 }

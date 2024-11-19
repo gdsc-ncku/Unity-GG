@@ -48,8 +48,8 @@ public class PlayerManager : MonoBehaviour
     #endregion
 
     #region InputAction設定
-    [SerializeField] InputAction _playerControl;
-    public InputAction playerControl
+    [SerializeField] PlayerControl _playerControl;
+    public PlayerControl playerControl
     {
         get
         {
@@ -90,25 +90,15 @@ public class PlayerManager : MonoBehaviour
             Destroy(gameObject);
         }
 
+        _playerControl = new();
+        _playerControl.Enable();
         _rb = _instance.GetComponent<Rigidbody>();
         playerStatus = PlayerStatus.move;
     }
     #endregion
 
-    //暫放，之後要搬到Player movement中
-    //StartCoroutine(debug());
-    public IEnumerator Sprint(Vector3 forward, float sprintDistance)
+    public void Sprint(Vector3 forward, float sprintDistance)
     {
-        PlayerManager.instance.playerStatus = PlayerStatus.sprint;
-        rb.velocity = Vector3.zero;
-        yield return new WaitForFixedUpdate();
-        PlayerManager.instance.rb.AddForce(2 * rb.mass * sprintDistance / (Time.fixedDeltaTime * sprintFrame) * forward, ForceMode.Impulse);
-        for (int i = 0; i < sprintFrame; i++)
-        {
-            yield return new WaitForFixedUpdate();
-        }
-        rb.velocity = Vector3.zero;
-        PlayerManager.instance.playerStatus = PlayerStatus.move;
-        yield break;
+        StartCoroutine(GetComponent<PlayerMove>().Sprint(forward, sprintDistance, sprintFrame));
     }
 }

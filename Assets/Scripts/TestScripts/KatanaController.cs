@@ -13,26 +13,12 @@ public class KatanaController : Weapon
     [SerializeField] float specialAttackDistance, specialAttackDetectSphere, detectDistance, sprintDistance, knockUpHeight;
     [SerializeField] LayerMask enemyLayer;
     private HashSet<GameObject> hitEnemy = new HashSet<GameObject>();
-    void Start()
-    {
-        StartCoroutine(debug());
-        //Debug
-        PlayerMove.Instance.inputActions.player.rightclick.performed += RightClick;
-    }
-    private void Update()
-    {
-        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out RaycastHit hitInfo, specialAttackDistance, enemyLayer))
-        {
-            Debug.Log(hitInfo.collider.name);
-        }
 
-    }
-    public override void RightClick(InputAction.CallbackContext callback)
+    public override void RightClickPerformed(InputAction.CallbackContext obj)
     {
         Vector3 origin = Camera.main.transform.position, forward = Camera.main.transform.forward;
         if (Physics.Raycast(origin, forward, out RaycastHit hitInfo, specialAttackDistance, enemyLayer))
         {
-            Debug.Log("Sprint Attack");
             hitEnemy.Add(hitInfo.collider.gameObject);
             //讓forward必定是平行線
             forward = new Vector3(forward.x, 0, forward.z);
@@ -41,15 +27,9 @@ public class KatanaController : Weapon
         }
         else
         {
-            Debug.Log("Sprint");
             forward = new Vector3(forward.x, 0, forward.z);
             StartCoroutine(PlayerManager.instance.Sprint(forward, sprintDistance));
         }
-    }
-
-    private IEnumerator debug()
-    {
-        yield return new WaitForSeconds(1);
     }
 
     //使用coroutine來執行武士刀右鍵邏輯

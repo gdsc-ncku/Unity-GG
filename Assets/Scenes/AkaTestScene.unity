@@ -711,7 +711,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 32a2569ed7fcc37458fe28ee55c68e72, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -812,7 +812,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3539fbbf13a0ae24b80de6268e28c02b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprintFrame: 10
+  sprintFrame: 30
   _playerControl:
     m_Name: Player Control
     m_Type: 0
@@ -1924,7 +1924,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2885668260745182378, guid: b9accf851b87b964fa90c64f04456606, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 17.4
+      value: 15.85
       objectReference: {fileID: 0}
     - target: {fileID: 2885668260745182378, guid: b9accf851b87b964fa90c64f04456606, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1932,7 +1932,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2885668260745182378, guid: b9accf851b87b964fa90c64f04456606, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -17.1
+      value: -16.03
       objectReference: {fileID: 0}
     - target: {fileID: 2885668260745182378, guid: b9accf851b87b964fa90c64f04456606, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1962,6 +1962,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4053485002448046021, guid: b9accf851b87b964fa90c64f04456606, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: d4e6ae94d4e2566428b522fc298da76f, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
