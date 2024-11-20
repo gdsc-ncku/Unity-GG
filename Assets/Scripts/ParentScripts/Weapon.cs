@@ -18,6 +18,32 @@ public enum ClickType
 */
 public abstract class Weapon : MonoBehaviour
 {
+    //instance mode
+    private static Weapon _weapon;
+    public static Weapon Instance
+    {
+        get
+        {
+            if (!_weapon)
+            {
+                _weapon = FindObjectOfType(typeof(Weapon)) as Weapon;
+            }
+            return _weapon;
+        }
+    }
+    
+    protected Transform keepPosition;
+    protected Camera playerCamera;
+    protected PlayerControl inputActions;
+
+    public void Init(Transform transform, Camera gameObject, PlayerControl playerControl)
+    {
+        keepPosition = transform;
+        playerCamera = gameObject;
+        inputActions = playerControl;
+    }
+
+
     #region 右鍵設定
     public virtual void RightClickStarted(InputAction.CallbackContext obj)
     {
