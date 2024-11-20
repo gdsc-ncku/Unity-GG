@@ -3,8 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+public enum PlayerStatus
+{
+    move,
+    sprint
+}
+
 public class PlayerManager : MonoBehaviour
 {
+    [SerializeField] int sprintFrame;
     #region 建立單例模式
     static private PlayerManager _instance = null;
     public static PlayerManager instance
@@ -41,8 +48,8 @@ public class PlayerManager : MonoBehaviour
     #endregion
 
     #region InputAction設定
-    [SerializeField] InputAction _playerControl;
-    public InputAction playerControl
+    [SerializeField] PlayerControl _playerControl;
+    public PlayerControl playerControl
     {
         get
         {
@@ -60,8 +67,17 @@ public class PlayerManager : MonoBehaviour
     }
     #endregion
 
+    #region 狀態機
+    public PlayerStatus playerStatus;
+    #endregion
+
     #region 初始化
     private void Awake()
+    {
+        Initialize();
+    }
+
+    private void Initialize()
     {
         if (_instance == null)
         {
@@ -71,14 +87,18 @@ public class PlayerManager : MonoBehaviour
         else
         {
             Debug.LogError("Duplicate creating PlayerManager Instance");
-            Destroy(this);
+            Destroy(gameObject);
         }
-        Initialize();
-    }
 
-    private void Initialize()
-    {
-        _rb = gameObject.GetComponent<Rigidbody>();
+        _playerControl = new();
+        _playerControl.Enable();
+        _rb = _instance.GetComponent<Rigidbody>();
+        playerStatus = PlayerStatus.move;
     }
     #endregion
+
+    public void Sprint(Vector3 forward, float sprintDistance)
+    {
+        StartCoroutine(GetComponent<PlayerMove>().Sprint(forward, sprintDistance, sprintFrame));
+    }
 }

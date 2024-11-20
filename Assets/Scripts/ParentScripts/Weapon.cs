@@ -1,25 +1,85 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
+
+/// <summary>
+/// æŒ‰éµè§¸ç™¼çš„ç‹€æ…‹
+/// æŒ‰ä¸‹ã€æŒ‰ä½ã€é¬†é–‹
+/// </summary>
+public enum ClickType
+{
+    push,
+    hold,
+    release
+}
 
 /*
- * ©w¸q°ò¥»Weapon function
- * ¨ÏWeaponManager©I¥s®É¥i¥H²Î¤@function¦WºÙ¡A¤£»İÃB¥~¥Îif¥h§PÂ_¸Ó¥Î­ş­ÓªZ¾¹¤ºªºfunction
+ * å®šç¾©åŸºæœ¬Weapon function
+ * ä½¿WeaponManagerå‘¼å«æ™‚å¯ä»¥çµ±ä¸€functionåç¨±ï¼Œä¸éœ€é¡å¤–ç”¨ifå»åˆ¤æ–·è©²ç”¨å“ªå€‹æ­¦å™¨å…§çš„function
 */
 public abstract class Weapon : MonoBehaviour
 {
-    #region °ò¥»«öÁä
-    public virtual void RightClick()
+    #region å³éµè¨­å®š
+    public virtual void RightClickStarted(InputAction.CallbackContext obj)
     {
         Debug.LogError($"{GetType().Name} havn't define right click logic");
     }
-    public virtual void LeftClick()
+    public virtual void RightClickPerformed(InputAction.CallbackContext obj)
+    {
+        Debug.LogError($"{GetType().Name} havn't define right click logic");
+    }
+
+    public virtual void RightClickCanceled(InputAction.CallbackContext obj)
+    {
+        Debug.LogError($"{GetType().Name} havn't define right click logic");
+    }
+    #endregion
+
+    #region å·¦éµè¨­å®š
+    public virtual void LeftClickStarted(InputAction.CallbackContext obj)
     {
         Debug.LogError($"{GetType().Name} havn't define left click logic");
     }
-    public virtual void MiddleClick()
+
+    public virtual void LeftClickPerformed(InputAction.CallbackContext obj)
+    {
+        Debug.LogError($"{GetType().Name} havn't define left click logic");
+    }
+
+    public virtual void LeftClickCanceled(InputAction.CallbackContext obj)
+    {
+        Debug.LogError($"{GetType().Name} havn't define left click logic");
+    }
+    #endregion
+
+    #region ä¸­éµè¨­å®š
+    public virtual void MiddleClickStarted(InputAction.CallbackContext obj)
     {
         Debug.LogError($"{GetType().Name} havn't define middle click logic");
     }
-    public virtual void RClick()
+
+    public virtual void MiddleClickPerformed(InputAction.CallbackContext obj)
+    {
+        Debug.LogError($"{GetType().Name} havn't define middle click logic");
+    }
+
+    public virtual void MiddleClickCanceled(InputAction.CallbackContext obj)
+    {
+        Debug.LogError($"{GetType().Name} havn't define middle click logic");
+    }
+    #endregion
+
+    #region Réµè¨­å®š
+    public virtual void RClickStarted(InputAction.CallbackContext obj)
+    {
+        Debug.LogError($"{GetType().Name} havn't define r click logic");
+    }
+
+    public virtual void RClickPerformed(InputAction.CallbackContext obj)
+    {
+        Debug.LogError($"{GetType().Name} havn't define r click logic");
+    }
+
+    public virtual void RClickCanceled(InputAction.CallbackContext obj)
     {
         Debug.LogError($"{GetType().Name} havn't define r click logic");
     }

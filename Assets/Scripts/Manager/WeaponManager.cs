@@ -35,7 +35,7 @@ public class WeaponManager : MonoBehaviour
         else
         {
             Debug.LogError("Duplicate creating WeaponManager Instance");
-            Destroy(this);
+            Destroy(gameObject);
         }
     }
 
@@ -50,27 +50,12 @@ public class WeaponManager : MonoBehaviour
     public void UseFlyingSickle()
     {
         FlyingSickle.Instance.InitWeapon(keepPosition, playerCamera);
-        inputActions = PlayerMove.Instance.inputActions;
+        inputActions = PlayerManager.instance.playerControl;
 
-        inputActions.player.leftclick.performed += LeftClick;
-        inputActions.player.leftclick.canceled += Leftclick_canceled;
+        inputActions.player.leftclick.performed += FlyingSickle.Instance.LeftClickPerformed;
+        inputActions.player.leftclick.canceled += FlyingSickle.Instance.LeftClickCanceled;
 
-        inputActions.player.rightclick.performed += RightClick;
-    }
-
-    private void Leftclick_canceled(InputAction.CallbackContext obj)
-    {
-        FlyingSickle.Instance.LeftClick(2);
-    }
-
-    private void LeftClick(InputAction.CallbackContext context)
-    {
-        FlyingSickle.Instance.LeftClick(0);
-    }
-
-    private void RightClick(InputAction.CallbackContext context)
-    {
-        FlyingSickle.Instance.RightClick();
+        inputActions.player.rightclick.performed += FlyingSickle.Instance.RightClickPerformed;
     }
     #endregion
 }
