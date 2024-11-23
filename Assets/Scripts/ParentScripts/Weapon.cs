@@ -36,10 +36,10 @@ public abstract class Weapon : MonoBehaviour
     protected Camera playerCamera;
     protected PlayerControl inputActions;
 
-    public void Init(Transform transform, Camera gameObject, PlayerControl playerControl)
+    public void Init(Transform transform, Camera camera, PlayerControl playerControl)
     {
         keepPosition = transform;
-        playerCamera = gameObject;
+        playerCamera = camera;
         inputActions = playerControl;
     }
 

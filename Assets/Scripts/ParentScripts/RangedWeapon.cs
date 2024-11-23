@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -11,53 +11,80 @@ public abstract class RangedWeapon : Weapon
     /// </summary>
     [SerializeField]protected float fireRate;
     [SerializeField]protected int ammoCapacity;
-    [SerializeField]protected Transform FirePoint;
-    int currentAmmo = 6;
-    /// <summary>
-    /// 瞄準
-    /// </summary>
-    protected bool IsAiming = false;
+    [SerializeField]protected Transform firePoint;
+    [SerializeField]protected GameObject ammoPrefab;
+    float ammoSpeed = 20f;
+    protected int currentAmmo;
+    float cooldownTimestamp;
+    protected bool isAming = false;
+    protected bool isReloading = false;
+
+    void Start()
+    {
+        currentAmmo = ammoCapacity;
+    }
     /// <summary>
     /// 後座力
     /// </summary>
     protected virtual void Aim()
     {
-        IsAiming = true;
+        isAming = true;
     }
+
     protected virtual void AimCancel()
     {
-        IsAiming = false;
+        isAming = false;
     }
-    protected virtual void TryFire()
+
+    protected virtual bool TryShoot(Vector3 direction)
     {
-        Fire();
-        if (!HasAmmo())
+        if (CanShoot())
         {
-            WaitForReload();
+            Fire(direction);
+            if (!HasAmmo())
+            {
+                WaitForReload();
+            }
+            return true;
         }
+        return false;
     }
-    protected virtual void Fire()
+
+    protected virtual bool CanShoot()
+    {
+        return currentAmmo != 0 && Time.time >= cooldownTimestamp;
+    }
+
+    protected virtual void Fire(Vector3 direction)
     {
         currentAmmo--;
-        // Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        cooldownTimestamp = Time.time + 1f / fireRate;
+        var ammo = Instantiate(ammoPrefab, firePoint.position, Quaternion.identity);
+        ammo.GetComponent<Rigidbody>().velocity = direction * ammoSpeed;
+        Debug.Log("Fire");
     }
 
     protected virtual void WaitForReload()
     {
-        AimCancel();
+        isReloading = true;
     }
 
-    protected virtual void Reload(int ammoNum)
+    protected virtual void TryReload(int ammoNum)
     {
-        currentAmmo += ammoNum;
-        if (currentAmmo == ammoCapacity)
+        if (currentAmmo < ammoCapacity)
         {
+            Debug.Log("Reload");
+            currentAmmo += ammoNum;
+        }
+        if (currentAmmo >= ammoCapacity)
+        {
+            currentAmmo = ammoCapacity;
             EndReload();
         }
     }
     protected virtual void EndReload()
     {
-        
+        isReloading = false;
     }
     bool HasAmmo()
     {
