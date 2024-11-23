@@ -6,60 +6,60 @@ using UnityEngine;
 /// </summary>
 public abstract class RangedWeapon : Weapon
 {
+    /// <summary>
+    /// 基本設定
+    /// </summary>
     [SerializeField]protected float fireRate;
     [SerializeField]protected int ammoCapacity;
-    [SerializeField]protected int currentAmmo;
     [SerializeField]protected Transform FirePoint;
-    private float normalFOV = 60f;
-    private float aimFOV = 20f;
-    private float zoomSpeed = 5f;
-    protected bool IsAiming;
+    int currentAmmo = 6;
+    /// <summary>
+    /// 瞄準
+    /// </summary>
+    protected bool IsAiming = false;
+    /// <summary>
+    /// 後座力
+    /// </summary>
     protected virtual void Aim()
     {
         IsAiming = true;
-        playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, aimFOV, Time.deltaTime * zoomSpeed);
     }
-    protected virtual IEnumerator CancelAim()
+    protected virtual void AimCancel()
     {
         IsAiming = false;
-        while (Mathf.Abs(playerCamera.fieldOfView - normalFOV) > 0.1f)
-        {
-            // Debug.Log(playerCamera.fieldOfView);
-            playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, normalFOV, Time.deltaTime * zoomSpeed);
-            yield return null;
-        }
     }
-    protected virtual void Fire()
+    protected virtual void TryFire()
     {
-        if (HasAmmo())
-        {
-            currentAmmo--;
-            // Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-        }
-        else
+        Fire();
+        if (!HasAmmo())
         {
             WaitForReload();
         }
     }
+    protected virtual void Fire()
+    {
+        currentAmmo--;
+        // Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+    }
 
     protected virtual void WaitForReload()
     {
-        // Animation?
+        AimCancel();
     }
 
     protected virtual void Reload(int ammoNum)
     {
-        currentAmmo++;
-        int ammoNeeded = ammoCapacity - currentAmmo;
-        if (ammoNeeded > 0)
+        currentAmmo += ammoNum;
+        if (currentAmmo == ammoCapacity)
         {
-            currentAmmo = ammoCapacity;
-        }
-        else
-        {
+            EndReload();
         }
     }
-    protected bool HasAmmo()
+    protected virtual void EndReload()
+    {
+        
+    }
+    bool HasAmmo()
     {
         return currentAmmo > 0;
     }
