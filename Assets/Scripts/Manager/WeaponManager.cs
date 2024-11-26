@@ -3,13 +3,13 @@ using UnityEngine.InputSystem;
 
 public class WeaponManager : MonoBehaviour
 {
-    #region ´ú¸Õ¥ÎÅÜ¼Æ
+    #region ï¿½ï¿½ï¿½Õ¥ï¿½ï¿½Ü¼ï¿½
     public Transform keepPosition;
-    public GameObject playerCamera;
+    public Camera playerCamera;
     public PlayerControl inputActions;
     #endregion
 
-    #region «Ø¥ß³æ¨Ò¼Ò¦¡
+    #region ï¿½Ø¥ß³ï¿½Ò¼Ò¦ï¿½
     static private WeaponManager _instance = null;
     public static WeaponManager instance
     {
@@ -24,7 +24,7 @@ public class WeaponManager : MonoBehaviour
     }
     #endregion
 
-    #region ªì©l¤Æ
+    #region ï¿½ï¿½lï¿½ï¿½
     private void Awake()
     {
         if(_instance ==  null)
@@ -41,15 +41,16 @@ public class WeaponManager : MonoBehaviour
 
     private void Start()
     {
-        UseFlyingSickle();        
+         Weapon.Instance.Init(keepPosition, playerCamera, inputActions);
+        UseFlyingSickle();
     }
     #endregion
 
-    #region ­¸ÅIµ{¦¡°Ï¬q
-    //«D§¹¾ãª©¡A¨¤¦â²¾°Ê§¹¦¨«á»Ý­n­×§ïinputAction¬ÛÃöÅÞ¿è
+    #region ï¿½ï¿½ï¿½Iï¿½{ï¿½ï¿½ï¿½Ï¬q
+    //ï¿½Dï¿½ï¿½ï¿½ãª©ï¿½Aï¿½ï¿½ï¿½â²¾ï¿½Ê§ï¿½ï¿½ï¿½ï¿½ï¿½Ý­nï¿½×§ï¿½inputActionï¿½ï¿½ï¿½ï¿½ï¿½Þ¿ï¿½
     public void UseFlyingSickle()
     {
-        FlyingSickle.Instance.InitWeapon(keepPosition, playerCamera);
+        FlyingSickle.Instance.InitWeapon(keepPosition, playerCamera.gameObject);
         inputActions = PlayerManager.instance.playerControl;
 
         inputActions.player.leftclick.performed += FlyingSickle.Instance.LeftClickPerformed;
