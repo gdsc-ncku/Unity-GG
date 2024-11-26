@@ -41,7 +41,6 @@ public class WeaponManager : MonoBehaviour
 
     private void Start()
     {
-         Weapon.Instance.Init(keepPosition, playerCamera, inputActions);
         UseFlyingSickle();
     }
     #endregion
@@ -53,7 +52,7 @@ public class WeaponManager : MonoBehaviour
     public void UseFlyingSickle()
     {
         currWeapon = FlyingSickle.Instance;
-        FlyingSickle.Instance.InitWeapon(keepPosition, playerCamera);
+        FlyingSickle.Instance.InitWeapon(keepPosition, playerCamera.gameObject);
         inputActions = PlayerManager.instance.playerControl;
 
         inputActions.player.leftclick.performed += FlyingSickle.Instance.LeftClickPerformed;
