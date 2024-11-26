@@ -46,17 +46,31 @@ public class WeaponManager : MonoBehaviour
     }
     #endregion
 
+    Weapon currWeapon;
+
     #region ���I�{���Ϭq
     //�D���㪩�A���Ⲿ�ʧ�����ݭn�ק�inputAction�����޿�
     public void UseFlyingSickle()
     {
-        FlyingSickle.Instance.InitWeapon(keepPosition, playerCamera.gameObject);
+        currWeapon = FlyingSickle.Instance;
+        FlyingSickle.Instance.InitWeapon(keepPosition, playerCamera);
         inputActions = PlayerManager.instance.playerControl;
 
         inputActions.player.leftclick.performed += FlyingSickle.Instance.LeftClickPerformed;
         inputActions.player.leftclick.canceled += FlyingSickle.Instance.LeftClickCanceled;
 
         inputActions.player.rightclick.performed += FlyingSickle.Instance.RightClickPerformed;
+
+
+        inputActions.player.rightclick.performed += currWeapon.RightClickPerformed;
     }
+
+    public void UseWeapon(Weapon weapon)
+    {
+        //weapon.InitWeapon();
+        inputActions.player.leftclick.performed += weapon.LeftClickPerformed;
+        inputActions.player.leftclick.canceled += weapon.LeftClickCanceled;
+    }
+
     #endregion
 }

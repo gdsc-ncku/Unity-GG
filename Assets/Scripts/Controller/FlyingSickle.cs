@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
 using UnityEngine.UI;
 
@@ -136,9 +137,9 @@ public class FlyingSickle : Weapon
     /// 右鍵觸發
     /// </summary>
     /// <param name="type"></param>
-    public override void RightClick(ClickType type)
+    public override void RightClickPerformed(InputAction.CallbackContext obj)
     {
-        if (status != FlyingStatus.drop && type == ClickType.push)
+        if (status != FlyingStatus.drop)
         {
             EnterBack(isLastFlyingBack = false);
         }
@@ -148,19 +149,15 @@ public class FlyingSickle : Weapon
     /// 左鍵觸發
     /// </summary>
     /// <param name="type">0, 1, 2 分別是點擊、按住、放開</param>
-    public override void LeftClick(ClickType type)
+    public override void LeftClickCanceled(InputAction.CallbackContext obj)
     {
-        //按下
-        if(type == ClickType.push)
-        {
-            ChoosePoint(false);
-        }
-        else if(type == ClickType.release)
-        {
-            //放開
-            ChoosePoint(true);
-            LockPoint();
-        }
+        ChoosePoint(true);
+        LockPoint();
+    }
+
+    public override void LeftClickPerformed(InputAction.CallbackContext obj)
+    {
+        ChoosePoint(false);
     }
 
     /// <summary>
