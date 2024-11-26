@@ -78,7 +78,7 @@ public class Shotgun : MonoBehaviour
             StartCoroutine(Reload(2f)); //sec
             Debug.Log("Reload");
         }
-        if (Input.GetKeyDown(KeyCode.K) && status != Status.reload && timer >= cd) 
+        if (Input.GetMouseButtonDown(0) && status != Status.reload && timer >= cd) 
         {
             timer = 0;
             LeftClick();
