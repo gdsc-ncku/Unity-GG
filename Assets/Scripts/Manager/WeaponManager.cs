@@ -6,7 +6,6 @@ public class WeaponManager : MonoBehaviour
     #region ���ե��ܼ�
     public Transform keepPosition;
     public Camera playerCamera;
-    public GameObject player;
     public PlayerControl inputActions;
     #endregion
 
@@ -51,7 +50,7 @@ public class WeaponManager : MonoBehaviour
     //�D���㪩�A���Ⲿ�ʧ�����ݭn�ק�inputAction�����޿�
     public void UseFlyingSickle()
     {
-        FlyingSickle.Instance.InitWeapon(keepPosition, player);
+        FlyingSickle.Instance.InitWeapon(keepPosition, playerCamera.gameObject);
         inputActions = PlayerManager.instance.playerControl;
 
         inputActions.player.leftclick.performed += FlyingSickle.Instance.LeftClickPerformed;
