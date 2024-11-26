@@ -28,7 +28,7 @@ public class KatanaController : Weapon
         else
         {
             forward = new Vector3(forward.x, 0, forward.z);
-            StartCoroutine(PlayerManager.instance.Sprint(forward, sprintDistance));
+            PlayerManager.instance.Sprint(forward, sprintDistance);
         }
     }
 

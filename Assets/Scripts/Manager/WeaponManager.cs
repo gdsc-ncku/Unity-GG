@@ -45,10 +45,13 @@ public class WeaponManager : MonoBehaviour
     }
     #endregion
 
+    Weapon currWeapon;
+
     #region 飛鐮程式區段
     //非完整版，角色移動完成後需要修改inputAction相關邏輯
     public void UseFlyingSickle()
     {
+        currWeapon = FlyingSickle.Instance;
         FlyingSickle.Instance.InitWeapon(keepPosition, playerCamera);
         inputActions = PlayerManager.instance.playerControl;
 
@@ -56,6 +59,17 @@ public class WeaponManager : MonoBehaviour
         inputActions.player.leftclick.canceled += FlyingSickle.Instance.LeftClickCanceled;
 
         inputActions.player.rightclick.performed += FlyingSickle.Instance.RightClickPerformed;
+
+
+        inputActions.player.rightclick.performed += currWeapon.RightClickPerformed;
     }
+
+    public void UseWeapon(Weapon weapon)
+    {
+        //weapon.InitWeapon();
+        inputActions.player.leftclick.performed += weapon.LeftClickPerformed;
+        inputActions.player.leftclick.canceled += weapon.LeftClickCanceled;
+    }
+
     #endregion
 }
