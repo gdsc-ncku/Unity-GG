@@ -42,7 +42,7 @@ public class PlayerMove : MonoBehaviour
     private void Movement()
     {
         //此處耦合了(下層需要上層資料)，後續可思考是否將playerControl移到ScriptableObject來解耦合
-        Vector2 inputVector = PlayerManager.instance.playerControl.player.move.ReadValue<Vector2>();
+        Vector2 inputVector = PlayerManager.Instance.playerControl.player.move.ReadValue<Vector2>();
 
         // 獲取玩家的前方和右側方向
         Vector3 forward = playerRigibody.transform.forward;
@@ -51,11 +51,11 @@ public class PlayerMove : MonoBehaviour
         // 根據輸入計算移動方向
         Vector3 moveDirection = forward * inputVector.y + right * inputVector.x;
 
-        if (PlayerManager.instance.playerStatus == PlayerStatus.move && inputVector != Vector2.zero && Vector3.Distance(playerRigibody.velocity, Vector3.zero) < maxSpeed)
+        if (PlayerManager.Instance.playerStatus == PlayerStatus.move && inputVector != Vector2.zero && Vector3.Distance(playerRigibody.velocity, Vector3.zero) < maxSpeed)
         {
             playerRigibody.velocity = moveDirection.normalized * maxSpeed;
         }
-        else if(PlayerManager.instance.playerStatus == PlayerStatus.move && inputVector == Vector2.zero)
+        else if(PlayerManager.Instance.playerStatus == PlayerStatus.move && inputVector == Vector2.zero)
         {
             playerRigibody.velocity = new Vector3(0, playerRigibody.velocity.y, 0);
         }
@@ -63,16 +63,16 @@ public class PlayerMove : MonoBehaviour
 
     public IEnumerator Sprint(Vector3 forward, float sprintDistance, int sprintFrame)
     {
-        PlayerManager.instance.playerStatus = PlayerStatus.sprint;
-        PlayerManager.instance.rb.velocity = Vector3.zero;
+        PlayerManager.Instance.playerStatus = PlayerStatus.sprint;
+        PlayerManager.Instance.rb.velocity = Vector3.zero;
         yield return new WaitForFixedUpdate();
-        PlayerManager.instance.rb.AddForce(2 * PlayerManager.instance.rb.mass * sprintDistance / (Time.fixedDeltaTime * sprintFrame) * forward, ForceMode.Impulse);
+        PlayerManager.Instance.rb.AddForce(2 * PlayerManager.Instance.rb.mass * sprintDistance / (Time.fixedDeltaTime * sprintFrame) * forward, ForceMode.Impulse);
         for (int i = 0; i < sprintFrame; i++)
         {
             yield return new WaitForFixedUpdate();
         }
-        PlayerManager.instance.rb.velocity = Vector3.zero;
-        PlayerManager.instance.playerStatus = PlayerStatus.move;
+        PlayerManager.Instance.rb.velocity = Vector3.zero;
+        PlayerManager.Instance.playerStatus = PlayerStatus.move;
         yield break;
     }
 }

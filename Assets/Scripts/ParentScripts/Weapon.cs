@@ -18,24 +18,12 @@ public enum ClickType
 */
 public abstract class Weapon : MonoBehaviour
 {
-//     //instance mode
-//     private static Weapon _weapon;
-//     public static Weapon Instance
-//     {
-//         get
-//         {
-//             if (!_weapon)
-//             {
-//                 _weapon = FindObjectOfType(typeof(Weapon)) as Weapon;
-//             }
-//             return _weapon;
-//         }
-//     }
     
     protected Transform keepPosition;
     protected Camera playerCamera;
 
-    public void Init(Transform transform, Camera camera, PlayerControl playerControl)
+    //修改為virtual 用於讓繼承的武器可以自訂義額外的初始化 ---zhwa
+    public virtual void Init(Transform transform, Camera camera)
     {
         keepPosition = transform;
         playerCamera = camera;

@@ -28,7 +28,7 @@ public class KatanaController : Weapon
         else
         {
             forward = new Vector3(forward.x, 0, forward.z);
-            PlayerManager.instance.Sprint(forward, sprintDistance);
+            PlayerManager.Instance.Sprint(forward, sprintDistance);
         }
     }
 
@@ -48,10 +48,10 @@ public class KatanaController : Weapon
             hitColliders = Physics.OverlapSphere(position, specialAttackDetectSphere, enemyLayer);
         }
 
-        PlayerManager.instance.gameObject.GetComponent<Collider>().isTrigger = true;
-        PlayerManager.instance.playerStatus = PlayerStatus.sprint;
-        forward = new Vector3(position.x, PlayerManager.instance.rb.transform.position.y, position.z) - PlayerManager.instance.rb.transform.position;
-        PlayerManager.instance.rb.AddForce(PlayerManager.instance.rb.mass * forward / 0.1f, ForceMode.Impulse);
+        PlayerManager.Instance.gameObject.GetComponent<Collider>().isTrigger = true;
+        PlayerManager.Instance.playerStatus = PlayerStatus.sprint;
+        forward = new Vector3(position.x, PlayerManager.Instance.rb.transform.position.y, position.z) - PlayerManager.Instance.rb.transform.position;
+        PlayerManager.Instance.rb.AddForce(PlayerManager.Instance.rb.mass * forward / 0.1f, ForceMode.Impulse);
         foreach (GameObject @object in hitEnemy)
         {
             Rigidbody @rb = @object.GetComponent<Rigidbody>();
@@ -62,8 +62,8 @@ public class KatanaController : Weapon
             yield return new WaitForSeconds(0.1f / hitEnemy.Count);
         }
         hitEnemy.Clear();
-        PlayerManager.instance.gameObject.GetComponent<Collider>().isTrigger = false;
-        PlayerManager.instance.playerStatus = PlayerStatus.move;
+        PlayerManager.Instance.gameObject.GetComponent<Collider>().isTrigger = false;
+        PlayerManager.Instance.playerStatus = PlayerStatus.move;
         yield break;
     }
 }
