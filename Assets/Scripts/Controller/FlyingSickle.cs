@@ -406,7 +406,7 @@ public class FlyingSickle : Weapon
 
     private void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject.tag == "Enviroument" && isLastFlyingBack == false)
+        if (collision.gameObject.tag == "Enviroument" && isLastFlyingBack == false && status != FlyingStatus.hold)
         {
             Debug.Log("touch object");
 
