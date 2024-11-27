@@ -42,6 +42,7 @@ public class WeaponManager : MonoBehaviour
     private void Start()
     {
         UseFlyingSickle();
+        UseWeapon(Revolver.Instance);
     }
     #endregion
 
@@ -66,7 +67,7 @@ public class WeaponManager : MonoBehaviour
 
     public void UseWeapon(Weapon weapon)
     {
-        //weapon.InitWeapon();
+        weapon.Init(keepPosition, playerCamera);
         inputActions.player.leftclick.performed += weapon.LeftClickPerformed;
         inputActions.player.leftclick.canceled += weapon.LeftClickCanceled;
     }

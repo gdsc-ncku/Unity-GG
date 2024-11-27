@@ -15,6 +15,26 @@ public class Revolver : RangedWeapon
     float speed = 240;
     float cameraZoomVelocity;
 
+    private static Revolver _revolver;
+    public static Revolver Instance
+    {
+        get
+        {
+            if (!_revolver)
+            {
+                _revolver = FindObjectOfType(typeof(Revolver)) as Revolver;
+                if (!_revolver)
+                {
+                    Debug.LogError("No script");
+                }
+                else
+                {
+                    //init
+                }
+            }
+            return _revolver;
+        }
+    }
     void Update()
     {
         if (Input.GetMouseButton(1) && !isReloading) // 右鍵按下
