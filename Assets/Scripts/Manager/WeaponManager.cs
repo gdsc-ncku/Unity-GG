@@ -11,7 +11,7 @@ public class WeaponManager : MonoBehaviour
 
     #region �إ߳�ҼҦ�
     static private WeaponManager _instance = null;
-    public static WeaponManager instance
+    public static WeaponManager Instance
     {
         get
         {
@@ -41,35 +41,26 @@ public class WeaponManager : MonoBehaviour
 
     private void Start()
     {
-        UseFlyingSickle();
-        UseWeapon(Revolver.Instance);
+        //UseFlyingSickle();
+        inputActions = PlayerManager.Instance.playerControl;
+
+        UseWeapon(FlyingSickle.Instance);
     }
     #endregion
 
     Weapon currWeapon;
 
     #region ���I�{���Ϭq
-    //�D���㪩�A���Ⲿ�ʧ�����ݭn�ק�inputAction�����޿�
-    public void UseFlyingSickle()
-    {
-        currWeapon = FlyingSickle.Instance;
-        FlyingSickle.Instance.InitWeapon(keepPosition, playerCamera.gameObject);
-        inputActions = PlayerManager.instance.playerControl;
-
-        inputActions.player.leftclick.performed += FlyingSickle.Instance.LeftClickPerformed;
-        inputActions.player.leftclick.canceled += FlyingSickle.Instance.LeftClickCanceled;
-
-        inputActions.player.rightclick.performed += FlyingSickle.Instance.RightClickPerformed;
-
-
-        inputActions.player.rightclick.performed += currWeapon.RightClickPerformed;
-    }
 
     public void UseWeapon(Weapon weapon)
     {
+        //初始化武器
         weapon.Init(keepPosition, playerCamera);
+
         inputActions.player.leftclick.performed += weapon.LeftClickPerformed;
         inputActions.player.leftclick.canceled += weapon.LeftClickCanceled;
+
+        inputActions.player.rightclick.performed += weapon.RightClickPerformed;
     }
 
     #endregion

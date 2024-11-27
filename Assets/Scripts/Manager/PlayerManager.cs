@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public enum PlayerStatus
 {
@@ -13,18 +11,21 @@ public class PlayerManager : MonoBehaviour
 {
     [SerializeField] int sprintFrame;
     #region 建立單例模式
-    static private PlayerManager _instance = null;
-    public static PlayerManager instance
+    //instance mode
+    private static PlayerManager _instance;
+    public static PlayerManager Instance
     {
         get
         {
             if (_instance == null)
             {
-                Debug.LogError("Can't Find WeaponManager Instance");
+                Debug.LogError("Can't Find Player Manager Instance");
             }
             return _instance;
         }
+
     }
+
     #endregion
 
     #region Rigidbody設定
@@ -80,7 +81,7 @@ public class PlayerManager : MonoBehaviour
     private void Initialize()
     {
         if (_instance == null)
-        {
+        {   
             _instance = this;
             DontDestroyOnLoad(gameObject);
         }
@@ -92,7 +93,7 @@ public class PlayerManager : MonoBehaviour
 
         _playerControl = new();
         _playerControl.Enable();
-        _rb = _instance.GetComponent<Rigidbody>();
+        _rb = Instance.GetComponent<Rigidbody>();
         playerStatus = PlayerStatus.move;
     }
     #endregion

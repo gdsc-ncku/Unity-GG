@@ -48,8 +48,8 @@ public class FlyingSickle : Weapon
     public GameObject flyingSickle; //飛鐮遊戲物件
     [Tooltip("輔助準心")] public Image targetHeart;
 
-    private GameObject playerCamera;   //玩家攝影機遊戲物件
-    private Transform keepPosition; //手持位置的transform
+    //private GameObject playerCamera;   //玩家攝影機遊戲物件
+    //private Transform keepPosition; //手持位置的transform
     public float rotationSpeed = 100f; // 旋轉速度，單位是度/秒
 
     [SerializeField] private FlyingStatus status = FlyingStatus.prepare;    //當前狀態
@@ -80,6 +80,16 @@ public class FlyingSickle : Weapon
 
     [Header("穿透相關")]
     [SerializeField] private bool isLastFlyingBack = false;   //紀錄是否為右鍵觸發的返回，如果是 無法穿透
+
+    private void Awake()
+    {
+        //防止重複創建
+        if(_flyingSickle != null)
+        {
+            Debug.Log("Duplicate creating Flying Sickle Instance");
+            Destroy(gameObject);
+        }
+    }
 
     // Update is called once per frame
     void FixedUpdate()
@@ -113,15 +123,13 @@ public class FlyingSickle : Weapon
     }
 
     /// <summary>
-    /// 初始化武器
-    /// 手持位置、旋轉角度
+    /// 飛鐮的初始化
     /// </summary>
-    /// <param name="takePosition">要手持的位置</param>
-    public void InitWeapon(Transform takePosition, GameObject _player)
+    /// <param name="transform"></param>
+    /// <param name="camera"></param>
+    public override void Init(Transform transform, Camera camera)
     {
-        //set value
-        keepPosition = takePosition;
-        playerCamera = _player;
+        base.Init(transform, camera);
 
         //init
         //coll = flyingSickle.GetComponent<Collider>();
@@ -132,6 +140,27 @@ public class FlyingSickle : Weapon
         rb.useGravity = false;
         EnterHold();
     }
+
+    ///// <summary>
+    ///// 初始化武器
+    ///// 手持位置、旋轉角度
+    ///// </summary>
+    ///// <param name="takePosition">要手持的位置</param>
+    //public void InitWeapon(Transform takePosition, GameObject _player)
+    //{
+    //    //set value
+    //    keepPosition = takePosition;
+    //    playerCamera = _player.GetComponent<Camera>();
+
+    //    //init
+    //    //coll = flyingSickle.GetComponent<Collider>();
+    //    coll = flyingSickle.GetComponent<MeshCollider>();
+    //    coll.isTrigger = true;
+
+    //    rb = flyingSickle.GetComponent<Rigidbody>();
+    //    rb.useGravity = false;
+    //    EnterHold();
+    //}
 
     /// <summary>
     /// 右鍵觸發
@@ -377,7 +406,7 @@ public class FlyingSickle : Weapon
 
     private void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject.tag == "Enviroument" && isLastFlyingBack == false)
+        if (collision.gameObject.tag == "Enviroument" && isLastFlyingBack == false && status != FlyingStatus.hold)
         {
             Debug.Log("touch object");
 
