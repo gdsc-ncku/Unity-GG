@@ -205,6 +205,12 @@ public class EnemyView : MonoBehaviour
         return count;
     }
 
+    public bool IsViewPlayer()
+    {
+        GameObject[] gm = new GameObject[1];
+        return Filter(gm, "Player") > 0 ? true : false;
+    }
+
     /// <summary>
     /// Debug¸ê°T
     /// </summary>
