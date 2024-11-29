@@ -1,24 +1,26 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [ExecuteInEditMode]
 public class EnemyView : MonoBehaviour
 {
-    public Mesh mesh;
-    public float distance = 10; //µø³¥¶ZÂ÷
-    public float angle = 30;    //µø³¥¨¤«×
-    public float height = 1.0f; //µø³¥°ª«×
-    public Color meshColor = Color.blue;    //ÃC¦â®i¥Ü
-
-    public LayerMask layers;    //¥iÆ[¹îªºlayer
+    public float distance = 10; //åµæ¸¬è·é›¢
+    public float angle = 30;    //åµæ¸¬è§’åº¦
+    public float height = 1.0f; //åµæ¸¬é«˜åº¦
+    public LayerMask layers;    //åµæ¸¬çš„layer
     public LayerMask occlusionLayers;
 
     Collider[] colliders = new Collider[50];
     int count;
-    public int scanFrequency = 30;  //±½´yÀW²v
+    public int scanFrequency = 30;  //åµæ¸¬é »ç‡
     float scanInterval;
     float scanTimer;
+
+    [Header("Debug")]
+    public Mesh mesh;
+    public Color meshColor = Color.blue;    //è¦–è¦ºåŒ–é¡è‰²
 
     private List<GameObject> scanObjects = new List<GameObject>();
 
@@ -38,13 +40,13 @@ public class EnemyView : MonoBehaviour
     }
 
     /// <summary>
-    /// ±½´y¨ç¼Æ
+    /// æƒæ
     /// </summary>
     private void Scan()
     {
         count = Physics.OverlapSphereNonAlloc(transform.position, distance, colliders, layers, QueryTriggerInteraction.Collide);
 
-        //¿z¿ï®g½uÀË´ú¨ìªº¸I¼²Åé ¬İ­ş¨Ç¯uªº¦bµø³¥¤¤
+        //æ¸…ç©ºä¹‹å‰åµæ¸¬åˆ°çš„ç‰©ä»¶
         scanObjects.Clear();
         for(int i = 0; i < count; i++)
         {
@@ -57,7 +59,7 @@ public class EnemyView : MonoBehaviour
     }
 
     /// <summary>
-    /// ÀË¬d¦b¥|©P³òªº¸I¼²Åé¬O§_¯uªº¦s¦bµø³¥¤¤
+    /// æª¢æŸ¥ç‰©ä»¶æ˜¯å¦åœ¨è¦–é‡ç¯„åœå…§
     /// </summary>
     /// <param name="obj"></param>
     /// <returns></returns>
@@ -70,26 +72,84 @@ public class EnemyView : MonoBehaviour
         {
             return false;
         }
-
         direction.y = 0;
+        // æª¢æŸ¥è§’åº¦
         float deltaAngle = Vector3.Angle(direction, transform.forward);
         if(deltaAngle > angle)
         {
             return false;
         }
-
+        // æª¢æŸ¥éšœç¤™ç‰©
         origin.y += height / 2;
         dest.y = origin.y;
         if(Physics.Linecast(origin, dest, occlusionLayers))
         {
             return false;
         }
-
         return true;
     }
 
     /// <summary>
-    /// ³Ğ«Øºô®æmesh ±½´y ·í§@µø³¥
+    /// æ ¹æ“šæŒ‡å®šçš„layer éæ¿¾åµæ¸¬åˆ°çš„ç‰©ä»¶
+    /// bufferæ˜¯å­˜å„²çµæœçš„é™£åˆ—
+    /// è¿”å›åµæ¸¬åˆ°çš„ç‰©ä»¶æ•¸é‡
+    /// </summary>
+    /// <param name="buffer"></param>
+    /// <param name="layerName"></param>
+    /// <returns></returns>
+    public int Filter(GameObject[] buffer, string layerName)
+    {
+        int layer = LayerMask.NameToLayer(layerName);
+        int count = 0;
+        foreach(var obj in scanObjects)
+        {
+            if(obj.layer == layer)
+            {
+                buffer[count++] = obj;
+            }
+
+            if(buffer.Length == count)
+            {
+                break;
+            }
+        }
+        return count;
+    }
+
+    public bool IsViewPlayer(out GameObject player)
+    {
+        if (scanObjects.Count > 0)
+        {
+            player = scanObjects[0];
+            return true;
+        }
+        player = null;
+        return false;
+    }
+
+#region Debug
+    private void OnValidate()
+    {
+        mesh = CreateWedgeMesh();
+    }
+    
+    private void OnDrawGizmos()
+    {
+        if (mesh)
+        {
+            Gizmos.color = meshColor;
+            Gizmos.DrawMesh(mesh, transform.position, transform.rotation);
+        }
+
+        Gizmos.color = Color.green;
+        foreach(var obj in scanObjects)
+        {
+            Gizmos.DrawSphere(obj.transform.position, 0.2f);
+        }
+    }
+
+    /// <summary>
+    /// å‰µå»ºç¶²æ ¼mesh æƒæ ç•¶ä½œè¦–é‡
     /// </summary>
     /// <returns></returns>
     private Mesh CreateWedgeMesh()
@@ -176,64 +236,5 @@ public class EnemyView : MonoBehaviour
 
         return mesh;
     }
-
-    /// <summary>
-    /// ®Ú¾Ú«ü©wªºlayer ÀË¯Á¦b¸Ólayer©³¤U³Q±½´y¨ìªºª«¥ó
-    /// buffer¬OÀx¦sª«¥óªº¦Cªí
-    /// ¦^¶ÇÀË´ú¨ìªº¼Æ¶q
-    /// </summary>
-    /// <param name="buffer"></param>
-    /// <param name="layerName"></param>
-    /// <returns></returns>
-    public int Filter(GameObject[] buffer, string layerName)
-    {
-        int layer = LayerMask.NameToLayer(layerName);
-        int count = 0;
-        foreach(var obj in scanObjects)
-        {
-            if(obj.layer == layer)
-            {
-                buffer[count++] = obj;
-            }
-
-            if(buffer.Length == count)
-            {
-                break;
-            }
-        }
-
-        return count;
-    }
-
-    public bool IsViewPlayer()
-    {
-        GameObject[] gm = new GameObject[1];
-        return Filter(gm, "Player") > 0 ? true : false;
-    }
-
-    /// <summary>
-    /// Debug¸ê°T
-    /// </summary>
-    private void OnValidate()
-    {
-        mesh = CreateWedgeMesh();
-    }
-
-    /// <summary>
-    /// Debug¸ê°T
-    /// </summary>
-    private void OnDrawGizmos()
-    {
-        if (mesh)
-        {
-            Gizmos.color = meshColor;
-            Gizmos.DrawMesh(mesh, transform.position, transform.rotation);
-        }
-
-        Gizmos.color = Color.green;
-        foreach(var obj in scanObjects)
-        {
-            Gizmos.DrawSphere(obj.transform.position, 0.2f);
-        }
-    }
+#endregion
 }
