@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.AI;
-using UniRx;
 
 /// <summary>
 /// 處理敵人移動
@@ -21,7 +20,6 @@ public class EnemyMovement : MonoBehaviour
         }
     }
     int currentPathPoint = 0;
-    bool isArrived = true;
 
     void Awake()
     {
@@ -30,15 +28,9 @@ public class EnemyMovement : MonoBehaviour
 
     void Update()
     {
-        // 無目標時，走預定路徑
         if (target == null)
         {
-            MoveTo(pathPoints[currentPathPoint].position);
-        }
-        // 有目標時，追蹤目標
-        else
-        {
-            agent.SetDestination(target.position);
+            CheckPathPointReached();
         }
     }
 
@@ -73,13 +65,21 @@ public class EnemyMovement : MonoBehaviour
     /// 移動到指定位置
     /// </summary>
     /// <param name="position"></param>
-    void MoveTo(Vector3 position)
+    public void MoveTo(Vector3 position)
+    {
+        agent.SetDestination(position);
+    }
+    void CheckPathPointReached()
     {
         if (IsArrived())
         {
-            agent.SetDestination(position);
-            updatePath();
+            OnPathPointReached();
         }
+    }
+    void OnPathPointReached()
+    {
+        updatePath();
+        MoveTo(pathPoints[currentPathPoint].position);
     }
 
     /// <summary>
@@ -88,7 +88,7 @@ public class EnemyMovement : MonoBehaviour
     /// <returns></returns>
     bool IsArrived()
     {
-        if (agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending && isArrived)
+        if (agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending)
         {
             return true;
         }
