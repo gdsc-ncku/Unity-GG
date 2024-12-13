@@ -10,7 +10,7 @@ public class Detector : MonoBehaviour
     [SerializeField]float distance = 10; //偵測距離
     [SerializeField]float angle = 30;    //偵測角度
     LayerMask layer => LayerMask.GetMask(LayerTagPack.Enemy, LayerTagPack.Player);
-    LayerMask occlusionLayers => LayerMask.NameToLayer(LayerTagPack.Environment);
+    LayerMask occlusionLayers => LayerMask.GetMask(LayerTagPack.Environment);
     Collider[] colliders = new Collider[50];
     List<GameObject> detectedObjects = new List<GameObject>();
     GameObject taget;
@@ -30,7 +30,7 @@ public class Detector : MonoBehaviour
         for(int i = 0; i < count; i++)
         {
             GameObject obj = colliders[i].gameObject;
-            if(obj == GetTopmostParent(gameObject)) continue;
+            if(obj == transform.root.gameObject) continue;
             if(IsVisible(obj))
             {
                 detectedObjects.Add(obj);
@@ -46,21 +46,6 @@ public class Detector : MonoBehaviour
             taget = null;
             OnTargetGone.OnNext(Unit.Default);
         }
-    }
-    
-    /// <summary>
-    /// 取得最上層的parent
-    /// </summary>
-    /// <param name="obj"></param>
-    /// <returns></returns>
-    GameObject GetTopmostParent(GameObject obj)
-    {
-        Transform currentParent = obj.transform;
-        while (currentParent.parent != null)
-        {
-            currentParent = currentParent.parent;
-        }
-        return currentParent.gameObject;
     }
 
     /// <summary>
