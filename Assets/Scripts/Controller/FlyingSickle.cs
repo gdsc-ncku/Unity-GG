@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
+using UnityEngine.Timeline;
 using UnityEngine.UI;
 
 /// <summary>
@@ -323,11 +324,13 @@ public class FlyingSickle : Weapon
     {
         if(isDown == false)
         {
-            Time.timeScale = bulletTime;
+            EventManager.TriggerEvent<float>(NameOfEvent.TimeControl, bulletTime);
+            //Time.timeScale = bulletTime;
         }
         else
         {
-            Time.timeScale = 1f;
+            EventManager.TriggerEvent<float>(NameOfEvent.TimeControl, 1f);
+            //Time.timeScale = 1f;
         }
     }
 

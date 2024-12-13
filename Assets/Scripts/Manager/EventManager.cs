@@ -3,7 +3,8 @@ using System.Collections.Generic;
 
 public enum NameOfEvent
 {
-    TimeControl
+    TimeControl,
+    TimeResume
 }
 
 public class EventManager
@@ -26,7 +27,7 @@ public class EventManager
         }
     }
     // 取消註冊事件
-    public static void StopListenin(NameOfEvent eventName, Action listener)
+    public static void StopListening(NameOfEvent eventName, Action listener)
     {
         if (eventDictionary.ContainsKey(eventName))
         {
@@ -93,7 +94,7 @@ public class EventManager
         }
     }
     // 取消註冊事件
-    public static void StopListenin<T1, T2>(NameOfEvent eventName, Action<T1, T2> listener)
+    public static void StopListening<T1, T2>(NameOfEvent eventName, Action<T1, T2> listener)
     {
         if (eventDictionary.ContainsKey(eventName))
         {
