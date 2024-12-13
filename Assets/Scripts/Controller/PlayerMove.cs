@@ -5,16 +5,20 @@ using UnityEngine.InputSystem;
 
 public class PlayerMove : MonoBehaviour
 {
-    public float speed = 20f;
+    //public float speed = 20f;
     public float maxSpeed = 15;
     private Rigidbody playerRigibody;
     public float mouseSensitivity = 100f; // 滑鼠靈敏度
     private float xRotation = 0f; // 角色的垂直旋轉
 
+    public bool isLockCursor = true;
+
     private void Awake()
     {
         playerRigibody = GetComponent<Rigidbody>();
-        Cursor.lockState = CursorLockMode.Locked; // 鎖定滑鼠
+
+        if(isLockCursor)
+            Cursor.lockState = CursorLockMode.Locked; // 鎖定滑鼠
     }
 
     private void FixedUpdate()
@@ -54,6 +58,7 @@ public class PlayerMove : MonoBehaviour
         if (PlayerManager.Instance.playerStatus == PlayerStatus.move && inputVector != Vector2.zero && Vector3.Distance(playerRigibody.velocity, Vector3.zero) < maxSpeed)
         {
             playerRigibody.velocity = moveDirection.normalized * maxSpeed;
+            //playerRigibody.velocity = moveDirection.normalized * maxSpeed * Time.unscaledDeltaTime;
         }
         else if(PlayerManager.Instance.playerStatus == PlayerStatus.move && inputVector == Vector2.zero)
         {
