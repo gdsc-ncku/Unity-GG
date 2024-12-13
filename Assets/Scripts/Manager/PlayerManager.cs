@@ -1,6 +1,5 @@
 using Unity.VisualScripting;
 using UnityEngine;
-
 public enum PlayerStatus
 {
     move,
@@ -10,7 +9,7 @@ public enum PlayerStatus
 public class PlayerManager : MonoBehaviour
 {
     [SerializeField] int sprintFrame;
-    #region «Ø¥ß³æ¨Ò¼Ò¦¡
+    #region ï¿½Ø¥ß³ï¿½Ò¼Ò¦ï¿½
     //instance mode
     private static PlayerManager _instance;
     public static PlayerManager Instance
@@ -28,7 +27,7 @@ public class PlayerManager : MonoBehaviour
 
     #endregion
 
-    #region Rigidbody³]©w
+    #region Rigidbodyï¿½]ï¿½w
     private Rigidbody _rb = null;
     public Rigidbody rb
     {
@@ -48,7 +47,7 @@ public class PlayerManager : MonoBehaviour
     }
     #endregion
 
-    #region InputAction³]©w
+    #region InputActionï¿½]ï¿½w
     [SerializeField] PlayerControl _playerControl;
     public PlayerControl playerControl
     {
@@ -68,11 +67,11 @@ public class PlayerManager : MonoBehaviour
     }
     #endregion
 
-    #region ª¬ºA¾÷
+    #region ï¿½ï¿½ï¿½Aï¿½ï¿½
     public PlayerStatus playerStatus;
     #endregion
 
-    #region ªì©l¤Æ
+    #region ï¿½ï¿½lï¿½ï¿½
     private void Awake()
     {
         Initialize();
