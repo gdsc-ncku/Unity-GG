@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -8,7 +8,7 @@ using UnityEngine.Timeline;
 using UnityEngine.UI;
 
 /// <summary>
-/// ­¸ÅIªº­¸¦æª¬ºA
+/// é£›é®çš„é£›è¡Œç‹€æ…‹
 /// </summary>
 public enum FlyingStatus
 {
@@ -46,17 +46,17 @@ public class FlyingSickle : Weapon
     }
 
 
-    public GameObject flyingSickle; //­¸ÅI¹CÀ¸ª«¥ó
-    [Tooltip("»²§U·Ç¤ß")] public Image targetHeart;
+    public GameObject flyingSickle; //é£›é®éŠæˆ²ç‰©ä»¶
+    [Tooltip("è¼”åŠ©æº–å¿ƒ")] public Image targetHeart;
 
-    //private GameObject playerCamera;   //ª±®aÄá¼v¾÷¹CÀ¸ª«¥ó
-    //private Transform keepPosition; //¤â«ù¦ì¸mªºtransform
-    public float rotationSpeed = 100f; // ±ÛÂà³t«×¡A³æ¦ì¬O«×/¬í
+    //private GameObject playerCamera;   //ç©å®¶æ”å½±æ©ŸéŠæˆ²ç‰©ä»¶
+    //private Transform keepPosition; //æ‰‹æŒä½ç½®çš„transform
+    public float rotationSpeed = 100f; // æ—‹è½‰é€Ÿåº¦ï¼Œå–®ä½æ˜¯åº¦/ç§’
 
-    [SerializeField] private FlyingStatus status = FlyingStatus.prepare;    //·í«eª¬ºA
+    [SerializeField] private FlyingStatus status = FlyingStatus.prepare;    //ç•¶å‰ç‹€æ…‹
 
-    [Header("¤¤Áä-²`«×±±¨î")]
-    [SerializeField] private float depth = 0f;   //¥Ø«eÂê©wªº²`«×
+    [Header("ä¸­éµ-æ·±åº¦æ§åˆ¶")]
+    [SerializeField] private float depth = 0f;   //ç›®å‰é–å®šçš„æ·±åº¦
     public float scrollSpeed;
     public float minDepth = 10f;
     public float maxDepth = 100f;
@@ -64,27 +64,27 @@ public class FlyingSickle : Weapon
     public float minTargetSize = 10f;
     public float maxTargetSize = 100f;
 
-    private Queue<Vector3> lockPoint = new Queue<Vector3>();    //ª±®aÂê©wªºÂI
+    private Queue<Vector3> lockPoint = new Queue<Vector3>();    //ç©å®¶é–å®šçš„é»
     //public Transform debugBall;
     //public Transform debugBall1;
 
-    [Header("¥ªÁä-Âê©w­¸¦æÂI")]
+    [Header("å·¦éµ-é–å®šé£›è¡Œé»")]
     public float bulletTime = 0.7f;
     private Vector3 currentTarget;
     public float sickleSpeed = 5f;
     public bool hasTarget = false;
 
-    [Header("±¼¸¨¬ÛÃö")]
+    [Header("æ‰è½ç›¸é—œ")]
     private Rigidbody rb;
     //private Collider coll;
     private MeshCollider coll;
 
-    [Header("¬ï³z¬ÛÃö")]
-    [SerializeField] private bool isLastFlyingBack = false;   //¬ö¿ı¬O§_¬°¥kÁäÄ²µoªºªğ¦^¡A¦pªG¬O µLªk¬ï³z
+    [Header("ç©¿é€ç›¸é—œ")]
+    [SerializeField] private bool isLastFlyingBack = false;   //ç´€éŒ„æ˜¯å¦ç‚ºå³éµè§¸ç™¼çš„è¿”å›ï¼Œå¦‚æœæ˜¯ ç„¡æ³•ç©¿é€
 
     private void Awake()
     {
-        //¨¾¤î­«½Æ³Ğ«Ø
+        //é˜²æ­¢é‡è¤‡å‰µå»º
         if(_flyingSickle != null)
         {
             Debug.Log("Duplicate creating Flying Sickle Instance");
@@ -100,7 +100,7 @@ public class FlyingSickle : Weapon
 
         SelfRotate();
 
-        //­¸ÅI°lÂÜ
+        //é£›é®è¿½è¹¤
         if (hasTarget)
         {
             Tracking();
@@ -124,7 +124,7 @@ public class FlyingSickle : Weapon
     }
 
     /// <summary>
-    /// ­¸ÅIªºªì©l¤Æ
+    /// é£›é®çš„åˆå§‹åŒ–
     /// </summary>
     /// <param name="transform"></param>
     /// <param name="camera"></param>
@@ -143,10 +143,10 @@ public class FlyingSickle : Weapon
     }
 
     ///// <summary>
-    ///// ªì©l¤ÆªZ¾¹
-    ///// ¤â«ù¦ì¸m¡B±ÛÂà¨¤«×
+    ///// åˆå§‹åŒ–æ­¦å™¨
+    ///// æ‰‹æŒä½ç½®ã€æ—‹è½‰è§’åº¦
     ///// </summary>
-    ///// <param name="takePosition">­n¤â«ùªº¦ì¸m</param>
+    ///// <param name="takePosition">è¦æ‰‹æŒçš„ä½ç½®</param>
     //public void InitWeapon(Transform takePosition, GameObject _player)
     //{
     //    //set value
@@ -164,7 +164,7 @@ public class FlyingSickle : Weapon
     //}
 
     /// <summary>
-    /// ¥kÁäÄ²µo
+    /// å³éµè§¸ç™¼
     /// </summary>
     /// <param name="type"></param>
     public override void RightClickPerformed(InputAction.CallbackContext obj)
@@ -176,9 +176,9 @@ public class FlyingSickle : Weapon
     }
 
     /// <summary>
-    /// ¥ªÁäÄ²µo
+    /// å·¦éµè§¸ç™¼
     /// </summary>
-    /// <param name="type">0, 1, 2 ¤À§O¬OÂIÀ»¡B«ö¦í¡B©ñ¶}</param>
+    /// <param name="type">0, 1, 2 åˆ†åˆ¥æ˜¯é»æ“Šã€æŒ‰ä½ã€æ”¾é–‹</param>
     public override void LeftClickCanceled(InputAction.CallbackContext obj)
     {
         ChoosePoint(true);
@@ -191,33 +191,33 @@ public class FlyingSickle : Weapon
     }
 
     /// <summary>
-    /// ¤¤Áäºu°Ê°»´ú
+    /// ä¸­éµæ»¾å‹•åµæ¸¬
     /// </summary>
     public void MiddleScroll()
     {
-        // ®Ú¾Ú·Æ¹«ºu½ü§ó·s²`«×
+        // æ ¹æ“šæ»‘é¼ æ»¾è¼ªæ›´æ–°æ·±åº¦
         float scroll = Input.mouseScrollDelta.y;
         depth = Mathf.Clamp(depth + scroll * scrollSpeed, minDepth, maxDepth);
 
-        // §ó·s·Ç¤ß¤j¤p¨Ó¤Ï¬M²`«×­È
+        // æ›´æ–°æº–å¿ƒå¤§å°ä¾†åæ˜ æ·±åº¦å€¼
         float targetSize = Mathf.Lerp(maxTargetSize, minTargetSize, (depth - minDepth) / (maxDepth - minDepth));
         targetHeart.rectTransform.sizeDelta = new Vector2(targetSize, targetSize);
     }
 
     /// <summary>
-    /// ­¸ÅI±ÛÂàªº¨ç¼Æ
+    /// é£›é®æ—‹è½‰çš„å‡½æ•¸
     /// </summary>
     private void SelfRotate()
     {
         if(status > FlyingStatus.hold && status < FlyingStatus.drop)
         {
-            // ¨Ï¥Î transform.Rotate Åı­¸ÅIª«¥ó¨C¬í±ÛÂà¤@©w¨¤«×
+            // ä½¿ç”¨ transform.Rotate è®“é£›é®ç‰©ä»¶æ¯ç§’æ—‹è½‰ä¸€å®šè§’åº¦
             flyingSickle.transform.Rotate(Vector3.left * rotationSpeed * Time.deltaTime);
         }
     }
 
     /// <summary>
-    /// ­¸ÅI§ì¦b¤â¤Wªº¨ç¼Æ
+    /// é£›é®æŠ“åœ¨æ‰‹ä¸Šçš„å‡½æ•¸
     /// </summary>
     private void Holding()
     {
@@ -226,52 +226,52 @@ public class FlyingSickle : Weapon
     }
 
     /// <summary>
-    /// ­¸ÅI¦^Âkªº¨ç¼Æ
+    /// é£›é®å›æ­¸çš„å‡½æ•¸
     /// </summary>
     private void Backing()
     {
-        // ­¸ÅI²¾°Ê¨ì¥Ø¼ĞÂI
+        // é£›é®ç§»å‹•åˆ°ç›®æ¨™é»
         flyingSickle.transform.position = Vector3.MoveTowards(flyingSickle.transform.position, keepPosition.position, sickleSpeed * Time.deltaTime);
 
-        // ÀË¬d­¸ÅI¬O§_¨ì¹F¥Ø¼ĞÂI
+        // æª¢æŸ¥é£›é®æ˜¯å¦åˆ°é”ç›®æ¨™é»
         if (Vector3.Distance(flyingSickle.transform.position, keepPosition.position) < 0.1f)
         {
             lockPoint.Clear();
 
-            //­«¸m¬ï³z¬ÛÃöªºÅÜ¼Æ
-            isLastFlyingBack = false;   //§ó·sªğ¦^Ä²µo¨Ó·½ªºª¬ºA
+            //é‡ç½®ç©¿é€ç›¸é—œçš„è®Šæ•¸
+            isLastFlyingBack = false;   //æ›´æ–°è¿”å›è§¸ç™¼ä¾†æºçš„ç‹€æ…‹
 
-            // ¶i¤J¤U­Óª¬ºA
+            // é€²å…¥ä¸‹å€‹ç‹€æ…‹
             EnterHold();
         }
     }
 
     /// <summary>
-    /// °lÂÜª±®a³]©wªºÂI
-    /// ¶}©l°õ¦æ«á ¥²©w²MªÅqueue
+    /// è¿½è¹¤ç©å®¶è¨­å®šçš„é»
+    /// é–‹å§‹åŸ·è¡Œå¾Œ å¿…å®šæ¸…ç©ºqueue
     /// </summary>
     private void Tracking()
     {
-        // ­¸ÅI²¾°Ê¨ì¥Ø¼ĞÂI
+        // é£›é®ç§»å‹•åˆ°ç›®æ¨™é»
         flyingSickle.transform.position = Vector3.MoveTowards(flyingSickle.transform.position, currentTarget, sickleSpeed * Time.deltaTime);
 
-        // ÀË¬d­¸ÅI¬O§_¨ì¹F¥Ø¼ĞÂI
+        // æª¢æŸ¥é£›é®æ˜¯å¦åˆ°é”ç›®æ¨™é»
         if (Vector3.Distance(flyingSickle.transform.position, currentTarget) < 0.1f)
         {
-            // ·í«e¥Ø¼ĞÂI¤w¨ì¹F¡AÀË¬d¬O§_ÁÙ¦³¤U¤@­ÓÂI
+            // ç•¶å‰ç›®æ¨™é»å·²åˆ°é”ï¼Œæª¢æŸ¥æ˜¯å¦é‚„æœ‰ä¸‹ä¸€å€‹é»
             if (lockPoint.Count > 0)
             {
-                currentTarget = lockPoint.Dequeue();  // ³]©w¤U¤@­Ó¥Ø¼ĞÂI
+                currentTarget = lockPoint.Dequeue();  // è¨­å®šä¸‹ä¸€å€‹ç›®æ¨™é»
             }
             else
             {
-                // ¦pªG¥Ø¼ĞÂI³]¸m¨S¦³¨ìªğ¦^ªºµ{«× ¨º¥Nªí¨Ó¤£¤Î³]¸m ­¸ÅI±¼¸¨
+                // å¦‚æœç›®æ¨™é»è¨­ç½®æ²’æœ‰åˆ°è¿”å›çš„ç¨‹åº¦ é‚£ä»£è¡¨ä¾†ä¸åŠè¨­ç½® é£›é®æ‰è½
                 if (status != FlyingStatus.back)
                 {
                     EnterDrop();
                 }else if(status == FlyingStatus.back)
                 {
-                    //³Ì«á¤@¬q­¸¦æ¦^Âk
+                    //æœ€å¾Œä¸€æ®µé£›è¡Œå›æ­¸
                     EnterBack(isLastFlyingBack=true);
                 }
             }
@@ -279,16 +279,16 @@ public class FlyingSickle : Weapon
     }
 
     /// <summary>
-    /// Âê©w¦ì¸m
-    /// ®Ú¾Ú·í«e­¸ÅIª¬ºA¡A³]¸mÂê©w¦ì¸m
+    /// é–å®šä½ç½®
+    /// æ ¹æ“šç•¶å‰é£›é®ç‹€æ…‹ï¼Œè¨­ç½®é–å®šä½ç½®
     /// </summary>
     private void LockPoint()
     {
         if((status == FlyingStatus.hold && lockPoint.Count == 0) 
             || (status > FlyingStatus.hold && status < FlyingStatus.back))
         {
-            // ²Ä¤@¦¸µo®g
-            // ®Ú¾Ú·Ç¤ß¤è¦V©M²`«×­pºâÂê©wÂI
+            // ç¬¬ä¸€æ¬¡ç™¼å°„
+            // æ ¹æ“šæº–å¿ƒæ–¹å‘å’Œæ·±åº¦è¨ˆç®—é–å®šé»
             Vector3 rayOrigin = playerCamera.transform.position;
             Vector3 rayDirection = playerCamera.transform.forward;
             
@@ -303,7 +303,7 @@ public class FlyingSickle : Weapon
                 lockPoint.Enqueue(point);
             }
 
-            // ¶i¤J¤U­Óª¬ºA
+            // é€²å…¥ä¸‹å€‹ç‹€æ…‹
             status = (FlyingStatus)((int)(status + 1) % ((int)FlyingStatus.back + 1));
             hasTarget = true;
         }
@@ -315,8 +315,8 @@ public class FlyingSickle : Weapon
     }
 
     /// <summary>
-    /// ¿ï¾Ü¦ì¸m
-    /// ¦pªG­n¿ï¾Ü¡A¶i¤J¤l¼u®É¶¡
+    /// é¸æ“‡ä½ç½®
+    /// å¦‚æœè¦é¸æ“‡ï¼Œé€²å…¥å­å½ˆæ™‚é–“
     /// </summary>
     /// <param name="isDown"></param>
     private void ChoosePoint(bool isDown)
@@ -334,7 +334,7 @@ public class FlyingSickle : Weapon
     }
 
     /// <summary>
-    /// ³B²z±¼¸¨
+    /// è™•ç†æ‰è½
     /// </summary>
     private void EnterDrop()
     {
@@ -354,7 +354,7 @@ public class FlyingSickle : Weapon
     }
 
     /// <summary>
-    /// ¶i¤J§ì¦íª¬ºA
+    /// é€²å…¥æŠ“ä½ç‹€æ…‹
     /// </summary>
     private void EnterHold()
     {
@@ -366,7 +366,7 @@ public class FlyingSickle : Weapon
             lockPoint.Clear();
         }
 
-        //³B²z¸I¼²¬ÛÃö
+        //è™•ç†ç¢°æ’ç›¸é—œ
         if (rb.useGravity == true)
         {
             rb.useGravity = false;
@@ -389,7 +389,7 @@ public class FlyingSickle : Weapon
             lockPoint.Clear();
         }
 
-        //³B²z¸I¼²¬ÛÃö
+        //è™•ç†ç¢°æ’ç›¸é—œ
         if (rb.useGravity == true)
         {
             rb.useGravity = false;
@@ -401,7 +401,7 @@ public class FlyingSickle : Weapon
     {
         if(collision.gameObject.tag == "Player")
         {
-            //¦¬¦^
+            //æ”¶å›
             EnterHold();
         }
     }
@@ -412,7 +412,7 @@ public class FlyingSickle : Weapon
         {
             Debug.Log("FlyingSickle: touch object");
 
-            //¸I¼²¥ô·Nª«Åé«á±¼¸¨
+            //ç¢°æ’ä»»æ„ç‰©é«”å¾Œæ‰è½
             EnterDrop();
         }
     }

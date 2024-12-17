@@ -1,25 +1,25 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// ´x±±¹CÀ¸¤¤¸ò®É¶¡¦³Ãöªº¨Æª«
+/// æŒæ§éŠæˆ²ä¸­è·Ÿæ™‚é–“æœ‰é—œçš„äº‹ç‰©
 /// </summary>
 public class TimeManager : MonoBehaviour
 {
-    bool isTimeControled = false;   //¦pªG®É¶¡¤w¸g³Q¬Y­ÓªF¦è¾Ş±± «h«á¨ÓªÌµLªk¾Ş±±
+    bool isTimeControled = false;   //å¦‚æœæ™‚é–“å·²ç¶“è¢«æŸå€‹æ±è¥¿æ“æ§ å‰‡å¾Œä¾†è€…ç„¡æ³•æ“æ§
 
     /// <summary>
-    /// ¾Ş±±®É¶¡
+    /// æ“æ§æ™‚é–“
     /// </summary>
-    /// <param name="slowdownFactor">«ü©wªº­¿²v</param>
+    /// <param name="slowdownFactor">æŒ‡å®šçš„å€ç‡</param>
     private void TimeControl(float slowdownFactor)
     {
         if(isTimeControled == false)
         {
             Debug.Log($"TimeManager: Time is modified to {slowdownFactor}");
-            Time.timeScale = slowdownFactor; // ±N¥ş§½®É¶¡ÁY©ñ³]¸m¬° slowdownFactor
-            Time.fixedDeltaTime = 0.02f * Time.timeScale; // ½T«Oª«²z¼ÒÀÀ¦P¨B
+            Time.timeScale = slowdownFactor; // å°‡å…¨å±€æ™‚é–“ç¸®æ”¾è¨­ç½®ç‚º slowdownFactor
+            Time.fixedDeltaTime = 0.02f * Time.timeScale; // ç¢ºä¿ç‰©ç†æ¨¡æ“¬åŒæ­¥
 
             isTimeControled = true;
         }
@@ -30,26 +30,26 @@ public class TimeManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ¦^´_®É¶¡³]©w
+    /// å›å¾©æ™‚é–“è¨­å®š
     /// </summary>
     private void TimeResume()
     {
         Debug.Log($"TimeManager: Time is resume");
         Time.timeScale = 1f;
-        Time.fixedDeltaTime = 0.02f * Time.timeScale; // ½T«Oª«²z¼ÒÀÀ¦P¨B
+        Time.fixedDeltaTime = 0.02f * Time.timeScale; // ç¢ºä¿ç‰©ç†æ¨¡æ“¬åŒæ­¥
         isTimeControled = false;
     }
 
     private void OnEnable()
     {
-        // µù¥U¹ï  ¨Æ¥óªº­q¾\
+        // è¨»å†Šå°  äº‹ä»¶çš„è¨‚é–±
         EventManager.StartListening<float>(NameOfEvent.TimeControl, TimeControl);
         EventManager.StartListening(NameOfEvent.TimeResume, TimeResume);
     }
     
     private void OnDisable()
     {
-        // ¨ú®øµù¥U¹ï  ¨Æ¥óªº­q¾\
+        // å–æ¶ˆè¨»å†Šå°  äº‹ä»¶çš„è¨‚é–±
         EventManager.StopListening<float>(NameOfEvent.TimeControl, TimeControl);
         EventManager.StopListening(NameOfEvent.TimeResume, TimeResume);
     }

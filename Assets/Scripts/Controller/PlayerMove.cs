@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -9,8 +9,8 @@ public class PlayerMove : MonoBehaviour
     //public float speed = 20f;
     public float maxSpeed = 15;
     private Rigidbody playerRigibody;
-    public float mouseSensitivity = 100f; // ·Æ¹«ÆF±Ó«×
-    private float xRotation = 0f; // ¨¤¦âªº««ª½±ÛÂà
+    public float mouseSensitivity = 100f; // æ»‘é¼ éˆæ•åº¦
+    private float xRotation = 0f; // è§’è‰²çš„å‚ç›´æ—‹è½‰
 
     public bool isLockCursor = true;
     [SerializeField] private bool isScaledByTime = true;
@@ -20,7 +20,7 @@ public class PlayerMove : MonoBehaviour
         playerRigibody = GetComponent<Rigidbody>();
 
         if(isLockCursor)
-            Cursor.lockState = CursorLockMode.Locked; // Âê©w·Æ¹«
+            Cursor.lockState = CursorLockMode.Locked; // é–å®šæ»‘é¼ 
     }
 
     private void FixedUpdate()
@@ -31,44 +31,44 @@ public class PlayerMove : MonoBehaviour
 
     private void ViewportFocus()
     {
-        // Àò¨ú·Æ¹«²¾°Êªº¿é¤J
+        // ç²å–æ»‘é¼ ç§»å‹•çš„è¼¸å…¥
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
-        // §ó·s««ª½±ÛÂà¡A­­¨î¤W¤U¨¤«×
+        // æ›´æ–°å‚ç›´æ—‹è½‰ï¼Œé™åˆ¶ä¸Šä¸‹è§’åº¦
         xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -70f, 70f); // ­­¨îµø¨¤¦b-70¨ì70«×¤§¶¡
+        xRotation = Mathf.Clamp(xRotation, -70f, 70f); // é™åˆ¶è¦–è§’åœ¨-70åˆ°70åº¦ä¹‹é–“
 
-        // §ó·sÄá¼v¾÷ªº±ÛÂà
+        // æ›´æ–°æ”å½±æ©Ÿçš„æ—‹è½‰
         Camera.main.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-        // §ó·s¨¤¦âªº±ÛÂà
+        // æ›´æ–°è§’è‰²çš„æ—‹è½‰
         transform.Rotate(Vector3.up * mouseX);
     }
 
     private void Movement()
     {
-        //¦¹³B½¢¦X¤F(¤U¼h»İ­n¤W¼h¸ê®Æ)¡A«áÄò¥i«ä¦Ò¬O§_±NplayerControl²¾¨ìScriptableObject¨Ó¸Ñ½¢¦X
+        //æ­¤è™•è€¦åˆäº†(ä¸‹å±¤éœ€è¦ä¸Šå±¤è³‡æ–™)ï¼Œå¾ŒçºŒå¯æ€è€ƒæ˜¯å¦å°‡playerControlç§»åˆ°ScriptableObjectä¾†è§£è€¦åˆ
         Vector2 inputVector = PlayerManager.Instance.playerControl.player.move.ReadValue<Vector2>();
 
-        // Àò¨úª±®aªº«e¤è©M¥k°¼¤è¦V
+        // ç²å–ç©å®¶çš„å‰æ–¹å’Œå³å´æ–¹å‘
         Vector3 forward = playerRigibody.transform.forward;
         Vector3 right = playerRigibody.transform.right;
 
-        // ®Ú¾Ú¿é¤J­pºâ²¾°Ê¤è¦V
+        // æ ¹æ“šè¼¸å…¥è¨ˆç®—ç§»å‹•æ–¹å‘
         Vector3 moveDirection = forward * inputVector.y + right * inputVector.x;
 
         if (PlayerManager.Instance.playerStatus == PlayerStatus.move && inputVector != Vector2.zero && Vector3.Distance(playerRigibody.velocity, Vector3.zero) < maxSpeed)
         {
             //playerRigibody.velocity = moveDirection.normalized * maxSpeed;
 
-            // ­pºâ²¾°Ê¤è¦V
+            // è¨ˆç®—ç§»å‹•æ–¹å‘
             Vector3 moveDir = (playerRigibody.transform.forward * inputVector.y + playerRigibody.transform.right * inputVector.x).normalized;
             Vector3 moveDistance = moveDir * maxSpeed;
 
-            // ®Ú¾Ú Time.timeScale ¬O§_ÁY©ñ¡A¿ï¾Ü¦X¾Aªº®É¶¡¶¡¹j
+            // æ ¹æ“š Time.timeScale æ˜¯å¦ç¸®æ”¾ï¼Œé¸æ“‡åˆé©çš„æ™‚é–“é–“éš”
             float deltaTime = isScaledByTime ? Time.deltaTime : Time.unscaledDeltaTime;
 
-            // ³o¼Ë¥i¥H¤â°Ê§ó·s¦ì¸m¡AÁ×§K¨ü Time.timeScale ¼vÅT
+            // é€™æ¨£å¯ä»¥æ‰‹å‹•æ›´æ–°ä½ç½®ï¼Œé¿å…å— Time.timeScale å½±éŸ¿
             playerRigibody.MovePosition(playerRigibody.position + moveDistance * deltaTime);
         }
         else if(PlayerManager.Instance.playerStatus == PlayerStatus.move && inputVector == Vector2.zero)
@@ -94,13 +94,13 @@ public class PlayerMove : MonoBehaviour
 
     private void OnEnable()
     {
-        // µù¥U¹ï  ¨Æ¥óªº­q¾\
+        // è¨»å†Šå°  äº‹ä»¶çš„è¨‚é–±
         EventManager.StartListening<bool>(NameOfEvent.ChangeMoveMode, ChangeMoveMode);
     }
 
     private void OnDisable()
     {
-        // ¨ú®øµù¥U¹ï  ¨Æ¥óªº­q¾\
+        // å–æ¶ˆè¨»å†Šå°  äº‹ä»¶çš„è¨‚é–±
         EventManager.StopListening<bool>(NameOfEvent.ChangeMoveMode, ChangeMoveMode);
     }
 
