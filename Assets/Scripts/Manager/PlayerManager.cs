@@ -1,16 +1,24 @@
+using System.Numerics;
 using Unity.VisualScripting;
 using UnityEngine;
-
 public enum PlayerStatus
 {
     move,
-    sprint
+    sprint,
+    jump
 }
 
 public class PlayerManager : MonoBehaviour
 {
     [SerializeField] int sprintFrame;
-    #region «Ø¥ß³æ¨Ò¼Ò¦¡
+
+    public float mouseSensitivity = 100f;
+
+    public float maxSpeed = 15;
+
+    public float xRotation = 0f;
+    public Transform playerTransform { get; private set; }
+    #region ï¿½Ø¥ß³ï¿½Ò¼Ò¦ï¿½
     //instance mode
     private static PlayerManager _instance;
     public static PlayerManager Instance
@@ -28,7 +36,7 @@ public class PlayerManager : MonoBehaviour
 
     #endregion
 
-    #region Rigidbody³]©w
+    #region Rigidbodyï¿½]ï¿½w
     private Rigidbody _rb = null;
     public Rigidbody rb
     {
@@ -48,7 +56,7 @@ public class PlayerManager : MonoBehaviour
     }
     #endregion
 
-    #region InputAction³]©w
+    #region InputActionï¿½]ï¿½w
     [SerializeField] PlayerControl _playerControl;
     public PlayerControl playerControl
     {
@@ -68,11 +76,11 @@ public class PlayerManager : MonoBehaviour
     }
     #endregion
 
-    #region ª¬ºA¾÷
+    #region ï¿½ï¿½ï¿½Aï¿½ï¿½
     public PlayerStatus playerStatus;
     #endregion
 
-    #region ªì©l¤Æ
+    #region ï¿½ï¿½lï¿½ï¿½
     private void Awake()
     {
         Initialize();
@@ -95,11 +103,22 @@ public class PlayerManager : MonoBehaviour
         _playerControl.Enable();
         _rb = Instance.GetComponent<Rigidbody>();
         playerStatus = PlayerStatus.move;
+        playerTransform = this.transform;
+
+        _playerControl.player.jump.performed += ctx => Jump();
     }
     #endregion
 
-    public void Sprint(Vector3 forward, float sprintDistance)
+    public void Sprint(UnityEngine.Vector3 forward, float sprintDistance)
     {
         StartCoroutine(GetComponent<PlayerMove>().Sprint(forward, sprintDistance, sprintFrame));
+    }
+
+    public void Jump()
+    {
+        
+        //è·³å¤šå¤§åŠ›
+        float jumpforce = 200f;
+        GetComponent<PlayerMove>().Jump(jumpforce);
     }
 }
