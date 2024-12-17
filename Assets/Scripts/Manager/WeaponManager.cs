@@ -44,7 +44,7 @@ public class WeaponManager : MonoBehaviour
         //UseFlyingSickle();
         inputActions = PlayerManager.Instance.playerControl;
 
-        UseWeapon(FlyingSickle.Instance);
+        UseWeapon(Revolver.Instance);
     }
     #endregion
 
