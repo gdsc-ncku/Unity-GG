@@ -5,16 +5,21 @@ using UnityEngine.InputSystem;
 
 public class PlayerMove : MonoBehaviour
 {
-    public float speed = 20f;
-    public float maxSpeed = 15;
+    //public float speed = 20f;
+    private float mouseSensitivity;
+    private float maxSpeed;
     private Rigidbody playerRigibody;
-    public float mouseSensitivity = 100f; // �ƹ��F�ӫ�
-    private float xRotation = 0f; // ���⪺��������
+    // �ƹ��F�ӫ�
+    private float xRotation; // ���⪺��������
 
     private void Awake()
     {
-        playerRigibody = GetComponent<Rigidbody>();
+        playerRigibody = PlayerManager.Instance.rb;
         Cursor.lockState = CursorLockMode.Locked; // ��w�ƹ�
+
+        maxSpeed = PlayerManager.Instance.maxSpeed;
+        mouseSensitivity = PlayerManager.Instance.mouseSensitivity; 
+        xRotation = PlayerManager.Instance.xRotation;
     }
 
     private void FixedUpdate()
@@ -74,5 +79,19 @@ public class PlayerMove : MonoBehaviour
         PlayerManager.Instance.rb.velocity = Vector3.zero;
         PlayerManager.Instance.playerStatus = PlayerStatus.move;
         yield break;
+    }
+
+    public void Jump(float jumpforce)
+    {
+        if(PlayerManager.Instance.playerStatus == PlayerStatus.move)
+        {
+            Debug.Log("Jump!");
+            PlayerManager.Instance.playerStatus = PlayerStatus.jump;  
+            PlayerManager.Instance.rb.AddForce(Vector3.up * jumpforce, ForceMode.Impulse);
+        }
+        else
+        {
+            Debug.Log("player is jumping now");
+        }
     }
 }

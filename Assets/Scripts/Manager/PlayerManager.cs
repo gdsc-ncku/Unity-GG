@@ -1,14 +1,23 @@
+using System.Numerics;
 using Unity.VisualScripting;
 using UnityEngine;
 public enum PlayerStatus
 {
     move,
-    sprint
+    sprint,
+    jump
 }
 
 public class PlayerManager : MonoBehaviour
 {
     [SerializeField] int sprintFrame;
+
+    public float mouseSensitivity = 100f;
+
+    public float maxSpeed = 15;
+
+    public float xRotation = 0f;
+    public Transform playerTransform { get; private set; }
     #region �إ߳�ҼҦ�
     //instance mode
     private static PlayerManager _instance;
@@ -94,11 +103,22 @@ public class PlayerManager : MonoBehaviour
         _playerControl.Enable();
         _rb = Instance.GetComponent<Rigidbody>();
         playerStatus = PlayerStatus.move;
+        playerTransform = this.transform;
+
+        _playerControl.player.jump.performed += ctx => Jump();
     }
     #endregion
 
-    public void Sprint(Vector3 forward, float sprintDistance)
+    public void Sprint(UnityEngine.Vector3 forward, float sprintDistance)
     {
         StartCoroutine(GetComponent<PlayerMove>().Sprint(forward, sprintDistance, sprintFrame));
+    }
+
+    public void Jump()
+    {
+        
+        //跳多大力
+        float jumpforce = 200f;
+        GetComponent<PlayerMove>().Jump(jumpforce);
     }
 }
