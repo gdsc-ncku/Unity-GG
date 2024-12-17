@@ -2,19 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Timeline;
 
 public class PlayerMove : MonoBehaviour
 {
-    public float speed = 20f;
+    //public float speed = 20f;
     public float maxSpeed = 15;
     private Rigidbody playerRigibody;
     public float mouseSensitivity = 100f; // 滑鼠靈敏度
     private float xRotation = 0f; // 角色的垂直旋轉
 
+    public bool isLockCursor = true;
+    [SerializeField] private bool isScaledByTime = true;
+
     private void Awake()
     {
         playerRigibody = GetComponent<Rigidbody>();
-        Cursor.lockState = CursorLockMode.Locked; // 鎖定滑鼠
+
+        if(isLockCursor)
+            Cursor.lockState = CursorLockMode.Locked; // 鎖定滑鼠
     }
 
     private void FixedUpdate()
@@ -53,7 +59,17 @@ public class PlayerMove : MonoBehaviour
 
         if (PlayerManager.Instance.playerStatus == PlayerStatus.move && inputVector != Vector2.zero && Vector3.Distance(playerRigibody.velocity, Vector3.zero) < maxSpeed)
         {
-            playerRigibody.velocity = moveDirection.normalized * maxSpeed;
+            //playerRigibody.velocity = moveDirection.normalized * maxSpeed;
+
+            // 計算移動方向
+            Vector3 moveDir = (playerRigibody.transform.forward * inputVector.y + playerRigibody.transform.right * inputVector.x).normalized;
+            Vector3 moveDistance = moveDir * maxSpeed;
+
+            // 根據 Time.timeScale 是否縮放，選擇合適的時間間隔
+            float deltaTime = isScaledByTime ? Time.deltaTime : Time.unscaledDeltaTime;
+
+            // 這樣可以手動更新位置，避免受 Time.timeScale 影響
+            playerRigibody.MovePosition(playerRigibody.position + moveDistance * deltaTime);
         }
         else if(PlayerManager.Instance.playerStatus == PlayerStatus.move && inputVector == Vector2.zero)
         {
@@ -74,5 +90,23 @@ public class PlayerMove : MonoBehaviour
         PlayerManager.Instance.rb.velocity = Vector3.zero;
         PlayerManager.Instance.playerStatus = PlayerStatus.move;
         yield break;
+    }
+
+    private void OnEnable()
+    {
+        // 註冊對  事件的訂閱
+        EventManager.StartListening<bool>(NameOfEvent.ChangeMoveMode, ChangeMoveMode);
+    }
+
+    private void OnDisable()
+    {
+        // 取消註冊對  事件的訂閱
+        EventManager.StopListening<bool>(NameOfEvent.ChangeMoveMode, ChangeMoveMode);
+    }
+
+    private void ChangeMoveMode(bool _isScaledByTime)
+    {
+        Debug.Log($"PlayMove: Move mode is changed (is scaled by time: {_isScaledByTime})");
+        isScaledByTime = _isScaledByTime;
     }
 }

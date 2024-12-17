@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
+using UnityEngine.Timeline;
 using UnityEngine.UI;
 
 /// <summary>
@@ -212,7 +213,6 @@ public class FlyingSickle : Weapon
         {
             // 使用 transform.Rotate 讓飛鐮物件每秒旋轉一定角度
             flyingSickle.transform.Rotate(Vector3.left * rotationSpeed * Time.deltaTime);
-            Debug.Log("rotate");
         }
     }
 
@@ -309,7 +309,7 @@ public class FlyingSickle : Weapon
         }
         else
         {
-            Debug.Log("illegal control");
+            Debug.Log("FlyingSickle: Illegal control");
             return;
         }
     }
@@ -323,11 +323,13 @@ public class FlyingSickle : Weapon
     {
         if(isDown == false)
         {
-            Time.timeScale = bulletTime;
+            EventManager.TriggerEvent<float>(NameOfEvent.TimeControl, bulletTime);
+            //Time.timeScale = bulletTime;
         }
         else
         {
-            Time.timeScale = 1f;
+            EventManager.TriggerEvent(NameOfEvent.TimeResume);
+            //Time.timeScale = 1f;
         }
     }
 
@@ -408,7 +410,7 @@ public class FlyingSickle : Weapon
     {
         if (collision.gameObject.tag == "Enviroument" && isLastFlyingBack == false && status != FlyingStatus.hold)
         {
-            Debug.Log("touch object");
+            Debug.Log("FlyingSickle: touch object");
 
             //碰撞任意物體後掉落
             EnterDrop();
