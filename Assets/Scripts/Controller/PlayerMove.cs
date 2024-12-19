@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Timeline;
@@ -13,7 +14,14 @@ public class PlayerMove : MonoBehaviour
     private float xRotation = 0f; // 角色的垂直旋轉
 
     public bool isLockCursor = true;
+
+    [Header("與時間放慢有關的移動設置")]
     [SerializeField] private bool isScaledByTime = true;
+    [SerializeField] private Vector3 currentVelocity = Vector3.zero;
+    public float friction = 0.9f; // 摩擦力係數（值越小減速越慢）
+
+    //用於事件訂閱
+    private CompositeDisposable disposables = new CompositeDisposable();
 
     private void Awake()
     {
@@ -61,19 +69,41 @@ public class PlayerMove : MonoBehaviour
         {
             //playerRigibody.velocity = moveDirection.normalized * maxSpeed;
 
-            // 計算移動方向
+            // 計算輸入的移動方向
             Vector3 moveDir = (playerRigibody.transform.forward * inputVector.y + playerRigibody.transform.right * inputVector.x).normalized;
-            Vector3 moveDistance = moveDir * maxSpeed;
 
-            // 根據 Time.timeScale 是否縮放，選擇合適的時間間隔
-            float deltaTime = isScaledByTime ? Time.deltaTime : Time.unscaledDeltaTime;
+            // 根據輸入更新目標速度
+            Vector3 targetVelocity = moveDir * maxSpeed;
 
-            // 這樣可以手動更新位置，避免受 Time.timeScale 影響
-            playerRigibody.MovePosition(playerRigibody.position + moveDistance * deltaTime);
+            // 使用 Lerp 模擬摩擦力，逐漸將速度拉近目標速度
+            currentVelocity = Vector3.Lerp(currentVelocity, targetVelocity, friction * (isScaledByTime ? Time.deltaTime : Time.unscaledDeltaTime));
+
+            // 計算實際移動距離
+            Vector3 moveDistance = currentVelocity * (isScaledByTime ? Time.deltaTime : Time.unscaledDeltaTime);
+
+            // 更新剛體的位置
+            playerRigibody.MovePosition(playerRigibody.position + moveDistance);
         }
         else if(PlayerManager.Instance.playerStatus == PlayerStatus.move && inputVector == Vector2.zero)
         {
-            playerRigibody.velocity = new Vector3(0, playerRigibody.velocity.y, 0);
+            //playerRigibody.velocity = new Vector3(0, playerRigibody.velocity.y, 0);
+
+            //手動模擬摩擦力減速效果
+            if(Vector3.Distance(currentVelocity, Vector3.zero) > 1f)
+            {
+                // 使用 Lerp 模擬摩擦力，逐漸將速度拉近目標速度
+                currentVelocity = Vector3.Lerp(currentVelocity, Vector3.zero, friction);
+
+                // 計算實際移動距離
+                Vector3 moveDistance = currentVelocity * (isScaledByTime ? Time.deltaTime : Time.unscaledDeltaTime);
+
+                // 更新剛體的位置
+                playerRigibody.MovePosition(playerRigibody.position + moveDistance);
+            }
+            else
+            {
+                currentVelocity = Vector3.zero;
+            }
         }
     }
 
@@ -95,13 +125,16 @@ public class PlayerMove : MonoBehaviour
     private void OnEnable()
     {
         // 註冊對  事件的訂閱
-        EventManager.StartListening<bool>(NameOfEvent.ChangeMoveMode, ChangeMoveMode);
+        disposables.Add(EventManager.StartListening<bool>(
+            NameOfEvent.ChangeMoveMode,
+            _isScaledByTime => ChangeMoveMode(_isScaledByTime)
+        ));
     }
 
     private void OnDisable()
     {
         // 取消註冊對  事件的訂閱
-        EventManager.StopListening<bool>(NameOfEvent.ChangeMoveMode, ChangeMoveMode);
+        disposables.Clear();
     }
 
     private void ChangeMoveMode(bool _isScaledByTime)
