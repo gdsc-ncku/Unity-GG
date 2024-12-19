@@ -44,7 +44,7 @@ public class WeaponManager : MonoBehaviour
         //UseFlyingSickle();
         inputActions = PlayerManager.Instance.playerControl;
 
-        UseWeapon(FlyingSickle.Instance);
+        UseWeapon(Shotgun.Instance);
     }
     #endregion
 
@@ -61,6 +61,8 @@ public class WeaponManager : MonoBehaviour
         inputActions.player.leftclick.canceled += weapon.LeftClickCanceled;
 
         inputActions.player.rightclick.performed += weapon.RightClickPerformed;
+
+        inputActions.player.rclick.performed += weapon.RClickPerformed;
     }
 
     #endregion

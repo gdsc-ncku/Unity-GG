@@ -8,10 +8,10 @@ using UnityEngine.Timeline;
 public class PlayerMove : MonoBehaviour
 {
     //public float speed = 20f;
-    public float maxSpeed = 15;
+    private float mouseSensitivity;
+    private float maxSpeed;
     private Rigidbody playerRigibody;
-    public float mouseSensitivity = 100f; // 滑鼠靈敏度
-    private float xRotation = 0f; // 角色的垂直旋轉
+    private float xRotation; // // 角色的垂直旋轉
 
     public bool isLockCursor = true;
 
@@ -25,7 +25,12 @@ public class PlayerMove : MonoBehaviour
 
     private void Awake()
     {
-        playerRigibody = GetComponent<Rigidbody>();
+        playerRigibody = PlayerManager.Instance.rb;
+        Cursor.lockState = CursorLockMode.Locked; // ��w�ƹ�
+
+        maxSpeed = PlayerManager.Instance.maxSpeed;
+        mouseSensitivity = PlayerManager.Instance.mouseSensitivity; 
+        xRotation = PlayerManager.Instance.xRotation;
 
         if(isLockCursor)
             Cursor.lockState = CursorLockMode.Locked; // 鎖定滑鼠
@@ -141,5 +146,19 @@ public class PlayerMove : MonoBehaviour
     {
         Debug.Log($"PlayMove: Move mode is changed (is scaled by time: {_isScaledByTime})");
         isScaledByTime = _isScaledByTime;
+    }
+
+    public void Jump(float jumpforce)
+    {
+        if(PlayerManager.Instance.playerStatus == PlayerStatus.move)
+        {
+            Debug.Log("Jump!");
+            PlayerManager.Instance.playerStatus = PlayerStatus.jump;  
+            PlayerManager.Instance.rb.AddForce(Vector3.up * jumpforce, ForceMode.Impulse);
+        }
+        else
+        {
+            Debug.Log("player is jumping now");
+        }
     }
 }
