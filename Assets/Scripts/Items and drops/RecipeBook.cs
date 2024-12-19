@@ -1,9 +1,9 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// ¦X¦¨¹ÏªºÁ`©M ¤@¥»¦X¦¨®Ñ
+/// åˆæˆåœ–çš„ç¸½å’Œ ä¸€æœ¬åˆæˆæ›¸
 /// </summary>
 [CreateAssetMenu(fileName = "NewRecipeBook", menuName = "Crafting/RecipeBook")]
 [System.Serializable]
