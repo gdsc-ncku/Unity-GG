@@ -20,6 +20,17 @@ public enum NameOfEvent
 /// <summary>
 /// 事件管理器
 /// 用於註冊、訂閱事件
+/// 
+/// 需要訂閱的人
+/// 選擇自己的參數 呼叫StartListening的多型進行訂閱
+/// 要記得保留該訂閱在呼叫者本地的dispose中
+/// 並在呼叫者釋放的時候 把訂閱給釋放掉
+/// 
+/// 訂閱的方法就是一般UniRx的方法
+/// 詳情可以參考TimeManager
+/// 
+/// 目前支援0, 1, 2個參數
+/// 有需要請在issue zhwa 我會寫更多支援
 /// </summary>
 public class EventManager
 {
