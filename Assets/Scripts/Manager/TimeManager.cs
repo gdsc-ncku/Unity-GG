@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 
 /// <summary>
@@ -7,6 +8,8 @@ using UnityEngine;
 /// </summary>
 public class TimeManager : MonoBehaviour
 {
+    private CompositeDisposable disposables = new CompositeDisposable();
+
     bool isTimeControled = false;   //如果時間已經被某個東西操控 則後來者無法操控
 
     /// <summary>
@@ -43,14 +46,19 @@ public class TimeManager : MonoBehaviour
     private void OnEnable()
     {
         // 註冊對  事件的訂閱
-        EventManager.StartListening<float>(NameOfEvent.TimeControl, TimeControl);
-        EventManager.StartListening(NameOfEvent.TimeResume, TimeResume);
+        disposables.Add(EventManager.StartListening<float>(
+            NameOfEvent.TimeControl,
+            slowdownFactor => TimeControl(slowdownFactor)
+        ));
+
+        disposables.Add(EventManager.StartListening(
+            NameOfEvent.TimeResume,
+            TimeResume
+        ));
     }
     
     private void OnDisable()
     {
-        // 取消註冊對  事件的訂閱
-        EventManager.StopListening<float>(NameOfEvent.TimeControl, TimeControl);
-        EventManager.StopListening(NameOfEvent.TimeResume, TimeResume);
+        disposables.Clear(); // 自動取消所有事件訂閱
     }
 }
