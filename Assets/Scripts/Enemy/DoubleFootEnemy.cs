@@ -1,10 +1,10 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
 /// <summary>
-/// Âù¸}©Çª«ªºª¬ºA
+/// é›™è…³æ€ªç‰©çš„ç‹€æ…‹
 /// </summary>
 public enum DoubleFootEnemyStatus
 {
@@ -18,16 +18,16 @@ public class DoubleFootEnemy : MonoBehaviour
 
     public DoubleFootEnemyStatus status;
 
-    [Header("¨µÅŞ¬ÛÃö")]
+    [Header("å·¡é‚ç›¸é—œ")]
     public GameObject path;
     private Transform[] pathPoint;
     [SerializeField] private bool isArrived = false;
     private int nowTrackingPoint = 0;
     private float distanceError = 1f;
 
-    [Header("µø³¥»P¬¼Ây")]
+    [Header("è¦–é‡èˆ‡ç‹©çµ")]
     public EnemyView enemyView;
-    private GameObject[] scanObj = new GameObject[1]; //¤j¤p¥u¦³1 ¦]¬°ª±®a¥u·|¦³¤@­Ó
+    private GameObject[] scanObj = new GameObject[1]; //å¤§å°åªæœ‰1 å› ç‚ºç©å®¶åªæœƒæœ‰ä¸€å€‹
     private float locationTimer = 0;
     public float locationCD = 0.5f;
 
@@ -38,7 +38,7 @@ public class DoubleFootEnemy : MonoBehaviour
 
     public void Init()
     {
-        //¸ü¤J¨µÅŞ¸ô®|
+        //è¼‰å…¥å·¡é‚è·¯å¾‘
         int pathPointNum = path.transform.childCount;
         pathPoint = new Transform[pathPointNum];
         for(int i = 0; i < pathPointNum; i++)
@@ -46,7 +46,7 @@ public class DoubleFootEnemy : MonoBehaviour
             pathPoint[i] = path.transform.GetChild(i);
         }
 
-        //ªì©l¤Æª¬ºA
+        //åˆå§‹åŒ–ç‹€æ…‹
         status = DoubleFootEnemyStatus.Patroling;
         isArrived = true;
     }
@@ -58,7 +58,7 @@ public class DoubleFootEnemy : MonoBehaviour
         {
             if(enemyView.Filter(scanObj, "Player") > 0)
             {
-                //¬¼Ây¼Ò¦¡
+                //ç‹©çµæ¨¡å¼
                 status = DoubleFootEnemyStatus.Hunting;
                 isArrived = true;
                 locationTimer = locationCD;
@@ -69,7 +69,7 @@ public class DoubleFootEnemy : MonoBehaviour
         {
             if (enemyView.Filter(scanObj, "Player") == 0)
             {
-                //¨µÅŞ¼Ò¦¡
+                //å·¡é‚æ¨¡å¼
                 status = DoubleFootEnemyStatus.Patroling;
                 isArrived = true;
             }
@@ -95,7 +95,7 @@ public class DoubleFootEnemy : MonoBehaviour
     {
         if(isArrived == true)
         {
-            //«e¶i¤U¤@­Ó¨µÅŞÂI
+            //å‰é€²ä¸‹ä¸€å€‹å·¡é‚é»
             int nextIndex = (nowTrackingPoint + 1) % pathPoint.Length;
             agent.SetDestination(pathPoint[nextIndex].position);
             nowTrackingPoint = nextIndex;
