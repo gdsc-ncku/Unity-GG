@@ -1,20 +1,39 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Timeline;
 
 public class PlayerMove : MonoBehaviour
 {
-    public float speed = 20f;
-    public float maxSpeed = 15;
+    //public float speed = 20f;
+    private float mouseSensitivity;
+    private float maxSpeed;
     private Rigidbody playerRigibody;
-    public float mouseSensitivity = 100f; // ·Æ¹«ÆF±Ó«×
-    private float xRotation = 0f; // ¨¤¦âªº««ª½±ÛÂà
+    private float xRotation; // // è§’è‰²çš„å‚ç›´æ—‹è½‰
+
+    public bool isLockCursor = true;
+
+    [Header("èˆ‡æ™‚é–“æ”¾æ…¢æœ‰é—œçš„ç§»å‹•è¨­ç½®")]
+    [SerializeField] private bool isScaledByTime = true;
+    [SerializeField] private Vector3 currentVelocity = Vector3.zero;
+    public float friction = 0.9f; // æ‘©æ“¦åŠ›ä¿‚æ•¸ï¼ˆå€¼è¶Šå°æ¸›é€Ÿè¶Šæ…¢ï¼‰
+
+    //ç”¨æ–¼äº‹ä»¶è¨‚é–±
+    private CompositeDisposable disposables = new CompositeDisposable();
 
     private void Awake()
     {
-        playerRigibody = GetComponent<Rigidbody>();
-        Cursor.lockState = CursorLockMode.Locked; // Âê©w·Æ¹«
+        playerRigibody = PlayerManager.Instance.rb;
+        Cursor.lockState = CursorLockMode.Locked; // ï¿½ï¿½wï¿½Æ¹ï¿½
+
+        maxSpeed = PlayerManager.Instance.maxSpeed;
+        mouseSensitivity = PlayerManager.Instance.mouseSensitivity; 
+        xRotation = PlayerManager.Instance.xRotation;
+
+        if(isLockCursor)
+            Cursor.lockState = CursorLockMode.Locked; // é–å®šæ»‘é¼ 
     }
 
     private void FixedUpdate()
@@ -25,39 +44,68 @@ public class PlayerMove : MonoBehaviour
 
     private void ViewportFocus()
     {
-        // Àò¨ú·Æ¹«²¾°Êªº¿é¤J
+        // ç²å–æ»‘é¼ ç§»å‹•çš„è¼¸å…¥
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
-        // §ó·s««ª½±ÛÂà¡A­­¨î¤W¤U¨¤«×
+        // æ›´æ–°å‚ç›´æ—‹è½‰ï¼Œé™åˆ¶ä¸Šä¸‹è§’åº¦
         xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -70f, 70f); // ­­¨îµø¨¤¦b-70¨ì70«×¤§¶¡
+        xRotation = Mathf.Clamp(xRotation, -70f, 70f); // é™åˆ¶è¦–è§’åœ¨-70åˆ°70åº¦ä¹‹é–“
 
-        // §ó·sÄá¼v¾÷ªº±ÛÂà
+        // æ›´æ–°æ”å½±æ©Ÿçš„æ—‹è½‰
         Camera.main.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-        // §ó·s¨¤¦âªº±ÛÂà
+        // æ›´æ–°è§’è‰²çš„æ—‹è½‰
         transform.Rotate(Vector3.up * mouseX);
     }
 
     private void Movement()
     {
-        //¦¹³B½¢¦X¤F(¤U¼h»İ­n¤W¼h¸ê®Æ)¡A«áÄò¥i«ä¦Ò¬O§_±NplayerControl²¾¨ìScriptableObject¨Ó¸Ñ½¢¦X
+        //æ­¤è™•è€¦åˆäº†(ä¸‹å±¤éœ€è¦ä¸Šå±¤è³‡æ–™)ï¼Œå¾ŒçºŒå¯æ€è€ƒæ˜¯å¦å°‡playerControlç§»åˆ°ScriptableObjectä¾†è§£è€¦åˆ
         Vector2 inputVector = PlayerManager.Instance.playerControl.player.move.ReadValue<Vector2>();
 
-        // Àò¨úª±®aªº«e¤è©M¥k°¼¤è¦V
+        // ç²å–ç©å®¶çš„å‰æ–¹å’Œå³å´æ–¹å‘
         Vector3 forward = playerRigibody.transform.forward;
         Vector3 right = playerRigibody.transform.right;
 
-        // ®Ú¾Ú¿é¤J­pºâ²¾°Ê¤è¦V
-        Vector3 moveDirection = forward * inputVector.y + right * inputVector.x;
-
         if (PlayerManager.Instance.playerStatus == PlayerStatus.move && inputVector != Vector2.zero && Vector3.Distance(playerRigibody.velocity, Vector3.zero) < maxSpeed)
         {
-            playerRigibody.velocity = moveDirection.normalized * maxSpeed;
+            //playerRigibody.velocity = moveDirection.normalized * maxSpeed;
+
+            // è¨ˆç®—è¼¸å…¥çš„ç§»å‹•æ–¹å‘
+            Vector3 moveDir = (playerRigibody.transform.forward * inputVector.y + playerRigibody.transform.right * inputVector.x).normalized;
+
+            // æ ¹æ“šè¼¸å…¥æ›´æ–°ç›®æ¨™é€Ÿåº¦
+            Vector3 targetVelocity = moveDir * maxSpeed;
+
+            // ä½¿ç”¨ Lerp æ¨¡æ“¬æ‘©æ“¦åŠ›ï¼Œé€æ¼¸å°‡é€Ÿåº¦æ‹‰è¿‘ç›®æ¨™é€Ÿåº¦
+            currentVelocity = Vector3.Lerp(currentVelocity, targetVelocity, friction * (isScaledByTime ? Time.deltaTime : Time.unscaledDeltaTime));
+
+            // è¨ˆç®—å¯¦éš›ç§»å‹•è·é›¢
+            Vector3 moveDistance = currentVelocity * (isScaledByTime ? Time.deltaTime : Time.unscaledDeltaTime);
+
+            // æ›´æ–°å‰›é«”çš„ä½ç½®
+            playerRigibody.MovePosition(playerRigibody.position + moveDistance);
         }
         else if(PlayerManager.Instance.playerStatus == PlayerStatus.move && inputVector == Vector2.zero)
         {
-            playerRigibody.velocity = new Vector3(0, playerRigibody.velocity.y, 0);
+            //playerRigibody.velocity = new Vector3(0, playerRigibody.velocity.y, 0);
+
+            //æ‰‹å‹•æ¨¡æ“¬æ‘©æ“¦åŠ›æ¸›é€Ÿæ•ˆæœ
+            if(Vector3.Distance(currentVelocity, Vector3.zero) > 1f)
+            {
+                // ä½¿ç”¨ Lerp æ¨¡æ“¬æ‘©æ“¦åŠ›ï¼Œé€æ¼¸å°‡é€Ÿåº¦æ‹‰è¿‘ç›®æ¨™é€Ÿåº¦
+                currentVelocity = Vector3.Lerp(currentVelocity, Vector3.zero, friction);
+
+                // è¨ˆç®—å¯¦éš›ç§»å‹•è·é›¢
+                Vector3 moveDistance = currentVelocity * (isScaledByTime ? Time.deltaTime : Time.unscaledDeltaTime);
+
+                // æ›´æ–°å‰›é«”çš„ä½ç½®
+                playerRigibody.MovePosition(playerRigibody.position + moveDistance);
+            }
+            else
+            {
+                currentVelocity = Vector3.zero;
+            }
         }
     }
 
@@ -74,5 +122,40 @@ public class PlayerMove : MonoBehaviour
         PlayerManager.Instance.rb.velocity = Vector3.zero;
         PlayerManager.Instance.playerStatus = PlayerStatus.move;
         yield break;
+    }
+
+    private void OnEnable()
+    {
+        // è¨»å†Šå°  äº‹ä»¶çš„è¨‚é–±
+        disposables.Add(EventManager.StartListening<bool>(
+            NameOfEvent.ChangeMoveMode,
+            _isScaledByTime => ChangeMoveMode(_isScaledByTime)
+        ));
+    }
+
+    private void OnDisable()
+    {
+        // å–æ¶ˆè¨»å†Šå°  äº‹ä»¶çš„è¨‚é–±
+        disposables.Clear();
+    }
+
+    private void ChangeMoveMode(bool _isScaledByTime)
+    {
+        Debug.Log($"PlayMove: Move mode is changed (is scaled by time: {_isScaledByTime})");
+        isScaledByTime = _isScaledByTime;
+    }
+
+    public void Jump(float jumpforce)
+    {
+        if(PlayerManager.Instance.playerStatus == PlayerStatus.move)
+        {
+            Debug.Log("Jump!");
+            PlayerManager.Instance.playerStatus = PlayerStatus.jump;  
+            PlayerManager.Instance.rb.AddForce(Vector3.up * jumpforce, ForceMode.Impulse);
+        }
+        else
+        {
+            Debug.Log("player is jumping now");
+        }
     }
 }

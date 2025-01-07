@@ -53,6 +53,15 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""r click"",
+                    ""type"": ""Button"",
+                    ""id"": ""fbe3b0ed-196c-4008-ab6d-04623b55aaf2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -132,6 +141,17 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
                     ""action"": ""right click"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""357561ab-a3f9-433d-9139-6a3dcafc3676"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""r click"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -143,6 +163,7 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
         m_player_move = m_player.FindAction("move", throwIfNotFound: true);
         m_player_leftclick = m_player.FindAction("left click", throwIfNotFound: true);
         m_player_rightclick = m_player.FindAction("right click", throwIfNotFound: true);
+        m_player_rclick = m_player.FindAction("r click", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -207,6 +228,7 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
     private readonly InputAction m_player_move;
     private readonly InputAction m_player_leftclick;
     private readonly InputAction m_player_rightclick;
+    private readonly InputAction m_player_rclick;
     public struct PlayerActions
     {
         private @PlayerControl m_Wrapper;
@@ -214,6 +236,7 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
         public InputAction @move => m_Wrapper.m_player_move;
         public InputAction @leftclick => m_Wrapper.m_player_leftclick;
         public InputAction @rightclick => m_Wrapper.m_player_rightclick;
+        public InputAction @rclick => m_Wrapper.m_player_rclick;
         public InputActionMap Get() { return m_Wrapper.m_player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -232,6 +255,9 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
             @rightclick.started += instance.OnRightclick;
             @rightclick.performed += instance.OnRightclick;
             @rightclick.canceled += instance.OnRightclick;
+            @rclick.started += instance.OnRclick;
+            @rclick.performed += instance.OnRclick;
+            @rclick.canceled += instance.OnRclick;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -245,6 +271,9 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
             @rightclick.started -= instance.OnRightclick;
             @rightclick.performed -= instance.OnRightclick;
             @rightclick.canceled -= instance.OnRightclick;
+            @rclick.started -= instance.OnRclick;
+            @rclick.performed -= instance.OnRclick;
+            @rclick.canceled -= instance.OnRclick;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -267,5 +296,6 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnLeftclick(InputAction.CallbackContext context);
         void OnRightclick(InputAction.CallbackContext context);
+        void OnRclick(InputAction.CallbackContext context);
     }
 }
