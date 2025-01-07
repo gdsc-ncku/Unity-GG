@@ -217,52 +217,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!1 &1271503242
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1271503243}
-  - component: {fileID: 1271503244}
-  m_Layer: 0
-  m_Name: Manager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1271503243
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1271503242}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1271503244
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1271503242}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7cffcbfc0a8844340b578a152f18f300, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  keepPosition: {fileID: 0}
-  playerCamera: {fileID: 7662064879569395181}
 --- !u!1001 &2146595753
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -430,6 +384,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sprintFrame: 30
+  mouseSensitivity: 100
+  maxSpeed: 15
+  xRotation: 0
   playerStatus: 0
 --- !u!81 &3564345551616986183
 AudioListener:
@@ -439,26 +396,6 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4147694613685030526}
   m_Enabled: 1
---- !u!114 &3846764484663141188
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3980375746510643888}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c6a91a6bdbd950048afd908ff38a5490, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  specialAttackDistance: 3
-  specialAttackDetectSphere: 0.1
-  detectDistance: 1
-  sprintDistance: 3
-  knockUpHeight: 1
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 8
 --- !u!1 &3980375746510643888
 GameObject:
   m_ObjectHideFlags: 0
@@ -473,7 +410,6 @@ GameObject:
   - component: {fileID: 4752495812863497391}
   - component: {fileID: 8417050263342491652}
   - component: {fileID: 2353373683617476285}
-  - component: {fileID: 3846764484663141188}
   - component: {fileID: 3194351858001252456}
   m_Layer: 0
   m_Name: Player
@@ -511,10 +447,6 @@ PrefabInstance:
     - target: {fileID: 3703671126007883408, guid: a484c9ea36cebdd4bbf0f5ff3ae8093d, type: 3}
       propertyPath: m_Name
       value: Revolver
-      objectReference: {fileID: 0}
-    - target: {fileID: 3817829081660059581, guid: a484c9ea36cebdd4bbf0f5ff3ae8093d, type: 3}
-      propertyPath: m_Enabled
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3865309361717987404, guid: a484c9ea36cebdd4bbf0f5ff3ae8093d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -578,9 +510,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af2c6c2f29cbeae43999f09170ec5bb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 20
-  maxSpeed: 5
-  mouseSensitivity: 100
+  isLockCursor: 1
+  isScaledByTime: 1
+  currentVelocity: {x: 0, y: 0, z: 0}
+  friction: 0.9
 --- !u!20 &7662064879569395181
 Camera:
   m_ObjectHideFlags: 0
@@ -671,7 +604,6 @@ Rigidbody:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 1271503243}
   - {fileID: 705507995}
   - {fileID: 1802602498968832146}
   - {fileID: 2146595753}

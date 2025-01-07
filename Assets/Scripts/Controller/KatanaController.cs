@@ -14,13 +14,13 @@ public class KatanaController : Weapon
     [SerializeField] LayerMask enemyLayer;
     private HashSet<GameObject> hitEnemy = new HashSet<GameObject>();
 
-    public override void RightClickPerformed(InputAction.CallbackContext obj)
+    protected override void RightClickPerformed(InputAction.CallbackContext obj)
     {
         Vector3 origin = Camera.main.transform.position, forward = Camera.main.transform.forward;
         if (Physics.Raycast(origin, forward, out RaycastHit hitInfo, specialAttackDistance, enemyLayer))
         {
             hitEnemy.Add(hitInfo.collider.gameObject);
-            //Åýforward¥²©w¬O¥­¦æ½u
+            //ï¿½ï¿½forwardï¿½ï¿½ï¿½wï¿½Oï¿½ï¿½ï¿½ï¿½u
             forward = new Vector3(forward.x, 0, forward.z);
             Vector3 position = hitInfo.point + forward * detectDistance;
             StartCoroutine(Teleport(position, forward));
@@ -32,8 +32,8 @@ public class KatanaController : Weapon
         }
     }
 
-    //¨Ï¥Îcoroutine¨Ó°õ¦æªZ¤h¤M¥kÁäÅÞ¿è
-    //¦]¬°­n³sÄò°»´ú¡A©Ò¥H¥Î¦¹¤è¦¡Á×§K¥d¹y
+    //ï¿½Ï¥ï¿½coroutineï¿½Ó°ï¿½ï¿½ï¿½Zï¿½hï¿½Mï¿½kï¿½ï¿½ï¿½Þ¿ï¿½
+    //ï¿½]ï¿½ï¿½ï¿½nï¿½sï¿½ò°»´ï¿½ï¿½Aï¿½Ò¥Hï¿½Î¦ï¿½ï¿½è¦¡ï¿½×§Kï¿½dï¿½y
     private IEnumerator Teleport(Vector3 position, Vector3 forward)
     {
         Collider[] hitColliders = Physics.OverlapSphere(position, specialAttackDetectSphere, enemyLayer);
@@ -55,9 +55,9 @@ public class KatanaController : Weapon
         foreach (GameObject @object in hitEnemy)
         {
             Rigidbody @rb = @object.GetComponent<Rigidbody>();
-            // ­pºâÀ»­¸°ª«×©Ò»Ýªºªì©l³t«×
+            // ï¿½pï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×©Ò»Ýªï¿½ï¿½ï¿½lï¿½tï¿½ï¿½
             float v0 = Mathf.Sqrt((float)(2 * 9.81 * knockUpHeight));
-            // ¨Ï¥Î AddForce ±N³t«×Âà´«¬°¤@­Ó¦V¤Wªº¤O
+            // ï¿½Ï¥ï¿½ AddForce ï¿½Nï¿½tï¿½ï¿½ï¿½à´«ï¿½ï¿½ï¿½@ï¿½Ó¦Vï¿½Wï¿½ï¿½ï¿½O
             @rb.AddForce(Vector3.up * @rb.mass * v0 * 2, ForceMode.Impulse);
             yield return new WaitForSeconds(0.1f / hitEnemy.Count);
         }

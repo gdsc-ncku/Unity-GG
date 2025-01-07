@@ -128,9 +128,9 @@ public class FlyingSickle : Weapon
     /// </summary>
     /// <param name="transform"></param>
     /// <param name="camera"></param>
-    public override void Init(Transform transform, Camera camera)
+    protected override void Init()
     {
-        base.Init(transform, camera);
+        base.Init();
 
         //init
         //coll = flyingSickle.GetComponent<Collider>();
@@ -167,7 +167,7 @@ public class FlyingSickle : Weapon
     /// 右鍵觸發
     /// </summary>
     /// <param name="type"></param>
-    public override void RightClickPerformed(InputAction.CallbackContext obj)
+    protected override void RightClickPerformed(InputAction.CallbackContext obj)
     {
         if (status != FlyingStatus.drop)
         {
@@ -179,13 +179,13 @@ public class FlyingSickle : Weapon
     /// 左鍵觸發
     /// </summary>
     /// <param name="type">0, 1, 2 分別是點擊、按住、放開</param>
-    public override void LeftClickCanceled(InputAction.CallbackContext obj)
+    protected override void LeftClickCanceled(InputAction.CallbackContext obj)
     {
         ChoosePoint(true);
         LockPoint();
     }
 
-    public override void LeftClickPerformed(InputAction.CallbackContext obj)
+    protected override void LeftClickPerformed(InputAction.CallbackContext obj)
     {
         ChoosePoint(false);
     }

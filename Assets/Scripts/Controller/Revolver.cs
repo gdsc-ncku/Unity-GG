@@ -1,4 +1,5 @@
 using System.Collections;
+using UniRx;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,6 +7,7 @@ public class Revolver : RangedWeapon
 {
     [SerializeField]protected Transform aimTransform;
     [SerializeField]protected Transform holdTransform;
+    [SerializeField]protected Transform revolver;
     [SerializeField]protected Transform fulcrum;
     [SerializeField]protected Transform cylinder;
     const int CYLINDER_PER_ANGLE = 60;
@@ -14,57 +16,46 @@ public class Revolver : RangedWeapon
     float aimFOV = 25f;
     float speed = 240;
     float cameraZoomVelocity;
-
-    private static Revolver _revolver;
-    public static Revolver Instance
+    float smoothTime = 0.1f;
+    protected override void RightClickStarted(InputAction.CallbackContext obj)
     {
-        get
-        {
-            if (!_revolver)
-            {
-                _revolver = FindObjectOfType(typeof(Revolver)) as Revolver;
-                if (!_revolver)
-                {
-                    Debug.LogError("No script");
-                }
-                else
-                {
-                    //init
-                }
-            }
-            return _revolver;
-        }
+        Aim();
     }
-    void Update()
+    protected override void RightClickCanceled(InputAction.CallbackContext obj)
     {
-        if (Input.GetMouseButton(1) && !isReloading) // 右鍵按下
-        {
-            Aim();
-        }
-        else
-        {
-            AimCancel();
-        }
-        if (Input.GetMouseButtonDown(0) && !isReloading)
-        {
-            TryShoot(playerCamera.transform.forward);
-        }
-        if (Input.GetKeyDown(KeyCode.R) && isReloading)
-        {
-            TryReload(1);
-        }
+        AimCancel();
+    }
+    protected override void LeftClickStarted(InputAction.CallbackContext obj)
+    {
+        TryShoot(playerCamera.transform.forward);
+    }
+    protected override void RClickStarted(InputAction.CallbackContext obj)
+    {
+        TryReload(1);
     }
     protected override void Aim()
     {
         base.Aim();
-		transform.position = Vector3.SmoothDamp(transform.position, aimTransform.position, ref currentVelocity, 0.1f);
-		playerCamera.fieldOfView = Mathf.SmoothDamp(playerCamera.fieldOfView, aimFOV, ref cameraZoomVelocity, 0.1f);
+        Observable.EveryUpdate()
+        .TakeWhile(_ => isAming)
+        .Subscribe(_ =>
+        {
+            revolver.position = Vector3.SmoothDamp(revolver.position, aimTransform.position, ref currentVelocity, smoothTime);
+            playerCamera.fieldOfView = Mathf.SmoothDamp(playerCamera.fieldOfView, aimFOV, ref cameraZoomVelocity, smoothTime);
+        })
+        .AddTo(gameObject);
     }
     protected override void AimCancel()
     {
         base.AimCancel();
-		transform.position = Vector3.SmoothDamp(transform.position, holdTransform.position, ref currentVelocity, 0.1f);
-		playerCamera.fieldOfView = Mathf.SmoothDamp(playerCamera.fieldOfView, normalFOV, ref cameraZoomVelocity, 0.1f);
+        Observable.EveryUpdate()
+        .TakeWhile(_ => !isAming)
+        .Subscribe(_ =>
+        {
+            revolver.position = Vector3.SmoothDamp(revolver.position, holdTransform.position, ref currentVelocity, smoothTime);
+            playerCamera.fieldOfView = Mathf.SmoothDamp(playerCamera.fieldOfView, normalFOV, ref cameraZoomVelocity, smoothTime);
+        })
+        .AddTo(gameObject);
     }
     protected override void Fire(Vector3 direction)
     {
@@ -76,29 +67,26 @@ public class Revolver : RangedWeapon
         base.WaitForReload();
         StartCoroutine(RotateAroundZAnim(fulcrum, CYLINDER_PER_ANGLE, speed));
     }
-    protected override void TryReload(int ammoNum)
+    protected override void Reload(int ammoNum)
     {
-        base.TryReload(ammoNum);
-        if (currentAmmo < ammoCapacity)
-        {
-            StartCoroutine(RotateAroundZAnim(cylinder, CYLINDER_PER_ANGLE, speed));
-        }
+        base.Reload(ammoNum);
+        StartCoroutine(RotateAroundZAnim(cylinder, CYLINDER_PER_ANGLE, speed));
     }
     protected override void EndReload()
     {
         base.EndReload();
         StartCoroutine(RotateAroundZAnim(fulcrum, 0, speed));
     }
-    IEnumerator RotateAroundZAnim(Transform transform, float finalAngle, float speed)
+    IEnumerator RotateAroundZAnim(Transform transform, float targetAngle, float speed)
     {
         var currentAngle = 0f;
-        while (currentAngle < finalAngle)
+        while (currentAngle < targetAngle)
         {
             float step = speed * Time.deltaTime;
 
-            if (currentAngle + step > finalAngle)
+            if (currentAngle + step > targetAngle)
             {
-                step = finalAngle - currentAngle;
+                step = targetAngle - currentAngle;
             }
 
             transform.Rotate(0, 0, step, Space.Self);
@@ -107,6 +95,6 @@ public class Revolver : RangedWeapon
 
             yield return null;
         }
-        transform.rotation = Quaternion.Euler(0, 0, finalAngle);
+        transform.localRotation = Quaternion.Euler(0, 0, targetAngle);
     }
 }
