@@ -256,7 +256,7 @@ Transform:
   m_GameObject: {fileID: 3703671126007883408}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.25, y: 0.1, z: 0.7}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -280,10 +280,11 @@ MonoBehaviour:
   fireRate: 3
   ammoCapacity: 6
   firePoint: {fileID: 7373697669258105163}
+  revolver: {fileID: 4607153054805572050}
   ammoPrefab: {fileID: 4180035959927559348, guid: f1bf9f830c6c5e74f9b89dc875d46c23, type: 3}
+  recoilForce: 5
   aimTransform: {fileID: 3449405826596214763}
   holdTransform: {fileID: 6710493406085636914}
-  revolver: {fileID: 4607153054805572050}
   fulcrum: {fileID: 2852629509559909668}
   cylinder: {fileID: 294047485206856538}
 --- !u!1 &4622712917192701046
