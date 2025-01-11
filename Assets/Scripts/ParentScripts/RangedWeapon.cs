@@ -9,10 +9,10 @@ public abstract class RangedWeapon : Weapon
     /// <summary>
     /// 基本設定
     /// </summary>
-    [SerializeField]protected float fireRate;
-    [SerializeField]protected int ammoCapacity;
-    [SerializeField]protected Transform firePoint;
-    [SerializeField]protected GameObject ammoPrefab;
+    [SerializeField] protected float fireRate;
+    [SerializeField] protected int ammoCapacity;
+    [SerializeField] protected Transform firePoint;
+    [SerializeField] protected GameObject ammoPrefab;
     float ammoSpeed = 50f;
     protected int currentAmmo;
     float cooldownTimestamp;
@@ -76,7 +76,7 @@ public abstract class RangedWeapon : Weapon
         {
             Reload(ammoNum);
         }
-        if (currentAmmo >= ammoCapacity)
+        if (currentAmmo >= ammoCapacity && isReloading)
         {
             EndReload();
         }

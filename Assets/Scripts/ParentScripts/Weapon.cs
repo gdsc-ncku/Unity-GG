@@ -13,10 +13,10 @@ public abstract class Weapon : MonoBehaviour
 
     void Start() 
     {
-        Init();
         inputActions = PlayerManager.Instance.playerControl;
         keepPosition = transform;
         playerCamera = Camera.main;
+        Init();
 
         inputActions.player.rightclick.started += RightClickStarted;
         inputActions.player.rightclick.performed += RightClickPerformed;
