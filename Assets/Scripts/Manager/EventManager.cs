@@ -15,6 +15,7 @@ public enum NameOfEvent
 
     [Header("PlayerMove")]
     ChangeMoveMode,
+    ChangeCursorState,
 }
 
 /// <summary>
