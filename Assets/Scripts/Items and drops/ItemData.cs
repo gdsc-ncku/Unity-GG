@@ -32,6 +32,8 @@ public enum ItemName
 [System.Serializable]
 public class ItemData : ScriptableObject
 {
+
+    [Header("通用資料")]
     public ItemName itemEnumName;   //方便代碼索引的名稱
     public string itemName; //物品名稱
     public Sprite itemSprite;   //物品圖片
