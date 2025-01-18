@@ -62,6 +62,15 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""fd1d478b-fd50-4b1c-b184-7ab3b5028411"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -152,6 +161,17 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
                     ""action"": ""r click"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a60473aa-58d5-4af0-8971-7f571ef959c9"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -164,6 +184,7 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
         m_player_leftclick = m_player.FindAction("left click", throwIfNotFound: true);
         m_player_rightclick = m_player.FindAction("right click", throwIfNotFound: true);
         m_player_rclick = m_player.FindAction("r click", throwIfNotFound: true);
+        m_player_jump = m_player.FindAction("jump", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -229,6 +250,7 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
     private readonly InputAction m_player_leftclick;
     private readonly InputAction m_player_rightclick;
     private readonly InputAction m_player_rclick;
+    private readonly InputAction m_player_jump;
     public struct PlayerActions
     {
         private @PlayerControl m_Wrapper;
@@ -237,6 +259,7 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
         public InputAction @leftclick => m_Wrapper.m_player_leftclick;
         public InputAction @rightclick => m_Wrapper.m_player_rightclick;
         public InputAction @rclick => m_Wrapper.m_player_rclick;
+        public InputAction @jump => m_Wrapper.m_player_jump;
         public InputActionMap Get() { return m_Wrapper.m_player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -258,6 +281,9 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
             @rclick.started += instance.OnRclick;
             @rclick.performed += instance.OnRclick;
             @rclick.canceled += instance.OnRclick;
+            @jump.started += instance.OnJump;
+            @jump.performed += instance.OnJump;
+            @jump.canceled += instance.OnJump;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -274,6 +300,9 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
             @rclick.started -= instance.OnRclick;
             @rclick.performed -= instance.OnRclick;
             @rclick.canceled -= instance.OnRclick;
+            @jump.started -= instance.OnJump;
+            @jump.performed -= instance.OnJump;
+            @jump.canceled -= instance.OnJump;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -297,5 +326,6 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
         void OnLeftclick(InputAction.CallbackContext context);
         void OnRightclick(InputAction.CallbackContext context);
         void OnRclick(InputAction.CallbackContext context);
+        void OnJump(InputAction.CallbackContext context);
     }
 }
