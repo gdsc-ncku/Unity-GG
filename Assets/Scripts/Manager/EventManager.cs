@@ -16,6 +16,9 @@ public enum NameOfEvent
     [Header("PlayerMove")]
     ChangeMoveMode,
     ChangeCursorState,
+
+    [Header("InventoryManager")]
+    InventoryItemChange
 }
 
 /// <summary>
