@@ -13,8 +13,6 @@ public class PlayerMove : MonoBehaviour
     private Rigidbody playerRigibody;
     private float xRotation; // // 角色的垂直旋轉
 
-    public bool isLockCursor = true;
-
     [Header("與時間放慢有關的移動設置")]
     [SerializeField] private bool isScaledByTime = true;
     [SerializeField] private Vector3 currentVelocity = Vector3.zero;
@@ -23,17 +21,27 @@ public class PlayerMove : MonoBehaviour
     //用於事件訂閱
     private CompositeDisposable disposables = new CompositeDisposable();
 
-    private void Awake()
+    //private void Awake()
+    //{
+    //    playerRigibody = PlayerManager.Instance.rb;
+    //    Cursor.lockState = CursorLockMode.Locked; // ��w�ƹ�
+
+    //    maxSpeed = PlayerManager.Instance.maxSpeed;
+    //    mouseSensitivity = PlayerManager.Instance.mouseSensitivity; 
+    //    xRotation = PlayerManager.Instance.xRotation;
+
+    //    if(isLockCursor)
+    //        Cursor.lockState = CursorLockMode.Locked; // 鎖定滑鼠
+    //}
+
+    private void Start()
     {
         playerRigibody = PlayerManager.Instance.rb;
-        Cursor.lockState = CursorLockMode.Locked; // ��w�ƹ�
+        Cursor.lockState = CursorLockMode.Locked; // 鎖定滑鼠到視窗中
 
         maxSpeed = PlayerManager.Instance.maxSpeed;
-        mouseSensitivity = PlayerManager.Instance.mouseSensitivity; 
+        mouseSensitivity = PlayerManager.Instance.mouseSensitivity;
         xRotation = PlayerManager.Instance.xRotation;
-
-        if(isLockCursor)
-            Cursor.lockState = CursorLockMode.Locked; // 鎖定滑鼠
     }
 
     private void FixedUpdate()
@@ -131,12 +139,30 @@ public class PlayerMove : MonoBehaviour
             NameOfEvent.ChangeMoveMode,
             _isScaledByTime => ChangeMoveMode(_isScaledByTime)
         ));
+
+        disposables.Add(EventManager.StartListening<bool>(
+            NameOfEvent.ChangeCursorState,
+            isLocked => ChangeCursorState(isLocked)
+        ));
     }
 
     private void OnDisable()
     {
         // 取消註冊對  事件的訂閱
         disposables.Clear();
+    }
+
+    /// <summary>
+    /// 更改當前鼠標狀態
+    /// 是否鎖定到視窗中
+    /// </summary>
+    /// <param name="isLocked">是否上鎖</param>
+    private void ChangeCursorState(bool isLocked)
+    {
+        if (isLocked == true)
+            Cursor.lockState = CursorLockMode.Locked; // 鎖定滑鼠
+        else if(isLocked == false)
+            Cursor.lockState = CursorLockMode.None;
     }
 
     private void ChangeMoveMode(bool _isScaledByTime)

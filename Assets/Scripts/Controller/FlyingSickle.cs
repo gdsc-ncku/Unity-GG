@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
@@ -10,7 +11,7 @@ using UnityEngine.UI;
 /// <summary>
 /// 飛鐮的飛行狀態
 /// </summary>
-public enum FlyingStatus
+public enum FlyingSickle_Status
 {
     prepare = -1,
     hold,
@@ -49,11 +50,8 @@ public class FlyingSickle : Weapon
     public GameObject flyingSickle; //飛鐮遊戲物件
     [Tooltip("輔助準心")] public Image targetHeart;
 
-    //private GameObject playerCamera;   //玩家攝影機遊戲物件
-    //private Transform keepPosition; //手持位置的transform
     public float rotationSpeed = 100f; // 旋轉速度，單位是度/秒
-
-    [SerializeField] private FlyingStatus status = FlyingStatus.prepare;    //當前狀態
+    [SerializeField] private FlyingSickle_Status status = FlyingSickle_Status.prepare;    //當前狀態
 
     [Header("中鍵-深度控制")]
     [SerializeField] private float depth = 0f;   //目前鎖定的深度
@@ -61,12 +59,10 @@ public class FlyingSickle : Weapon
     public float minDepth = 10f;
     public float maxDepth = 100f;
 
-    public float minTargetSize = 10f;
-    public float maxTargetSize = 100f;
+    public float minTargetSize = 10f;   //最小準心大小
+    public float maxTargetSize = 100f;  //最大準心大小
 
     private Queue<Vector3> lockPoint = new Queue<Vector3>();    //玩家鎖定的點
-    //public Transform debugBall;
-    //public Transform debugBall1;
 
     [Header("左鍵-鎖定飛行點")]
     public float bulletTime = 0.7f;
@@ -76,11 +72,14 @@ public class FlyingSickle : Weapon
 
     [Header("掉落相關")]
     private Rigidbody rb;
-    //private Collider coll;
     private MeshCollider coll;
+    public float dropSpeed = 5f;
 
     [Header("穿透相關")]
     [SerializeField] private bool isLastFlyingBack = false;   //紀錄是否為右鍵觸發的返回，如果是 無法穿透
+
+    [Header("手持相關")]
+    private bool isHolding = false;
 
     private void Awake()
     {
@@ -105,22 +104,14 @@ public class FlyingSickle : Weapon
         {
             Tracking();
         }
-        else if(status == FlyingStatus.back)
+        else if(status == FlyingSickle_Status.back)
         {
             Backing();
         }
-        else if(status == FlyingStatus.hold)
-        {
-            Holding();
-        }
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            EnterHold();
-        }
+        //else if(status == FlyingSickle_Status.drop && isGrounded == false)
+        //{
+        //    Droping();
+        //}
     }
 
     /// <summary>
@@ -132,36 +123,19 @@ public class FlyingSickle : Weapon
     {
         base.Init();
 
-        //init
-        //coll = flyingSickle.GetComponent<Collider>();
+        //追蹤相關
+        currentTarget = Vector3.zero;
+
+        //掉落與碰撞相關
         coll = flyingSickle.GetComponent<MeshCollider>();
         coll.isTrigger = true;
 
         rb = flyingSickle.GetComponent<Rigidbody>();
         rb.useGravity = false;
-        EnterHold();
+        rb.isKinematic = true;
+
+        EnterStatus(FlyingSickle_Status.hold);
     }
-
-    ///// <summary>
-    ///// 初始化武器
-    ///// 手持位置、旋轉角度
-    ///// </summary>
-    ///// <param name="takePosition">要手持的位置</param>
-    //public void InitWeapon(Transform takePosition, GameObject _player)
-    //{
-    //    //set value
-    //    keepPosition = takePosition;
-    //    playerCamera = _player.GetComponent<Camera>();
-
-    //    //init
-    //    //coll = flyingSickle.GetComponent<Collider>();
-    //    coll = flyingSickle.GetComponent<MeshCollider>();
-    //    coll.isTrigger = true;
-
-    //    rb = flyingSickle.GetComponent<Rigidbody>();
-    //    rb.useGravity = false;
-    //    EnterHold();
-    //}
 
     /// <summary>
     /// 右鍵觸發
@@ -169,9 +143,15 @@ public class FlyingSickle : Weapon
     /// <param name="type"></param>
     protected override void RightClickPerformed(InputAction.CallbackContext obj)
     {
-        if (status != FlyingStatus.drop)
+        //if (status != FlyingSickle_Status.drop)
+        //{
+        //    EnterBack(isLastFlyingBack = false);
+        //}
+
+        if(status == FlyingSickle_Status.fly_1 || status == FlyingSickle_Status.fly_2)
         {
-            EnterBack(isLastFlyingBack = false);
+            //EnterBack(isLastFlyingBack = false);
+            EnterStatus(FlyingSickle_Status.back, false);
         }
     }
 
@@ -181,13 +161,23 @@ public class FlyingSickle : Weapon
     /// <param name="type">0, 1, 2 分別是點擊、按住、放開</param>
     protected override void LeftClickCanceled(InputAction.CallbackContext obj)
     {
-        ChoosePoint(true);
+        EnterBulletTime(false);
         LockPoint();
     }
 
     protected override void LeftClickPerformed(InputAction.CallbackContext obj)
     {
-        ChoosePoint(false);
+        EnterBulletTime(true);
+    }
+
+    /// <summary>
+    /// R 鍵觸發
+    /// </summary>
+    /// <param name="obj"></param>
+    public override void RClickPerformed(InputAction.CallbackContext obj)
+    {
+        //EnterHold();
+        EnterStatus(FlyingSickle_Status.hold);
     }
 
     /// <summary>
@@ -209,20 +199,12 @@ public class FlyingSickle : Weapon
     /// </summary>
     private void SelfRotate()
     {
-        if(status > FlyingStatus.hold && status < FlyingStatus.drop)
+        if (status == FlyingSickle_Status.fly_1 || status == FlyingSickle_Status.fly_2
+            || status == FlyingSickle_Status.back)
         {
             // 使用 transform.Rotate 讓飛鐮物件每秒旋轉一定角度
             flyingSickle.transform.Rotate(Vector3.left * rotationSpeed * Time.deltaTime);
         }
-    }
-
-    /// <summary>
-    /// 飛鐮抓在手上的函數
-    /// </summary>
-    private void Holding()
-    {
-        flyingSickle.transform.position = keepPosition.position;
-        flyingSickle.transform.eulerAngles = keepPosition.eulerAngles;
     }
 
     /// <summary>
@@ -242,7 +224,7 @@ public class FlyingSickle : Weapon
             isLastFlyingBack = false;   //更新返回觸發來源的狀態
 
             // 進入下個狀態
-            EnterHold();
+            EnterStatus(FlyingSickle_Status.hold);
         }
     }
 
@@ -264,15 +246,15 @@ public class FlyingSickle : Weapon
                 currentTarget = lockPoint.Dequeue();  // 設定下一個目標點
             }
             else
-            {
+            {                
                 // 如果目標點設置沒有到返回的程度 那代表來不及設置 飛鐮掉落
-                if (status != FlyingStatus.back)
+                if (status != FlyingSickle_Status.back)
                 {
-                    EnterDrop();
-                }else if(status == FlyingStatus.back)
+                    EnterStatus(FlyingSickle_Status.drop);
+                }else if(status == FlyingSickle_Status.back)
                 {
                     //最後一段飛行回歸
-                    EnterBack(isLastFlyingBack=true);
+                    EnterStatus(FlyingSickle_Status.back, true);
                 }
             }
         }
@@ -284,27 +266,41 @@ public class FlyingSickle : Weapon
     /// </summary>
     private void LockPoint()
     {
-        if((status == FlyingStatus.hold && lockPoint.Count == 0) 
-            || (status > FlyingStatus.hold && status < FlyingStatus.back))
+        //飛鐮處在合法的操作狀態
+        //手持 且 沒有其他鎖定點
+        //飛行1
+        //飛行2
+        if((status == FlyingSickle_Status.hold && lockPoint.Count == 0) 
+            || (status > FlyingSickle_Status.hold && status < FlyingSickle_Status.back))
         {
-            // 第一次發射
             // 根據準心方向和深度計算鎖定點
             Vector3 rayOrigin = playerCamera.transform.position;
             Vector3 rayDirection = playerCamera.transform.forward;
             
             Vector3 point = rayOrigin + rayDirection * depth;
-            
-            if(status == FlyingStatus.hold)
+
+            if (status == FlyingSickle_Status.hold)
             {
+                //第一次直接設定鎖定點
                 currentTarget = point;
             }
             else
             {
+                //第二次以後 將鎖定點加入buffer
                 lockPoint.Enqueue(point);
             }
 
             // 進入下個狀態
-            status = (FlyingStatus)((int)(status + 1) % ((int)FlyingStatus.back + 1));
+            status = (FlyingSickle_Status)((int)(status + 1) % ((int)FlyingSickle_Status.back + 1));
+            
+            //脫手
+            if(isHolding == true)
+            {
+                isHolding = false;
+                flyingSickle.transform.SetParent(null);
+            }
+            
+            //告訴飛鐮有目標了
             hasTarget = true;
         }
         else
@@ -318,82 +314,98 @@ public class FlyingSickle : Weapon
     /// 選擇位置
     /// 如果要選擇，進入子彈時間
     /// </summary>
-    /// <param name="isDown"></param>
-    private void ChoosePoint(bool isDown)
+    /// <param name="isTrigger"></param>
+    private void EnterBulletTime(bool isTrigger)
     {
-        if(isDown == false)
+        if(isTrigger == true)
         {
             EventManager.TriggerEvent<float>(NameOfEvent.TimeControl, bulletTime);
-            //Time.timeScale = bulletTime;
         }
         else
         {
             EventManager.TriggerEvent(NameOfEvent.TimeResume);
-            //Time.timeScale = 1f;
         }
     }
 
-    /// <summary>
-    /// 處理掉落
-    /// </summary>
-    private void EnterDrop()
+     /// <summary>
+     /// 進入指定狀態
+     /// 需要做的處理
+     /// </summary>
+     /// <param name="_status"></param>
+     /// <param name="isLastFlying"></param>
+    private void EnterStatus(FlyingSickle_Status _status, bool isLastFlying)
     {
-        status = FlyingStatus.drop;
+        status = _status;
         hasTarget = false;
 
-        if(lockPoint.Count > 0)
+        //清空鎖定點buffer
+        if (lockPoint.Count > 0)
         {
             lockPoint.Clear();
         }
 
-        if(rb.useGravity == false)
+        if(status == FlyingSickle_Status.back)
+        {
+            if (isLastFlying == true)
+            {
+                isLastFlyingBack = true;
+            }
+
+            ChangeGravity(false);
+        }
+    }
+
+    /// <summary>
+    /// 進入指定狀態
+    /// 需要做的處理
+    /// </summary>
+    /// <param name="_status"></param>
+    private void EnterStatus(FlyingSickle_Status _status)
+    {
+        status = _status;
+        hasTarget = false;
+
+        //清空鎖定點buffer
+        if (lockPoint.Count > 0)
+        {
+            lockPoint.Clear();
+        }
+
+        if (_status == FlyingSickle_Status.drop)
+        {
+            ChangeGravity(true);
+        }
+        else if (_status == FlyingSickle_Status.hold)
+        {
+            isHolding = true;
+
+            //回到手的準確位置
+            flyingSickle.transform.SetParent(keepPosition.parent.parent);
+            flyingSickle.transform.position = keepPosition.position;
+            flyingSickle.transform.rotation = keepPosition.rotation;
+
+            ChangeGravity(false);
+        }
+    }
+
+    /// <summary>
+    /// 改變重力
+    /// 有或沒有
+    /// </summary>
+    /// <param name="use">是否使用重力</param>
+    private void ChangeGravity(bool use)
+    {
+        //處理碰撞相關
+        if (use == false && rb.useGravity == true)
+        {
+            rb.useGravity = false;
+            rb.isKinematic = true;
+            coll.isTrigger = true;
+        }else if(use == true && rb.useGravity == false)
         {
             rb.useGravity = true;
+            rb.isKinematic = false;
             coll.isTrigger = false;
-        }
-    }
-
-    /// <summary>
-    /// 進入抓住狀態
-    /// </summary>
-    private void EnterHold()
-    {
-        status = FlyingStatus.hold;
-        hasTarget = false;
-
-        if (lockPoint.Count > 0)
-        {
-            lockPoint.Clear();
-        }
-
-        //處理碰撞相關
-        if (rb.useGravity == true)
-        {
-            rb.useGravity = false;
-            coll.isTrigger = true;
-        }
-    }
-
-    private void EnterBack(bool isLastFlying)
-    {
-        hasTarget = false;
-        status = FlyingStatus.back;
-
-        if(isLastFlying == true)
-        {
-            isLastFlyingBack = true;
-        }
-
-        if (lockPoint.Count > 0)
-        {
-            lockPoint.Clear();
-        }
-
-        //處理碰撞相關
-        if (rb.useGravity == true)
-        {
-            rb.useGravity = false;
-            coll.isTrigger = true;
         }
     }
 
@@ -402,18 +414,18 @@ public class FlyingSickle : Weapon
         if(collision.gameObject.tag == "Player")
         {
             //收回
-            EnterHold();
+            EnterStatus(FlyingSickle_Status.hold);
         }
     }
 
     private void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject.tag == "Enviroument" && isLastFlyingBack == false && status != FlyingStatus.hold)
+        if (collision.gameObject.tag == "Enviroument" && isLastFlyingBack == false && status != FlyingSickle_Status.hold)
         {
             Debug.Log("FlyingSickle: touch object");
 
             //碰撞任意物體後掉落
-            EnterDrop();
+            EnterStatus(FlyingSickle_Status.drop);
         }
     }
 }

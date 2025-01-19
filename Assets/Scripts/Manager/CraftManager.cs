@@ -52,21 +52,57 @@ public class CraftManager : MonoBehaviour
     public RecipeBook recipeBook;
 
     /// <summary>
-    /// 嘗試合成
+    /// 嘗試合成指定道具
     /// </summary>
-    /// <param name="inputMaterials">輸入的合成材料</param>
+    /// <param name="item">希望合成出來的道具</param>
     /// <returns>合成結果</returns>
-    public ItemData TryCraft(List<ItemData> inputMaterials)
+    public ItemData TryCraft(ItemName item)
     {
+        Recipe targetRecipe = null;
+
         foreach (var recipe in recipeBook.recipes)
         {
-            // 檢查材料是否符合配方
-            if (IsRecipeMatch(recipe, inputMaterials))
+            Debug.Log($"CraftManager: 查找合成圖 {item} : {recipe.resultItem.itemEnumName}");
+            if (recipe.resultItem.itemEnumName == item)
             {
-                return recipe.resultItem;
+                targetRecipe = recipe;
+                break;
             }
+            
         }
-        return null; // 沒有符合的配方
+
+        if (targetRecipe == null)
+        {
+            Debug.LogWarning($"CraftManager: 找不到對應道具的合成圖 {item}");
+            return null;
+        }
+
+        if (IsRecipeMatch(targetRecipe) == true)
+        {
+            ConsumeItem(targetRecipe);
+            InventoryManager.Instance.AddItem(targetRecipe.resultItem.itemEnumName, 1);
+            Debug.Log($"CraftManager: 合成成功 {item}");
+            return targetRecipe.resultItem;
+        }
+        else
+        {
+            Debug.LogWarning($"CraftManager: 合成失敗 {item}");
+            return null; // 沒有符合的配方
+        }
+
+    }
+
+    /// <summary>
+    /// 將合成圖的材料消耗掉
+    /// </summary>
+    /// <param name="recipe"></param>
+    private void ConsumeItem(Recipe recipe)
+    {
+        // 簡單匹配邏輯，檢查數量與名稱是否一致
+        foreach (var material in recipe.requiredMaterials)
+        {
+            InventoryManager.Instance.ConsumeItem(material.itemEnumName, 1);
+        }
     }
 
     /// <summary>
@@ -75,14 +111,20 @@ public class CraftManager : MonoBehaviour
     /// <param name="recipe">組合圖</param>
     /// <param name="inputMaterials">輸入材料</param>
     /// <returns></returns>
-    private bool IsRecipeMatch(Recipe recipe, List<ItemData> inputMaterials)
+    private bool IsRecipeMatch(Recipe recipe)
     {
+        bool isMatched = true;
+
         // 簡單匹配邏輯，檢查數量與名稱是否一致
         foreach (var material in recipe.requiredMaterials)
         {
-            if (!inputMaterials.Contains(material))
-                return false;
+            if (InventoryManager.Instance.SearchItem(material.itemEnumName, 1) == false)
+            {
+                isMatched = false;
+                break;
+            } 
         }
-        return true;
+
+        return isMatched;
     }
 }
