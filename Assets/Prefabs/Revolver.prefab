@@ -73,7 +73,6 @@ GameObject:
   - component: {fileID: 4607153054805572050}
   - component: {fileID: 4831145387206795408}
   - component: {fileID: 6214715359011241357}
-  - component: {fileID: 3817829081660059581}
   m_Layer: 0
   m_Name: Revolver_TestModel
   m_TagString: Untagged
@@ -148,26 +147,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &3817829081660059581
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2269430189109780834}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26fab7b4efc01554f8508ec5a708232a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fireRate: 3
-  ammoCapacity: 6
-  firePoint: {fileID: 7373697669258105163}
-  ammoPrefab: {fileID: 2279164195736710619, guid: 64a1c2a78a8b84846a53c300fd8c2e94, type: 3}
-  aimTransform: {fileID: 3449405826596214763}
-  holdTransform: {fileID: 6710493406085636914}
-  fulcrum: {fileID: 2852629509559909668}
-  cylinder: {fileID: 294047485206856538}
 --- !u!1 &3093840178361030367
 GameObject:
   m_ObjectHideFlags: 0
@@ -260,6 +239,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3865309361717987404}
+  - component: {fileID: 7578028258165608576}
   m_Layer: 0
   m_Name: Revolver
   m_TagString: Untagged
@@ -275,8 +255,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3703671126007883408}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.25, y: 0.1, z: 0.7}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -285,6 +265,28 @@ Transform:
   - {fileID: 6710493406085636914}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7578028258165608576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3703671126007883408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26fab7b4efc01554f8508ec5a708232a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fireRate: 3
+  ammoCapacity: 6
+  firePoint: {fileID: 7373697669258105163}
+  revolver: {fileID: 4607153054805572050}
+  ammoPrefab: {fileID: 4180035959927559348, guid: f1bf9f830c6c5e74f9b89dc875d46c23, type: 3}
+  recoilForce: 5
+  aimTransform: {fileID: 3449405826596214763}
+  holdTransform: {fileID: 6710493406085636914}
+  fulcrum: {fileID: 2852629509559909668}
+  cylinder: {fileID: 294047485206856538}
 --- !u!1 &4622712917192701046
 GameObject:
   m_ObjectHideFlags: 0
