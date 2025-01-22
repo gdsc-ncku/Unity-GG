@@ -174,7 +174,7 @@ public class FlyingSickle : Weapon
     /// R 鍵觸發
     /// </summary>
     /// <param name="obj"></param>
-    public override void RClickPerformed(InputAction.CallbackContext obj)
+    protected override void RClickPerformed(InputAction.CallbackContext obj)
     {
         //EnterHold();
         EnterStatus(FlyingSickle_Status.hold);
