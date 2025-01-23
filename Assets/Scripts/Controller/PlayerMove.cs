@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
@@ -52,26 +52,26 @@ public class PlayerMove : MonoBehaviour
 
     private void ViewportFocus()
     {
-        // 獲取滑鼠移動的輸入
+        // ����ƹ����ʪ���J
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
-        // 更新垂直旋轉，限制上下角度
+        // ��s��������A����W�U����
         xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -70f, 70f); // 限制視角在-70到70度之間
+        xRotation = Mathf.Clamp(xRotation, -70f, 70f); // ��������b-70��70�פ���
 
-        // 更新攝影機的旋轉
+        // ��s��v��������
         Camera.main.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-        // 更新角色的旋轉
+        // ��s���⪺����
         transform.Rotate(Vector3.up * mouseX);
     }
 
     private void Movement()
     {
-        //此處耦合了(下層需要上層資料)，後續可思考是否將playerControl移到ScriptableObject來解耦合
+        //���B���X�F(�U�h�ݭn�W�h���)�A����i��ҬO�_�NplayerControl����ScriptableObject�Ӹѽ��X
         Vector2 inputVector = PlayerManager.Instance.playerControl.player.move.ReadValue<Vector2>();
 
-        // 獲取玩家的前方和右側方向
+        // ������a���e��M�k����V
         Vector3 forward = playerRigibody.transform.forward;
         Vector3 right = playerRigibody.transform.right;
 
@@ -120,14 +120,14 @@ public class PlayerMove : MonoBehaviour
     public IEnumerator Sprint(Vector3 forward, float sprintDistance, int sprintFrame)
     {
         PlayerManager.Instance.playerStatus = PlayerStatus.sprint;
-        PlayerManager.Instance.rb.velocity = Vector3.zero;
+        PlayerManager.Instance.rb.linearVelocity = Vector3.zero;
         yield return new WaitForFixedUpdate();
         PlayerManager.Instance.rb.AddForce(2 * PlayerManager.Instance.rb.mass * sprintDistance / (Time.fixedDeltaTime * sprintFrame) * forward, ForceMode.Impulse);
         for (int i = 0; i < sprintFrame; i++)
         {
             yield return new WaitForFixedUpdate();
         }
-        PlayerManager.Instance.rb.velocity = Vector3.zero;
+        PlayerManager.Instance.rb.linearVelocity = Vector3.zero;
         PlayerManager.Instance.playerStatus = PlayerStatus.move;
         yield break;
     }

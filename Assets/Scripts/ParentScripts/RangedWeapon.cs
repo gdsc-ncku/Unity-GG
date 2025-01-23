@@ -61,7 +61,7 @@ public abstract class RangedWeapon : Weapon
         currentAmmo--;
         cooldownTimestamp = Time.time + 1f / fireRate;
         var ammo = Instantiate(ammoPrefab, firePoint.position, Quaternion.identity);
-        ammo.GetComponent<Rigidbody>().velocity = direction * ammoSpeed;
+        ammo.GetComponent<Rigidbody>().linearVelocity = direction * ammoSpeed;
         Debug.Log("Fire");
     }
 

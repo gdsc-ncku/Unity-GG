@@ -15,7 +15,7 @@ public class bulletController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         if (rb != null)
         {
-            rb.velocity = transform.forward * speed;  // 根據子彈方向設置速度
+            rb.linearVelocity = transform.forward * speed;  // 根據子彈方向設置速度
         }
 
         // 開啟計時器，時間過長後銷毀子彈
