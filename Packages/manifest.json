@@ -1,11 +1,5 @@
 {
   "dependencies": {
-    "com.cdm.figma": "https://github.com/cdmvision/unity-figma-importer.git#1.9.0",
-    "com.cdm.figma.ui": "https://github.com/cdmvision/unity-figma-importer.git#1.9.0-ugui",
-    "com.manakhovn.figma_to_unity_importer": "https://github.com/ManakhovN/FigmaToUnityImporter.git?path=/Assets/FigmaImporter",
-    "com.simonoliver.unityfigma": "https://github.com/simonoliver/UnityFigmaBridge.git",
-    "com.trackman.asyncawaitutil": "https://github.com/TrackMan/Unity.Package.AsyncAwaitUtil.git",
-    "com.trackman.commonutils": "https://github.com/TrackMan/Unity.Package.CommonUtils.git",
     "com.unity.ai.navigation": "2.0.5",
     "com.unity.collab-proxy": "2.6.0",
     "com.unity.feature.development": "1.0.2",
