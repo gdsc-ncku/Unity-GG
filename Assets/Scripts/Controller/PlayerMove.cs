@@ -8,13 +8,13 @@ public class PlayerMove : MonoBehaviour
     public float speed = 20f;
     public float maxSpeed = 15;
     private Rigidbody playerRigibody;
-    public float mouseSensitivity = 100f; // ·Æ¹«ÆF±Ó«×
-    private float xRotation = 0f; // ¨¤¦âªº««ª½±ÛÂà
+    public float mouseSensitivity = 100f; // ï¿½Æ¹ï¿½ï¿½Fï¿½Ó«ï¿½
+    private float xRotation = 0f; // ï¿½ï¿½ï¿½âªºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
     private void Awake()
     {
         playerRigibody = GetComponent<Rigidbody>();
-        Cursor.lockState = CursorLockMode.Locked; // Âê©w·Æ¹«
+        Cursor.lockState = CursorLockMode.Locked; // ï¿½ï¿½wï¿½Æ¹ï¿½
     }
 
     private void FixedUpdate()
@@ -25,53 +25,53 @@ public class PlayerMove : MonoBehaviour
 
     private void ViewportFocus()
     {
-        // Àò¨ú·Æ¹«²¾°Êªº¿é¤J
+        // ï¿½ï¿½ï¿½ï¿½Æ¹ï¿½ï¿½ï¿½ï¿½Êªï¿½ï¿½ï¿½J
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
-        // §ó·s««ª½±ÛÂà¡A­­¨î¤W¤U¨¤«×
+        // ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½Wï¿½Uï¿½ï¿½ï¿½ï¿½
         xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -70f, 70f); // ­­¨îµø¨¤¦b-70¨ì70«×¤§¶¡
+        xRotation = Mathf.Clamp(xRotation, -70f, 70f); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½b-70ï¿½ï¿½70ï¿½×¤ï¿½ï¿½ï¿½
 
-        // §ó·sÄá¼v¾÷ªº±ÛÂà
+        // ï¿½ï¿½sï¿½ï¿½vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         Camera.main.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-        // §ó·s¨¤¦âªº±ÛÂà
+        // ï¿½ï¿½sï¿½ï¿½ï¿½âªºï¿½ï¿½ï¿½ï¿½
         transform.Rotate(Vector3.up * mouseX);
     }
 
     private void Movement()
     {
-        //¦¹³B½¢¦X¤F(¤U¼h»Ý­n¤W¼h¸ê®Æ)¡A«áÄò¥i«ä¦Ò¬O§_±NplayerControl²¾¨ìScriptableObject¨Ó¸Ñ½¢¦X
+        //ï¿½ï¿½ï¿½Bï¿½ï¿½ï¿½Xï¿½F(ï¿½Uï¿½hï¿½Ý­nï¿½Wï¿½hï¿½ï¿½ï¿½)ï¿½Aï¿½ï¿½ï¿½ï¿½iï¿½ï¿½Ò¬Oï¿½_ï¿½NplayerControlï¿½ï¿½ï¿½ï¿½ScriptableObjectï¿½Ó¸Ñ½ï¿½ï¿½X
         Vector2 inputVector = PlayerManager.Instance.playerControl.player.move.ReadValue<Vector2>();
 
-        // Àò¨úª±®aªº«e¤è©M¥k°¼¤è¦V
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½aï¿½ï¿½ï¿½eï¿½ï¿½Mï¿½kï¿½ï¿½ï¿½ï¿½V
         Vector3 forward = playerRigibody.transform.forward;
         Vector3 right = playerRigibody.transform.right;
 
-        // ®Ú¾Ú¿é¤J­pºâ²¾°Ê¤è¦V
+        // ï¿½Ú¾Ú¿ï¿½Jï¿½pï¿½â²¾ï¿½Ê¤ï¿½V
         Vector3 moveDirection = forward * inputVector.y + right * inputVector.x;
 
-        if (PlayerManager.Instance.playerStatus == PlayerStatus.move && inputVector != Vector2.zero && Vector3.Distance(playerRigibody.velocity, Vector3.zero) < maxSpeed)
+        if (PlayerManager.Instance.playerStatus == PlayerStatus.move && inputVector != Vector2.zero && Vector3.Distance(playerRigibody.linearVelocity, Vector3.zero) < maxSpeed)
         {
-            playerRigibody.velocity = moveDirection.normalized * maxSpeed;
+            playerRigibody.linearVelocity = moveDirection.normalized * maxSpeed;
         }
         else if(PlayerManager.Instance.playerStatus == PlayerStatus.move && inputVector == Vector2.zero)
         {
-            playerRigibody.velocity = new Vector3(0, playerRigibody.velocity.y, 0);
+            playerRigibody.linearVelocity = new Vector3(0, playerRigibody.linearVelocity.y, 0);
         }
     }
 
     public IEnumerator Sprint(Vector3 forward, float sprintDistance, int sprintFrame)
     {
         PlayerManager.Instance.playerStatus = PlayerStatus.sprint;
-        PlayerManager.Instance.rb.velocity = Vector3.zero;
+        PlayerManager.Instance.rb.linearVelocity = Vector3.zero;
         yield return new WaitForFixedUpdate();
         PlayerManager.Instance.rb.AddForce(2 * PlayerManager.Instance.rb.mass * sprintDistance / (Time.fixedDeltaTime * sprintFrame) * forward, ForceMode.Impulse);
         for (int i = 0; i < sprintFrame; i++)
         {
             yield return new WaitForFixedUpdate();
         }
-        PlayerManager.Instance.rb.velocity = Vector3.zero;
+        PlayerManager.Instance.rb.linearVelocity = Vector3.zero;
         PlayerManager.Instance.playerStatus = PlayerStatus.move;
         yield break;
     }
