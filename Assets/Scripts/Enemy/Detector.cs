@@ -2,22 +2,29 @@ using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 
+/// <summary>
+/// 偵測
+/// </summary>
 [ExecuteInEditMode]
 public class Detector : MonoBehaviour
 {
-    public Subject<GameObject> OnTargetGet = new();
-    public Subject<Unit> OnTargetGone = new();
-    public string targetTag { private get; set; }
-    [SerializeField]float distance = 10; //偵測距離
-    [SerializeField]float angle = 30;    //偵測角度
-    [SerializeField]bool isDebug = true;    //偵測角度
-    LayerMask layer => LayerMask.GetMask(LayerTagPack.Enemy, LayerTagPack.Player);
-    LayerMask occlusionLayers => LayerMask.GetMask(LayerTagPack.Environment);
-    Collider[] colliders = new Collider[50];
-    List<GameObject> detectedObjects = new List<GameObject>();
-    GameObject taget;
+    [SerializeField] float distance = 10;    //偵測距離
+    [SerializeField] float angle = 30;       //偵測角度
+    [SerializeField] bool isDebug = true;    //偵測角度
+    LayerMask layer => LayerMask.GetMask(LayerTagPack.Enemy, LayerTagPack.Player);  //偵測的層
+    LayerMask occlusionLayers => LayerMask.GetMask(LayerTagPack.Environment);       //不偵測的層
+    Collider[] colliders = new Collider[50]; //偵測到的物件(暫存器)
 
-    
+    /// <summary>
+    /// 偵測到的目標們，可以給外部判斷
+    /// </summary>
+    public List<GameObject> detectedObjects = new List<GameObject>();
+    /// <summary>
+    /// 偵測到的目標，可以給外部判斷
+    /// </summary>
+    public GameObject taget;
+
+
     void Update()
     {
         Dectect();
@@ -30,24 +37,22 @@ public class Detector : MonoBehaviour
     {
         detectedObjects.Clear();
         var count = Physics.OverlapSphereNonAlloc(transform.position, distance, colliders, layer, QueryTriggerInteraction.Collide);
-        for(int i = 0; i < count; i++)
+        for (int i = 0; i < count; i++)
         {
             GameObject obj = colliders[i].gameObject;
-            if(obj == transform.root.gameObject) continue;
-            if(IsVisible(obj))
+            if (obj == transform.root.gameObject) continue;
+            if (IsVisible(obj))
             {
                 detectedObjects.Add(obj);
-                if (taget != obj && obj.CompareTag(targetTag))
+                if (taget != obj)
                 {
                     taget = obj;
-                    OnTargetGet.OnNext(taget);
                 }
             }
         }
-        if(taget != null && !detectedObjects.Contains(taget))
+        if (taget != null && !detectedObjects.Contains(taget))
         {
             taget = null;
-            OnTargetGone.OnNext(Unit.Default);
         }
     }
 
@@ -72,7 +77,7 @@ public class Detector : MonoBehaviour
         var direction = target.transform.position - transform.position;
         direction.y = 0;
         float deltaAngle = Vector3.Angle(direction, transform.forward);
-        if(deltaAngle > angle)
+        if (deltaAngle > angle)
         {
             return false;
         }
@@ -88,21 +93,21 @@ public class Detector : MonoBehaviour
     {
         // 待修，occlusionLayers偵測不到
         // Debug.DrawLine(transform.position, target.transform.position, Color.red);
-        if(Physics.Linecast(transform.position, target.transform.position, occlusionLayers))
+        if (Physics.Linecast(transform.position, target.transform.position, occlusionLayers))
         {
             return true;
         }
         return false;
     }
 
-#region Debug
+    #region Debug
     Mesh mesh;
     Color meshColor = Color.blue;
     void OnValidate()
     {
         mesh = CreateWedgeMesh();
     }
-    
+
     void OnDrawGizmos()
     {
         if (mesh && isDebug)
@@ -162,5 +167,5 @@ public class Detector : MonoBehaviour
 
         return mesh;
     }
-#endregion
+    #endregion
 }
