@@ -24,12 +24,6 @@ public class Detector : MonoBehaviour
     /// </summary>
     public GameObject taget;
 
-
-    void Update()
-    {
-        Dectect();
-    }
-
     /// <summary>
     /// 偵測
     /// </summary>
