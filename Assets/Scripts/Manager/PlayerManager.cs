@@ -8,14 +8,15 @@ public enum PlayerStatus
     jump
 }
 
+[DefaultExecutionOrder(-100)] // 負數越小越早執行
 public class PlayerManager : MonoBehaviour
 {
     [SerializeField] int sprintFrame;
 
     public float mouseSensitivity = 100f;
 
-    public float maxSpeed = 15;
-
+    public float maxSpeed = 15f;
+    public float jumpforce = 200f;
     public float xRotation = 0f;
     public Transform playerTransform { get; private set; }
     #region �إ߳�ҼҦ�
@@ -118,7 +119,6 @@ public class PlayerManager : MonoBehaviour
     {
         
         //跳多大力
-        float jumpforce = 200f;
         GetComponent<PlayerMove>().Jump(jumpforce);
     }
 }

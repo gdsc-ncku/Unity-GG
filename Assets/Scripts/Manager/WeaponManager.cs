@@ -37,6 +37,7 @@ public class WeaponManager : MonoBehaviour
             Debug.LogError("Duplicate creating WeaponManager Instance");
             Destroy(gameObject);
         }
+        
     }
 
     private void Start()

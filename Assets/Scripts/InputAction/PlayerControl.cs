@@ -62,6 +62,24 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""4d47b331-05c8-48ec-a0a8-cd7e29ffbe5a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""rebinding"",
+                    ""type"": ""Button"",
+                    ""id"": ""bc01de10-aeb2-452e-851a-18812592015c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -152,6 +170,56 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
                     ""action"": ""r click"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""881c52c8-543c-49c0-9090-fa72cc29d591"",
+                    ""path"": ""<Keyboard>/z"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""164c50ec-d2ca-4096-bb98-e6f920fe10a5"",
+                    ""path"": ""<Keyboard>/b"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""rebinding"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""rebinding"",
+            ""id"": ""11671d05-c673-4b7b-9289-7819433c41ae"",
+            ""actions"": [
+                {
+                    ""name"": ""New action"",
+                    ""type"": ""Button"",
+                    ""id"": ""bb8729ed-7000-49f6-89d2-6828a29e646c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""d1bcca4c-e53b-4eb5-8bb8-96a7b71fcfbd"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""New action"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -164,6 +232,11 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
         m_player_leftclick = m_player.FindAction("left click", throwIfNotFound: true);
         m_player_rightclick = m_player.FindAction("right click", throwIfNotFound: true);
         m_player_rclick = m_player.FindAction("r click", throwIfNotFound: true);
+        m_player_jump = m_player.FindAction("jump", throwIfNotFound: true);
+        m_player_rebinding = m_player.FindAction("rebinding", throwIfNotFound: true);
+        // rebinding
+        m_rebinding = asset.FindActionMap("rebinding", throwIfNotFound: true);
+        m_rebinding_Newaction = m_rebinding.FindAction("New action", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -229,6 +302,8 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
     private readonly InputAction m_player_leftclick;
     private readonly InputAction m_player_rightclick;
     private readonly InputAction m_player_rclick;
+    private readonly InputAction m_player_jump;
+    private readonly InputAction m_player_rebinding;
     public struct PlayerActions
     {
         private @PlayerControl m_Wrapper;
@@ -237,6 +312,8 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
         public InputAction @leftclick => m_Wrapper.m_player_leftclick;
         public InputAction @rightclick => m_Wrapper.m_player_rightclick;
         public InputAction @rclick => m_Wrapper.m_player_rclick;
+        public InputAction @jump => m_Wrapper.m_player_jump;
+        public InputAction @rebinding => m_Wrapper.m_player_rebinding;
         public InputActionMap Get() { return m_Wrapper.m_player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -258,6 +335,12 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
             @rclick.started += instance.OnRclick;
             @rclick.performed += instance.OnRclick;
             @rclick.canceled += instance.OnRclick;
+            @jump.started += instance.OnJump;
+            @jump.performed += instance.OnJump;
+            @jump.canceled += instance.OnJump;
+            @rebinding.started += instance.OnRebinding;
+            @rebinding.performed += instance.OnRebinding;
+            @rebinding.canceled += instance.OnRebinding;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -274,6 +357,12 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
             @rclick.started -= instance.OnRclick;
             @rclick.performed -= instance.OnRclick;
             @rclick.canceled -= instance.OnRclick;
+            @jump.started -= instance.OnJump;
+            @jump.performed -= instance.OnJump;
+            @jump.canceled -= instance.OnJump;
+            @rebinding.started -= instance.OnRebinding;
+            @rebinding.performed -= instance.OnRebinding;
+            @rebinding.canceled -= instance.OnRebinding;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -291,11 +380,63 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
         }
     }
     public PlayerActions @player => new PlayerActions(this);
+
+    // rebinding
+    private readonly InputActionMap m_rebinding;
+    private List<IRebindingActions> m_RebindingActionsCallbackInterfaces = new List<IRebindingActions>();
+    private readonly InputAction m_rebinding_Newaction;
+    public struct RebindingActions
+    {
+        private @PlayerControl m_Wrapper;
+        public RebindingActions(@PlayerControl wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Newaction => m_Wrapper.m_rebinding_Newaction;
+        public InputActionMap Get() { return m_Wrapper.m_rebinding; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(RebindingActions set) { return set.Get(); }
+        public void AddCallbacks(IRebindingActions instance)
+        {
+            if (instance == null || m_Wrapper.m_RebindingActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_RebindingActionsCallbackInterfaces.Add(instance);
+            @Newaction.started += instance.OnNewaction;
+            @Newaction.performed += instance.OnNewaction;
+            @Newaction.canceled += instance.OnNewaction;
+        }
+
+        private void UnregisterCallbacks(IRebindingActions instance)
+        {
+            @Newaction.started -= instance.OnNewaction;
+            @Newaction.performed -= instance.OnNewaction;
+            @Newaction.canceled -= instance.OnNewaction;
+        }
+
+        public void RemoveCallbacks(IRebindingActions instance)
+        {
+            if (m_Wrapper.m_RebindingActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IRebindingActions instance)
+        {
+            foreach (var item in m_Wrapper.m_RebindingActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_RebindingActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public RebindingActions @rebinding => new RebindingActions(this);
     public interface IPlayerActions
     {
         void OnMove(InputAction.CallbackContext context);
         void OnLeftclick(InputAction.CallbackContext context);
         void OnRightclick(InputAction.CallbackContext context);
         void OnRclick(InputAction.CallbackContext context);
+        void OnJump(InputAction.CallbackContext context);
+        void OnRebinding(InputAction.CallbackContext context);
+    }
+    public interface IRebindingActions
+    {
+        void OnNewaction(InputAction.CallbackContext context);
     }
 }
