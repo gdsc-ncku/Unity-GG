@@ -1,6 +1,7 @@
 using System.Numerics;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 public enum PlayerStatus
 {
     move,
@@ -106,7 +107,31 @@ public class PlayerManager : MonoBehaviour
         playerStatus = PlayerStatus.move;
         playerTransform = this.transform;
 
+        _playerControl.player.rebinding.performed += ctx => Rebinding();
+
+
         _playerControl.player.jump.performed += ctx => Jump();
+
+        /*
+        _playerControl.player.jump.Disable();
+
+        _playerControl.player.jump.PerformInteractiveRebinding()
+            .OnComplete(callback => {
+                Debug.Log("Rebinding complete.");
+                callback.Dispose();
+                // 在這裡查看綁定的按鍵
+                foreach (var binding in _playerControl.player.jump.bindings)
+                {
+                    Debug.Log($"Binding: {binding.path}");
+                }
+
+                // 重綁定完成後啟用 action
+                _playerControl.player.jump.Enable();
+            })
+            .Start();
+*/
+
+
     }
     #endregion
 
@@ -120,5 +145,26 @@ public class PlayerManager : MonoBehaviour
         
         //跳多大力
         GetComponent<PlayerMove>().Jump(jumpforce);
+    }
+
+
+    public void Rebinding()
+    {
+        _playerControl.player.jump.Disable();
+
+        _playerControl.player.jump.PerformInteractiveRebinding()
+            .OnComplete(callback => {
+                Debug.Log("Rebinding complete.");
+                callback.Dispose();
+                // 在這裡查看綁定的按鍵
+                foreach (var binding in _playerControl.player.jump.bindings)
+                {
+                    Debug.Log($"Binding: {binding.path}");
+                }
+
+                // 重綁定完成後啟用 action
+                _playerControl.player.jump.Enable();
+            })
+            .Start();
     }
 }
