@@ -11,25 +11,26 @@ public class Detector : MonoBehaviour
     [SerializeField] float distance = 10;    //偵測距離
     [SerializeField] float angle = 30;       //偵測角度
     [SerializeField] bool isDebug = true;    //偵測角度
-    LayerMask layer => LayerMask.GetMask(LayerTagPack.Enemy, LayerTagPack.Player);  //偵測的層
     LayerMask occlusionLayers => LayerMask.GetMask(LayerTagPack.Environment);       //不偵測的層
     Collider[] colliders = new Collider[50]; //偵測到的物件(暫存器)
 
     /// <summary>
     /// 偵測到的目標們，可以給外部判斷
     /// </summary>
-    public List<GameObject> detectedObjects = new List<GameObject>();
+    //public List<GameObject> detectedObjects = new List<GameObject>();
     /// <summary>
     /// 偵測到的目標，可以給外部判斷
     /// </summary>
-    public GameObject taget;
+    //public GameObject taget;
 
     /// <summary>
     /// 偵測
+    /// 在behavior tree的function下方可以直接丟LayerTagPack裡的layer進去或是GetMask完在丟進去
+    /// 這裡這樣做是因為敵人、玩家偵測分開才可以做不同行為，也可以傳入參數時丟LayerMask.GetMask(LayerTagPack.layer1, LayerTagPack.layer2)來偵測多種layer
     /// </summary>
-    void Dectect()
+    /// 
+    public GameObject Detect(LayerMask layer)
     {
-        detectedObjects.Clear();
         var count = Physics.OverlapSphereNonAlloc(transform.position, distance, colliders, layer, QueryTriggerInteraction.Collide);
         for (int i = 0; i < count; i++)
         {
@@ -37,17 +38,11 @@ public class Detector : MonoBehaviour
             if (obj == transform.root.gameObject) continue;
             if (IsVisible(obj))
             {
-                detectedObjects.Add(obj);
-                if (taget != obj)
-                {
-                    taget = obj;
-                }
+                return obj;
             }
         }
-        if (taget != null && !detectedObjects.Contains(taget))
-        {
-            taget = null;
-        }
+
+        return null;
     }
 
     /// <summary>
