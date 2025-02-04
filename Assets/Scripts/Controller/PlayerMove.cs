@@ -75,7 +75,7 @@ public class PlayerMove : MonoBehaviour
         Vector3 forward = playerRigibody.transform.forward;
         Vector3 right = playerRigibody.transform.right;
 
-        if (PlayerManager.Instance.playerStatus == PlayerStatus.move && inputVector != Vector2.zero && Vector3.Distance(playerRigibody.velocity, Vector3.zero) < maxSpeed)
+        if (PlayerManager.Instance.playerStatus == PlayerStatus.move && inputVector != Vector2.zero && Vector3.Distance(playerRigibody.linearVelocity, Vector3.zero) < maxSpeed)
         {
             //playerRigibody.velocity = moveDirection.normalized * maxSpeed;
 
