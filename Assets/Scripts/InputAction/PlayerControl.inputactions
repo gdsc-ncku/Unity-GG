@@ -18,7 +18,7 @@
                     "name": "left click",
                     "type": "Button",
                     "id": "c09e5efc-f6b6-4767-bf13-c7958e302bfd",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -27,7 +27,7 @@
                     "name": "right click",
                     "type": "Button",
                     "id": "43affaa1-8407-4b42-8c38-8f44abdef6a0",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -54,7 +54,25 @@
                     "name": "rebinding",
                     "type": "Button",
                     "id": "bc01de10-aeb2-452e-851a-18812592015c",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Item",
+                    "type": "Button",
+                    "id": "7b05dfa7-8653-4e59-8dd6-368618f28e4f",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "CloseUI",
+                    "type": "Button",
+                    "id": "94f17186-0176-4227-a1ef-9c3d016ba3c6",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -168,6 +186,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "rebinding",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "acc31688-b39b-4c77-bfa7-88f8de724afc",
+                    "path": "<Keyboard>/i",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Item",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3cbe090a-b6e8-4d56-9688-0b968b14b655",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CloseUI",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

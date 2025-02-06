@@ -15,8 +15,8 @@ public class Shotgun_Bullet : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         if (rb != null)
         {
-            rb.velocity = transform.forward * speed;  // 根據子彈方向設置速度
-            Debug.Log("Bullet launched with velocity: " + rb.velocity);
+            rb.linearVelocity = transform.forward * speed;  // 根據子彈方向設置速度
+            Debug.Log("Bullet launched with velocity: " + rb.linearVelocity);
         }
 
         // 開啟計時器，時間過長後銷毀子彈

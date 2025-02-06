@@ -112,6 +112,10 @@ public class PlayerManager : MonoBehaviour
 
         _playerControl.player.jump.performed += ctx => Jump();
 
+        _playerControl.player.Item.performed += ctx => Item();
+
+        _playerControl.player.CloseUI.performed += ctx => CloseUI();
+
         /*
         _playerControl.player.jump.Disable();
 
@@ -147,8 +151,18 @@ public class PlayerManager : MonoBehaviour
         GetComponent<PlayerMove>().Jump(jumpforce);
     }
 
+    public void Item()
+    {
+        GetComponent<PlayerMove>().Item();
+    }
 
-    public void Rebinding()
+    public void CloseUI()
+    {
+        GetComponent<PlayerMove>().CloseUI();
+    }
+
+
+    public void Rebinding()//目前只能rebinding jump這個動作的按鍵，但可以很輕鬆的改到需要的動作上
     {
         _playerControl.player.jump.Disable();
 
