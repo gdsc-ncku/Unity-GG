@@ -18,7 +18,10 @@ public enum NameOfEvent
     ChangeCursorState,
 
     [Header("InventoryManager")]
-    InventoryItemChange
+    InventoryItemChange,
+
+    [Header("SpawnManager_Develop")]
+    ShowSpawnPoint,
 }
 
 /// <summary>

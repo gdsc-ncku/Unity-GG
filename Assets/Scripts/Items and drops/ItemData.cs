@@ -22,7 +22,11 @@ public enum ItemName
     HoundExclusiveCameraModule,
     HoundExclusiveMemory,
     HoundExclusiveMicrophone,
-    HoundExclusiveProcessorSoC
+    HoundExclusiveProcessorSoC,
+    HumanoidExclusiveMemory,
+    StereoProjector,
+    Battery,
+    SpawnPointDisplay,
 }
 
 /// <summary>
