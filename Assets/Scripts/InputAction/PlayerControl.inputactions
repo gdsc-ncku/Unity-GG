@@ -18,7 +18,7 @@
                     "name": "left click",
                     "type": "Button",
                     "id": "c09e5efc-f6b6-4767-bf13-c7958e302bfd",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -27,7 +27,7 @@
                     "name": "right click",
                     "type": "Button",
                     "id": "43affaa1-8407-4b42-8c38-8f44abdef6a0",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -44,8 +44,35 @@
                 {
                     "name": "jump",
                     "type": "Button",
-                    "id": "fd1d478b-fd50-4b1c-b184-7ab3b5028411",
+                    "id": "4d47b331-05c8-48ec-a0a8-cd7e29ffbe5a",
                     "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "rebinding",
+                    "type": "Button",
+                    "id": "bc01de10-aeb2-452e-851a-18812592015c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Item",
+                    "type": "Button",
+                    "id": "7b05dfa7-8653-4e59-8dd6-368618f28e4f",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "CloseUI",
+                    "type": "Button",
+                    "id": "94f17186-0176-4227-a1ef-9c3d016ba3c6",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -142,12 +169,73 @@
                 },
                 {
                     "name": "",
-                    "id": "a60473aa-58d5-4af0-8971-7f571ef959c9",
-                    "path": "<Keyboard>/space",
+                    "id": "881c52c8-543c-49c0-9090-fa72cc29d591",
+                    "path": "<Keyboard>/z",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "164c50ec-d2ca-4096-bb98-e6f920fe10a5",
+                    "path": "<Keyboard>/b",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "rebinding",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "acc31688-b39b-4c77-bfa7-88f8de724afc",
+                    "path": "<Keyboard>/i",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Item",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3cbe090a-b6e8-4d56-9688-0b968b14b655",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CloseUI",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "rebinding",
+            "id": "11671d05-c673-4b7b-9289-7819433c41ae",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "bb8729ed-7000-49f6-89d2-6828a29e646c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "d1bcca4c-e53b-4eb5-8bb8-96a7b71fcfbd",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
