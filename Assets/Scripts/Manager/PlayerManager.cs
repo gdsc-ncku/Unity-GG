@@ -1,4 +1,4 @@
-using System.Numerics;
+﻿using System.Numerics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -20,7 +20,7 @@ public class PlayerManager : MonoBehaviour
     public float jumpforce = 200f;
     public float xRotation = 0f;
     public Transform playerTransform { get; private set; }
-    #region �إ߳�ҼҦ�
+    #region 建立單例模式
     //instance mode
     private static PlayerManager _instance;
     public static PlayerManager Instance
@@ -38,7 +38,7 @@ public class PlayerManager : MonoBehaviour
 
     #endregion
 
-    #region Rigidbody�]�w
+    #region Rigidbody設定
     private Rigidbody _rb = null;
     public Rigidbody rb
     {
@@ -58,7 +58,7 @@ public class PlayerManager : MonoBehaviour
     }
     #endregion
 
-    #region InputAction�]�w
+    #region InputAction設定
     [SerializeField] PlayerControl _playerControl;
     public PlayerControl playerControl
     {
@@ -78,11 +78,11 @@ public class PlayerManager : MonoBehaviour
     }
     #endregion
 
-    #region ���A��
+    #region 狀態機
     public PlayerStatus playerStatus;
     #endregion
 
-    #region ��l��
+    #region 初始化
     private void Awake()
     {
         Initialize();

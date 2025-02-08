@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Timeline;
 
 public class PlayerMove : MonoBehaviour
 {
@@ -9,21 +11,41 @@ public class PlayerMove : MonoBehaviour
     private float mouseSensitivity;
     private float maxSpeed;
     private Rigidbody playerRigibody;
-
     public GameObject ItemUI;
     public GameObject WeaponUI;
     public GameObject CollectionUI;
     public GameObject BackMask;
     // �ƹ��F�ӫ�
-    private float xRotation; // ���⪺��������
+    private float xRotation; // 角色的垂直旋轉
 
-    private void Awake()
+    [Header("與時間放慢有關的移動設置")]
+    [SerializeField] private bool isScaledByTime = true;
+    [SerializeField] private Vector3 currentVelocity = Vector3.zero;
+    public float friction = 0.9f; // 摩擦力係數（值越小減速越慢）
+
+    //用於事件訂閱
+    private CompositeDisposable disposables = new CompositeDisposable();
+
+    //private void Awake()
+    //{
+    //    playerRigibody = PlayerManager.Instance.rb;
+    //    Cursor.lockState = CursorLockMode.Locked; // ��w�ƹ�
+
+    //    maxSpeed = PlayerManager.Instance.maxSpeed;
+    //    mouseSensitivity = PlayerManager.Instance.mouseSensitivity; 
+    //    xRotation = PlayerManager.Instance.xRotation;
+
+    //    if(isLockCursor)
+    //        Cursor.lockState = CursorLockMode.Locked; // 鎖定滑鼠
+    //}
+
+    private void Start()
     {
         playerRigibody = PlayerManager.Instance.rb;
-        Cursor.lockState = CursorLockMode.Locked; // ��w�ƹ�
+        Cursor.lockState = CursorLockMode.Locked; // 鎖定滑鼠到視窗中
 
         maxSpeed = PlayerManager.Instance.maxSpeed;
-        mouseSensitivity = PlayerManager.Instance.mouseSensitivity; 
+        mouseSensitivity = PlayerManager.Instance.mouseSensitivity;
         xRotation = PlayerManager.Instance.xRotation;
     }
 
@@ -58,16 +80,45 @@ public class PlayerMove : MonoBehaviour
         Vector3 forward = playerRigibody.transform.forward;
         Vector3 right = playerRigibody.transform.right;
 
-        // �ھڿ�J�p�Ⲿ�ʤ�V
-        Vector3 moveDirection = forward * inputVector.y + right * inputVector.x;
-
-        if (PlayerManager.Instance.playerStatus == PlayerStatus.move && inputVector != Vector2.zero && Vector3.Distance(playerRigibody.linearVelocity, Vector3.zero) < maxSpeed)
+        if (PlayerManager.Instance.playerStatus == PlayerStatus.move && inputVector != Vector2.zero && Vector3.Distance(playerRigibody.velocity, Vector3.zero) < maxSpeed)
         {
-            playerRigibody.linearVelocity = moveDirection.normalized * maxSpeed;
+            //playerRigibody.velocity = moveDirection.normalized * maxSpeed;
+
+            // 計算輸入的移動方向
+            Vector3 moveDir = (playerRigibody.transform.forward * inputVector.y + playerRigibody.transform.right * inputVector.x).normalized;
+
+            // 根據輸入更新目標速度
+            Vector3 targetVelocity = moveDir * maxSpeed;
+
+            // 使用 Lerp 模擬摩擦力，逐漸將速度拉近目標速度
+            currentVelocity = Vector3.Lerp(currentVelocity, targetVelocity, friction * (isScaledByTime ? Time.deltaTime : Time.unscaledDeltaTime));
+
+            // 計算實際移動距離
+            Vector3 moveDistance = currentVelocity * (isScaledByTime ? Time.deltaTime : Time.unscaledDeltaTime);
+
+            // 更新剛體的位置
+            playerRigibody.MovePosition(playerRigibody.position + moveDistance);
         }
         else if(PlayerManager.Instance.playerStatus == PlayerStatus.move && inputVector == Vector2.zero)
         {
-            playerRigibody.linearVelocity = new Vector3(0, playerRigibody.linearVelocity.y, 0);
+            //playerRigibody.velocity = new Vector3(0, playerRigibody.velocity.y, 0);
+
+            //手動模擬摩擦力減速效果
+            if(Vector3.Distance(currentVelocity, Vector3.zero) > 1f)
+            {
+                // 使用 Lerp 模擬摩擦力，逐漸將速度拉近目標速度
+                currentVelocity = Vector3.Lerp(currentVelocity, Vector3.zero, friction);
+
+                // 計算實際移動距離
+                Vector3 moveDistance = currentVelocity * (isScaledByTime ? Time.deltaTime : Time.unscaledDeltaTime);
+
+                // 更新剛體的位置
+                playerRigibody.MovePosition(playerRigibody.position + moveDistance);
+            }
+            else
+            {
+                currentVelocity = Vector3.zero;
+            }
         }
     }
 
@@ -84,6 +135,45 @@ public class PlayerMove : MonoBehaviour
         PlayerManager.Instance.rb.linearVelocity = Vector3.zero;
         PlayerManager.Instance.playerStatus = PlayerStatus.move;
         yield break;
+    }
+
+    private void OnEnable()
+    {
+        // 註冊對  事件的訂閱
+        disposables.Add(EventManager.StartListening<bool>(
+            NameOfEvent.ChangeMoveMode,
+            _isScaledByTime => ChangeMoveMode(_isScaledByTime)
+        ));
+
+        disposables.Add(EventManager.StartListening<bool>(
+            NameOfEvent.ChangeCursorState,
+            isLocked => ChangeCursorState(isLocked)
+        ));
+    }
+
+    private void OnDisable()
+    {
+        // 取消註冊對  事件的訂閱
+        disposables.Clear();
+    }
+
+    /// <summary>
+    /// 更改當前鼠標狀態
+    /// 是否鎖定到視窗中
+    /// </summary>
+    /// <param name="isLocked">是否上鎖</param>
+    private void ChangeCursorState(bool isLocked)
+    {
+        if (isLocked == true)
+            Cursor.lockState = CursorLockMode.Locked; // 鎖定滑鼠
+        else if(isLocked == false)
+            Cursor.lockState = CursorLockMode.None;
+    }
+
+    private void ChangeMoveMode(bool _isScaledByTime)
+    {
+        Debug.Log($"PlayMove: Move mode is changed (is scaled by time: {_isScaledByTime})");
+        isScaledByTime = _isScaledByTime;
     }
 
     public void Jump(float jumpforce)

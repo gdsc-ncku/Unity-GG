@@ -10,18 +10,27 @@ using UnityEngine;
 public class EnemyBase : MonoBehaviour
 {
     [SerializeField]EnemyMovement movement;
-    [SerializeField]Detector detector;
+    [SerializeField]EnemyAttack attack;
+    [SerializeField]Detector searchableDetector;
+    [SerializeField]Detector attackableDetector;
     string targetTag = LayerTagPack.Player;
     void Start()
     {
-        detector.targetTag = targetTag;
-        detector.OnViewTarget.Subscribe(OnViewTarget).AddTo(this);
-        detector.OnTargetGone.Subscribe(_ => OnTargetGone()).AddTo(this);
+        searchableDetector.targetTag = targetTag;
+        attackableDetector.targetTag = targetTag;
+        searchableDetector.OnTargetGet.Subscribe(OnViewTarget).AddTo(this);
+        searchableDetector.OnTargetGone.Subscribe(_ => OnTargetGone()).AddTo(this);
+        attackableDetector.OnTargetGet.Subscribe(OnAttackable).AddTo(this);
     }
-
+    void OnAttackable(GameObject player)
+    {
+        attack.target = player.transform;
+        attack.Attack();
+    }
     void OnViewTarget(GameObject player)
     {
         movement.target = player.transform;
+        movement.MoveTo(player.transform.position);
     }
     void OnTargetGone()
     {

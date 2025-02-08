@@ -1,15 +1,17 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
+using UnityEngine.Timeline;
 using UnityEngine.UI;
 
 /// <summary>
-/// ­¸ÅIªº­¸¦æª¬ºA
+/// é£›é®çš„é£›è¡Œç‹€æ…‹
 /// </summary>
-public enum FlyingStatus
+public enum FlyingSickle_Status
 {
     prepare = -1,
     hold,
@@ -45,45 +47,43 @@ public class FlyingSickle : Weapon
     }
 
 
-    public GameObject flyingSickle; //­¸ÅI¹CÀ¸ª«¥ó
-    [Tooltip("»²§U·Ç¤ß")] public Image targetHeart;
+    public GameObject flyingSickle; //é£›é®éŠæˆ²ç‰©ä»¶
+    [Tooltip("è¼”åŠ©æº–å¿ƒ")] public Image targetHeart;
 
-    //private GameObject playerCamera;   //ª±®aÄá¼v¾÷¹CÀ¸ª«¥ó
-    //private Transform keepPosition; //¤â«ù¦ì¸mªºtransform
-    public float rotationSpeed = 100f; // ±ÛÂà³t«×¡A³æ¦ì¬O«×/¬í
+    public float rotationSpeed = 100f; // æ—‹è½‰é€Ÿåº¦ï¼Œå–®ä½æ˜¯åº¦/ç§’
+    [SerializeField] private FlyingSickle_Status status = FlyingSickle_Status.prepare;    //ç•¶å‰ç‹€æ…‹
 
-    [SerializeField] private FlyingStatus status = FlyingStatus.prepare;    //·í«eª¬ºA
-
-    [Header("¤¤Áä-²`«×±±¨î")]
-    [SerializeField] private float depth = 0f;   //¥Ø«eÂê©wªº²`«×
+    [Header("ä¸­éµ-æ·±åº¦æ§åˆ¶")]
+    [SerializeField] private float depth = 0f;   //ç›®å‰é–å®šçš„æ·±åº¦
     public float scrollSpeed;
     public float minDepth = 10f;
     public float maxDepth = 100f;
 
-    public float minTargetSize = 10f;
-    public float maxTargetSize = 100f;
+    public float minTargetSize = 10f;   //æœ€å°æº–å¿ƒå¤§å°
+    public float maxTargetSize = 100f;  //æœ€å¤§æº–å¿ƒå¤§å°
 
-    private Queue<Vector3> lockPoint = new Queue<Vector3>();    //ª±®aÂê©wªºÂI
-    //public Transform debugBall;
-    //public Transform debugBall1;
+    private Queue<Vector3> lockPoint = new Queue<Vector3>();    //ç©å®¶é–å®šçš„é»
 
-    [Header("¥ªÁä-Âê©w­¸¦æÂI")]
+    [Header("å·¦éµ-é–å®šé£›è¡Œé»")]
     public float bulletTime = 0.7f;
     private Vector3 currentTarget;
     public float sickleSpeed = 5f;
     public bool hasTarget = false;
 
-    [Header("±¼¸¨¬ÛÃö")]
+    [Header("æ‰è½ç›¸é—œ")]
     private Rigidbody rb;
-    //private Collider coll;
     private MeshCollider coll;
+    public float dropSpeed = 5f;
 
-    [Header("¬ï³z¬ÛÃö")]
-    [SerializeField] private bool isLastFlyingBack = false;   //¬ö¿ı¬O§_¬°¥kÁäÄ²µoªºªğ¦^¡A¦pªG¬O µLªk¬ï³z
+    [Header("ç©¿é€ç›¸é—œ")]
+    [SerializeField] private bool isLastFlyingBack = false;   //ç´€éŒ„æ˜¯å¦ç‚ºå³éµè§¸ç™¼çš„è¿”å›ï¼Œå¦‚æœæ˜¯ ç„¡æ³•ç©¿é€
+
+    [Header("æ‰‹æŒç›¸é—œ")]
+    private bool isHolding = false;
 
     private void Awake()
     {
-        //¨¾¤î­«½Æ³Ğ«Ø
+        //é˜²æ­¢é‡è¤‡å‰µå»º
         if(_flyingSickle != null)
         {
             Debug.Log("Duplicate creating Flying Sickle Instance");
@@ -99,299 +99,313 @@ public class FlyingSickle : Weapon
 
         SelfRotate();
 
-        //­¸ÅI°lÂÜ
+        //é£›é®è¿½è¹¤
         if (hasTarget)
         {
             Tracking();
         }
-        else if(status == FlyingStatus.back)
+        else if(status == FlyingSickle_Status.back)
         {
             Backing();
         }
-        else if(status == FlyingStatus.hold)
-        {
-            Holding();
-        }
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            EnterHold();
-        }
+        //else if(status == FlyingSickle_Status.drop && isGrounded == false)
+        //{
+        //    Droping();
+        //}
     }
 
     /// <summary>
-    /// ­¸ÅIªºªì©l¤Æ
+    /// é£›é®çš„åˆå§‹åŒ–
     /// </summary>
     /// <param name="transform"></param>
     /// <param name="camera"></param>
-    public override void Init(Transform transform, Camera camera)
+    protected override void Init()
     {
-        base.Init(transform, camera);
+        base.Init();
 
-        //init
-        //coll = flyingSickle.GetComponent<Collider>();
+        //è¿½è¹¤ç›¸é—œ
+        currentTarget = Vector3.zero;
+
+        //æ‰è½èˆ‡ç¢°æ’ç›¸é—œ
         coll = flyingSickle.GetComponent<MeshCollider>();
         coll.isTrigger = true;
 
         rb = flyingSickle.GetComponent<Rigidbody>();
         rb.useGravity = false;
-        EnterHold();
+        rb.isKinematic = true;
+
+        EnterStatus(FlyingSickle_Status.hold);
     }
 
-    ///// <summary>
-    ///// ªì©l¤ÆªZ¾¹
-    ///// ¤â«ù¦ì¸m¡B±ÛÂà¨¤«×
-    ///// </summary>
-    ///// <param name="takePosition">­n¤â«ùªº¦ì¸m</param>
-    //public void InitWeapon(Transform takePosition, GameObject _player)
-    //{
-    //    //set value
-    //    keepPosition = takePosition;
-    //    playerCamera = _player.GetComponent<Camera>();
-
-    //    //init
-    //    //coll = flyingSickle.GetComponent<Collider>();
-    //    coll = flyingSickle.GetComponent<MeshCollider>();
-    //    coll.isTrigger = true;
-
-    //    rb = flyingSickle.GetComponent<Rigidbody>();
-    //    rb.useGravity = false;
-    //    EnterHold();
-    //}
-
     /// <summary>
-    /// ¥kÁäÄ²µo
+    /// å³éµè§¸ç™¼
     /// </summary>
     /// <param name="type"></param>
-    public override void RightClickPerformed(InputAction.CallbackContext obj)
+    protected override void RightClickPerformed(InputAction.CallbackContext obj)
     {
-        if (status != FlyingStatus.drop)
+        //if (status != FlyingSickle_Status.drop)
+        //{
+        //    EnterBack(isLastFlyingBack = false);
+        //}
+
+        if(status == FlyingSickle_Status.fly_1 || status == FlyingSickle_Status.fly_2)
         {
-            EnterBack(isLastFlyingBack = false);
+            //EnterBack(isLastFlyingBack = false);
+            EnterStatus(FlyingSickle_Status.back, false);
         }
     }
 
     /// <summary>
-    /// ¥ªÁäÄ²µo
+    /// å·¦éµè§¸ç™¼
     /// </summary>
-    /// <param name="type">0, 1, 2 ¤À§O¬OÂIÀ»¡B«ö¦í¡B©ñ¶}</param>
-    public override void LeftClickCanceled(InputAction.CallbackContext obj)
+    /// <param name="type">0, 1, 2 åˆ†åˆ¥æ˜¯é»æ“Šã€æŒ‰ä½ã€æ”¾é–‹</param>
+    protected override void LeftClickCanceled(InputAction.CallbackContext obj)
     {
-        ChoosePoint(true);
+        EnterBulletTime(false);
         LockPoint();
     }
 
-    public override void LeftClickPerformed(InputAction.CallbackContext obj)
+    protected override void LeftClickPerformed(InputAction.CallbackContext obj)
     {
-        ChoosePoint(false);
+        EnterBulletTime(true);
     }
 
     /// <summary>
-    /// ¤¤Áäºu°Ê°»´ú
+    /// R éµè§¸ç™¼
+    /// </summary>
+    /// <param name="obj"></param>
+    protected override void RClickPerformed(InputAction.CallbackContext obj)
+    {
+        //EnterHold();
+        EnterStatus(FlyingSickle_Status.hold);
+    }
+
+    /// <summary>
+    /// ä¸­éµæ»¾å‹•åµæ¸¬
     /// </summary>
     public void MiddleScroll()
     {
-        // ®Ú¾Ú·Æ¹«ºu½ü§ó·s²`«×
+        // æ ¹æ“šæ»‘é¼ æ»¾è¼ªæ›´æ–°æ·±åº¦
         float scroll = Input.mouseScrollDelta.y;
         depth = Mathf.Clamp(depth + scroll * scrollSpeed, minDepth, maxDepth);
 
-        // §ó·s·Ç¤ß¤j¤p¨Ó¤Ï¬M²`«×­È
+        // æ›´æ–°æº–å¿ƒå¤§å°ä¾†åæ˜ æ·±åº¦å€¼
         float targetSize = Mathf.Lerp(maxTargetSize, minTargetSize, (depth - minDepth) / (maxDepth - minDepth));
         targetHeart.rectTransform.sizeDelta = new Vector2(targetSize, targetSize);
     }
 
     /// <summary>
-    /// ­¸ÅI±ÛÂàªº¨ç¼Æ
+    /// é£›é®æ—‹è½‰çš„å‡½æ•¸
     /// </summary>
     private void SelfRotate()
     {
-        if(status > FlyingStatus.hold && status < FlyingStatus.drop)
+        if (status == FlyingSickle_Status.fly_1 || status == FlyingSickle_Status.fly_2
+            || status == FlyingSickle_Status.back)
         {
-            // ¨Ï¥Î transform.Rotate Åı­¸ÅIª«¥ó¨C¬í±ÛÂà¤@©w¨¤«×
+            // ä½¿ç”¨ transform.Rotate è®“é£›é®ç‰©ä»¶æ¯ç§’æ—‹è½‰ä¸€å®šè§’åº¦
             flyingSickle.transform.Rotate(Vector3.left * rotationSpeed * Time.deltaTime);
-            Debug.Log("rotate");
         }
     }
 
     /// <summary>
-    /// ­¸ÅI§ì¦b¤â¤Wªº¨ç¼Æ
-    /// </summary>
-    private void Holding()
-    {
-        flyingSickle.transform.position = keepPosition.position;
-        flyingSickle.transform.eulerAngles = keepPosition.eulerAngles;
-    }
-
-    /// <summary>
-    /// ­¸ÅI¦^Âkªº¨ç¼Æ
+    /// é£›é®å›æ­¸çš„å‡½æ•¸
     /// </summary>
     private void Backing()
     {
-        // ­¸ÅI²¾°Ê¨ì¥Ø¼ĞÂI
+        // é£›é®ç§»å‹•åˆ°ç›®æ¨™é»
         flyingSickle.transform.position = Vector3.MoveTowards(flyingSickle.transform.position, keepPosition.position, sickleSpeed * Time.deltaTime);
 
-        // ÀË¬d­¸ÅI¬O§_¨ì¹F¥Ø¼ĞÂI
+        // æª¢æŸ¥é£›é®æ˜¯å¦åˆ°é”ç›®æ¨™é»
         if (Vector3.Distance(flyingSickle.transform.position, keepPosition.position) < 0.1f)
         {
             lockPoint.Clear();
 
-            //­«¸m¬ï³z¬ÛÃöªºÅÜ¼Æ
-            isLastFlyingBack = false;   //§ó·sªğ¦^Ä²µo¨Ó·½ªºª¬ºA
+            //é‡ç½®ç©¿é€ç›¸é—œçš„è®Šæ•¸
+            isLastFlyingBack = false;   //æ›´æ–°è¿”å›è§¸ç™¼ä¾†æºçš„ç‹€æ…‹
 
-            // ¶i¤J¤U­Óª¬ºA
-            EnterHold();
+            // é€²å…¥ä¸‹å€‹ç‹€æ…‹
+            EnterStatus(FlyingSickle_Status.hold);
         }
     }
 
     /// <summary>
-    /// °lÂÜª±®a³]©wªºÂI
-    /// ¶}©l°õ¦æ«á ¥²©w²MªÅqueue
+    /// è¿½è¹¤ç©å®¶è¨­å®šçš„é»
+    /// é–‹å§‹åŸ·è¡Œå¾Œ å¿…å®šæ¸…ç©ºqueue
     /// </summary>
     private void Tracking()
     {
-        // ­¸ÅI²¾°Ê¨ì¥Ø¼ĞÂI
+        // é£›é®ç§»å‹•åˆ°ç›®æ¨™é»
         flyingSickle.transform.position = Vector3.MoveTowards(flyingSickle.transform.position, currentTarget, sickleSpeed * Time.deltaTime);
 
-        // ÀË¬d­¸ÅI¬O§_¨ì¹F¥Ø¼ĞÂI
+        // æª¢æŸ¥é£›é®æ˜¯å¦åˆ°é”ç›®æ¨™é»
         if (Vector3.Distance(flyingSickle.transform.position, currentTarget) < 0.1f)
         {
-            // ·í«e¥Ø¼ĞÂI¤w¨ì¹F¡AÀË¬d¬O§_ÁÙ¦³¤U¤@­ÓÂI
+            // ç•¶å‰ç›®æ¨™é»å·²åˆ°é”ï¼Œæª¢æŸ¥æ˜¯å¦é‚„æœ‰ä¸‹ä¸€å€‹é»
             if (lockPoint.Count > 0)
             {
-                currentTarget = lockPoint.Dequeue();  // ³]©w¤U¤@­Ó¥Ø¼ĞÂI
+                currentTarget = lockPoint.Dequeue();  // è¨­å®šä¸‹ä¸€å€‹ç›®æ¨™é»
             }
             else
-            {
-                // ¦pªG¥Ø¼ĞÂI³]¸m¨S¦³¨ìªğ¦^ªºµ{«× ¨º¥Nªí¨Ó¤£¤Î³]¸m ­¸ÅI±¼¸¨
-                if (status != FlyingStatus.back)
+            {                
+                // å¦‚æœç›®æ¨™é»è¨­ç½®æ²’æœ‰åˆ°è¿”å›çš„ç¨‹åº¦ é‚£ä»£è¡¨ä¾†ä¸åŠè¨­ç½® é£›é®æ‰è½
+                if (status != FlyingSickle_Status.back)
                 {
-                    EnterDrop();
-                }else if(status == FlyingStatus.back)
+                    EnterStatus(FlyingSickle_Status.drop);
+                }else if(status == FlyingSickle_Status.back)
                 {
-                    //³Ì«á¤@¬q­¸¦æ¦^Âk
-                    EnterBack(isLastFlyingBack=true);
+                    //æœ€å¾Œä¸€æ®µé£›è¡Œå›æ­¸
+                    EnterStatus(FlyingSickle_Status.back, true);
                 }
             }
         }
     }
 
     /// <summary>
-    /// Âê©w¦ì¸m
-    /// ®Ú¾Ú·í«e­¸ÅIª¬ºA¡A³]¸mÂê©w¦ì¸m
+    /// é–å®šä½ç½®
+    /// æ ¹æ“šç•¶å‰é£›é®ç‹€æ…‹ï¼Œè¨­ç½®é–å®šä½ç½®
     /// </summary>
     private void LockPoint()
     {
-        if((status == FlyingStatus.hold && lockPoint.Count == 0) 
-            || (status > FlyingStatus.hold && status < FlyingStatus.back))
+        //é£›é®è™•åœ¨åˆæ³•çš„æ“ä½œç‹€æ…‹
+        //æ‰‹æŒ ä¸” æ²’æœ‰å…¶ä»–é–å®šé»
+        //é£›è¡Œ1
+        //é£›è¡Œ2
+        if((status == FlyingSickle_Status.hold && lockPoint.Count == 0) 
+            || (status > FlyingSickle_Status.hold && status < FlyingSickle_Status.back))
         {
-            // ²Ä¤@¦¸µo®g
-            // ®Ú¾Ú·Ç¤ß¤è¦V©M²`«×­pºâÂê©wÂI
+            // æ ¹æ“šæº–å¿ƒæ–¹å‘å’Œæ·±åº¦è¨ˆç®—é–å®šé»
             Vector3 rayOrigin = playerCamera.transform.position;
             Vector3 rayDirection = playerCamera.transform.forward;
             
             Vector3 point = rayOrigin + rayDirection * depth;
-            
-            if(status == FlyingStatus.hold)
+
+            if (status == FlyingSickle_Status.hold)
             {
+                //ç¬¬ä¸€æ¬¡ç›´æ¥è¨­å®šé–å®šé»
                 currentTarget = point;
             }
             else
             {
+                //ç¬¬äºŒæ¬¡ä»¥å¾Œ å°‡é–å®šé»åŠ å…¥buffer
                 lockPoint.Enqueue(point);
             }
 
-            // ¶i¤J¤U­Óª¬ºA
-            status = (FlyingStatus)((int)(status + 1) % ((int)FlyingStatus.back + 1));
+            // é€²å…¥ä¸‹å€‹ç‹€æ…‹
+            status = (FlyingSickle_Status)((int)(status + 1) % ((int)FlyingSickle_Status.back + 1));
+            
+            //è„«æ‰‹
+            if(isHolding == true)
+            {
+                isHolding = false;
+                flyingSickle.transform.SetParent(null);
+            }
+            
+            //å‘Šè¨´é£›é®æœ‰ç›®æ¨™äº†
             hasTarget = true;
         }
         else
         {
-            Debug.Log("illegal control");
+            Debug.Log("FlyingSickle: Illegal control");
             return;
         }
     }
 
     /// <summary>
-    /// ¿ï¾Ü¦ì¸m
-    /// ¦pªG­n¿ï¾Ü¡A¶i¤J¤l¼u®É¶¡
+    /// é¸æ“‡ä½ç½®
+    /// å¦‚æœè¦é¸æ“‡ï¼Œé€²å…¥å­å½ˆæ™‚é–“
     /// </summary>
-    /// <param name="isDown"></param>
-    private void ChoosePoint(bool isDown)
+    /// <param name="isTrigger"></param>
+    private void EnterBulletTime(bool isTrigger)
     {
-        if(isDown == false)
+        if(isTrigger == true)
         {
-            Time.timeScale = bulletTime;
+            EventManager.TriggerEvent<float>(NameOfEvent.TimeControl, bulletTime);
         }
         else
         {
-            Time.timeScale = 1f;
+            EventManager.TriggerEvent(NameOfEvent.TimeResume);
         }
     }
 
-    /// <summary>
-    /// ³B²z±¼¸¨
-    /// </summary>
-    private void EnterDrop()
+     /// <summary>
+     /// é€²å…¥æŒ‡å®šç‹€æ…‹
+     /// éœ€è¦åšçš„è™•ç†
+     /// </summary>
+     /// <param name="_status"></param>
+     /// <param name="isLastFlying"></param>
+    private void EnterStatus(FlyingSickle_Status _status, bool isLastFlying)
     {
-        status = FlyingStatus.drop;
+        status = _status;
         hasTarget = false;
 
-        if(lockPoint.Count > 0)
+        //æ¸…ç©ºé–å®šé»buffer
+        if (lockPoint.Count > 0)
         {
             lockPoint.Clear();
         }
 
-        if(rb.useGravity == false)
+        if(status == FlyingSickle_Status.back)
+        {
+            if (isLastFlying == true)
+            {
+                isLastFlyingBack = true;
+            }
+
+            ChangeGravity(false);
+        }
+    }
+
+    /// <summary>
+    /// é€²å…¥æŒ‡å®šç‹€æ…‹
+    /// éœ€è¦åšçš„è™•ç†
+    /// </summary>
+    /// <param name="_status"></param>
+    private void EnterStatus(FlyingSickle_Status _status)
+    {
+        status = _status;
+        hasTarget = false;
+
+        //æ¸…ç©ºé–å®šé»buffer
+        if (lockPoint.Count > 0)
+        {
+            lockPoint.Clear();
+        }
+
+        if (_status == FlyingSickle_Status.drop)
+        {
+            ChangeGravity(true);
+        }
+        else if (_status == FlyingSickle_Status.hold)
+        {
+            isHolding = true;
+
+            //å›åˆ°æ‰‹çš„æº–ç¢ºä½ç½®
+            flyingSickle.transform.SetParent(keepPosition.parent.parent);
+            flyingSickle.transform.position = keepPosition.position;
+            flyingSickle.transform.rotation = keepPosition.rotation;
+
+            ChangeGravity(false);
+        }
+    }
+
+    /// <summary>
+    /// æ”¹è®Šé‡åŠ›
+    /// æœ‰æˆ–æ²’æœ‰
+    /// </summary>
+    /// <param name="use">æ˜¯å¦ä½¿ç”¨é‡åŠ›</param>
+    private void ChangeGravity(bool use)
+    {
+        //è™•ç†ç¢°æ’ç›¸é—œ
+        if (use == false && rb.useGravity == true)
+        {
+            rb.useGravity = false;
+            rb.isKinematic = true;
+            coll.isTrigger = true;
+        }else if(use == true && rb.useGravity == false)
         {
             rb.useGravity = true;
+            rb.isKinematic = false;
             coll.isTrigger = false;
-        }
-    }
-
-    /// <summary>
-    /// ¶i¤J§ì¦íª¬ºA
-    /// </summary>
-    private void EnterHold()
-    {
-        status = FlyingStatus.hold;
-        hasTarget = false;
-
-        if (lockPoint.Count > 0)
-        {
-            lockPoint.Clear();
-        }
-
-        //³B²z¸I¼²¬ÛÃö
-        if (rb.useGravity == true)
-        {
-            rb.useGravity = false;
-            coll.isTrigger = true;
-        }
-    }
-
-    private void EnterBack(bool isLastFlying)
-    {
-        hasTarget = false;
-        status = FlyingStatus.back;
-
-        if(isLastFlying == true)
-        {
-            isLastFlyingBack = true;
-        }
-
-        if (lockPoint.Count > 0)
-        {
-            lockPoint.Clear();
-        }
-
-        //³B²z¸I¼²¬ÛÃö
-        if (rb.useGravity == true)
-        {
-            rb.useGravity = false;
-            coll.isTrigger = true;
         }
     }
 
@@ -399,19 +413,19 @@ public class FlyingSickle : Weapon
     {
         if(collision.gameObject.tag == "Player")
         {
-            //¦¬¦^
-            EnterHold();
+            //æ”¶å›
+            EnterStatus(FlyingSickle_Status.hold);
         }
     }
 
     private void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject.tag == "Enviroument" && isLastFlyingBack == false && status != FlyingStatus.hold)
+        if (collision.gameObject.tag == "Enviroument" && isLastFlyingBack == false && status != FlyingSickle_Status.hold)
         {
-            Debug.Log("touch object");
+            Debug.Log("FlyingSickle: touch object");
 
-            //¸I¼²¥ô·Nª«Åé«á±¼¸¨
-            EnterDrop();
+            //ç¢°æ’ä»»æ„ç‰©é«”å¾Œæ‰è½
+            EnterStatus(FlyingSickle_Status.drop);
         }
     }
 }
