@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
@@ -11,30 +12,76 @@ public class Detector : MonoBehaviour
     [SerializeField] float distance = 10;    //偵測距離
     [SerializeField] float angle = 30;       //偵測角度
     [SerializeField] bool isDebug = true;    //偵測角度
+    [SerializeField] LayerMask selfLayerMask;
     LayerMask occlusionLayers => LayerMask.GetMask(LayerTagPack.Environment);       //不偵測的層
     Collider[] colliders = new Collider[50]; //偵測到的物件(暫存器)
 
-    /// <summary>
-    /// 偵測到的目標們，可以給外部判斷
-    /// </summary>
-    //public List<GameObject> detectedObjects = new List<GameObject>();
-    /// <summary>
-    /// 偵測到的目標，可以給外部判斷
-    /// </summary>
-    //public GameObject taget;
+    private void Start()
+    {
+        selfLayerMask = LayerMask.GetMask(LayerMask.LayerToName(gameObject.layer));
+    }
 
     /// <summary>
     /// 偵測
     /// 在behavior tree的function下方可以直接丟LayerTagPack裡的layer進去或是GetMask完在丟進去
     /// 這裡這樣做是因為敵人、玩家偵測分開才可以做不同行為，也可以傳入參數時丟LayerMask.GetMask(LayerTagPack.layer1, LayerTagPack.layer2)來偵測多種layer
     /// </summary>
-    /// 
     public GameObject Detect(LayerMask layer)
     {
-        var count = Physics.OverlapSphereNonAlloc(transform.position, distance, colliders, layer, QueryTriggerInteraction.Collide);
-        for (int i = 0; i < count; i++)
+        Collider[] colliders = Physics.OverlapSphere(transform.position, distance, layer, QueryTriggerInteraction.Collide);
+
+        /// <summary>
+        /// 按優先級和距離從(優先級高且近)到(優先級低且遠)排序
+        /// 主要邏輯: 因為只有三個狀態，所以把優先級最高(runAway)跟優先級最低(stay)拆出來判斷，就可以用簡單的if在O(1)解決
+        /// 先判斷優先級是否相同
+        /// 相同: 用距離判斷排序
+        /// 不相同: 是否有人優先級最低，有->無條件選另一個，無->其中必定有一人優先級最高(因為stay與優先級相等在上面被排除了)
+        /// 稍微有點Tricky，但因為這是內部的排序所以如果再用查表的方式解決問題會導致這邊變成O(n^2)解，太慢了
+        /// </summary>
+        Array.Sort(colliders, (a, b) =>
         {
-            GameObject obj = colliders[i].gameObject;
+            int aFirst = -1, bFirst = 1;
+            LayerMask LayerMaskA = LayerMask.GetMask(LayerMask.LayerToName(a.gameObject.layer))
+                    , LayerMaskB = LayerMask.GetMask(LayerMask.LayerToName(b.gameObject.layer));
+            int valueA = EnemyDiagrams.enemyDiagram[selfLayerMask][LayerMaskA]
+                , valueB = EnemyDiagrams.enemyDiagram[selfLayerMask][LayerMaskB];
+            //查表狀態相同距離近的先偵測
+            if(valueA == valueB)
+            {
+                float distA = Vector3.Distance(transform.position, a.transform.position);
+                float distB = Vector3.Distance(transform.position, b.transform.position);
+                return distA.CompareTo(distB);
+            }
+            else
+            {
+                //查表狀態不同，stay優先級最低
+                if (valueA == EnemyDiagrams.stay)
+                {
+                    return bFirst;
+                }
+                else if(valueB == EnemyDiagrams.stay)
+                {
+                    return aFirst;
+                }
+
+                //查表狀態不同且無人是stay，runAway優先級最高
+                if(valueA == EnemyDiagrams.runAway)
+                {
+                    return aFirst;
+                }
+                else if(valueB == EnemyDiagrams.runAway)
+                {
+                    return bFirst;
+                }
+            }
+
+            //此狀況不會發生
+            return 0;
+        });
+
+        foreach (Collider collider in colliders)
+        {
+            GameObject obj = collider.gameObject;
             if (obj == transform.root.gameObject) continue;
             if (IsVisible(obj))
             {

@@ -411,6 +411,7 @@ GameObject:
   - component: {fileID: 472564684}
   - component: {fileID: 472564683}
   - component: {fileID: 472564682}
+  - component: {fileID: 472564685}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -468,6 +469,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &472564685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 472564681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e0cca1758721ee45b33c30487ee6db5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &574241233
 GameObject:
   m_ObjectHideFlags: 0
@@ -1546,7 +1559,7 @@ GameObject:
   - component: {fileID: 1600237180}
   - component: {fileID: 1600237179}
   - component: {fileID: 1600237187}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1592,9 +1605,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f52efa30fcaf3d34facd834cfa10b8fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distance: 5
-  angle: 30
+  distance: 10
+  angle: 60
   isDebug: 1
+  selfLayerMask:
+    serializedVersion: 2
+    m_Bits: 512
 --- !u!114 &1600237181
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1610,10 +1626,10 @@ MonoBehaviour:
   m_Graph: {fileID: 2244881967296739181, guid: ad1be547e837f364db5f82eaaa9db5ec, type: 2}
   m_BlackboardVariableOverridesList:
   - rid: 1880244143112323072
-  - rid: 1880244143112323073
   - rid: 1880244143112323612
   - rid: 1880244147052085493
   - rid: 1880244147052085494
+  - rid: 1880244216288510064
   m_IsInitialised: 0
   m_IsStarted: 0
   references:
@@ -1627,14 +1643,6 @@ MonoBehaviour:
           m_Value1: 0
         Name: Self
         m_Value: {fileID: 1600237178}
-    - rid: 1880244143112323073
-      type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 2704065859597270396
-          m_Value1: 640713324382049163
-        Name: Player
-        m_Value: {fileID: 0}
     - rid: 1880244143112323612
       type: {class: 'BlackboardVariable`1[[Detector, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -1663,6 +1671,14 @@ MonoBehaviour:
         - {fileID: 2053372268}
         - {fileID: 2119352816}
         - {fileID: 1879621203}
+    - rid: 1880244216288510064
+      type: {class: 'BlackboardVariable`1[[UnityEngine.Vector3, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 17067363019497451066
+          m_Value1: 12399043744619879637
+        Name: disappearPosition
+        m_Value: {x: -100, y: -100, z: -100}
 --- !u!195 &1600237182
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2303,161 +2319,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &2103448067
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2103448071}
-  - component: {fileID: 2103448070}
-  - component: {fileID: 2103448069}
-  - component: {fileID: 2103448068}
-  - component: {fileID: 2103448072}
-  - component: {fileID: 2103448073}
-  m_Layer: 0
-  m_Name: player
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!136 &2103448068
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2103448067}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!23 &2103448069
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2103448067}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &2103448070
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2103448067}
-  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
---- !u!4 &2103448071
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2103448067}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.9211109, z: -0, w: 0.38930032}
-  m_LocalPosition: {x: -0.512, y: 0.835, z: -10.058}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 134.178, z: 0}
---- !u!114 &2103448072
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2103448067}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af2c6c2f29cbeae43999f09170ec5bb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isLockCursor: 1
-  isScaledByTime: 1
-  currentVelocity: {x: 0, y: 0, z: 0}
-  friction: 0.9
---- !u!54 &2103448073
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2103448067}
-  serializedVersion: 4
-  m_Mass: 60
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 80
-  m_CollisionDetection: 0
 --- !u!1 &2119352816
 GameObject:
   m_ObjectHideFlags: 0
@@ -2588,7 +2449,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8558407490388991683, guid: 8f04198e0f30d7044a924a23835e07d3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 13.36
+      value: 7.47
       objectReference: {fileID: 0}
     - target: {fileID: 8558407490388991683, guid: 8f04198e0f30d7044a924a23835e07d3, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2596,7 +2457,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8558407490388991683, guid: 8f04198e0f30d7044a924a23835e07d3, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -16.98
+      value: -16.37
       objectReference: {fileID: 0}
     - target: {fileID: 8558407490388991683, guid: 8f04198e0f30d7044a924a23835e07d3, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2704,7 +2565,6 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 854805446}
-  - {fileID: 2103448071}
   - {fileID: 7190667890884541034}
   - {fileID: 6004281261315768288}
   - {fileID: 10679684}

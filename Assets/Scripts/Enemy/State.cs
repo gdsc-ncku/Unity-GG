@@ -7,5 +7,6 @@ public enum State
     Idle,
     Patroling,
 	Chasing,
-    Attacking
+    Attacking,
+    RunAway
 }
