@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem.Interactions;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems; 
 
 public enum Status
 {
@@ -123,6 +124,8 @@ public class Shotgun : Weapon
     /// <param name="type"></param>
     protected override void LeftClickPerformed(InputAction.CallbackContext obj)
     {
+
+        
         if(ammo>0)
         {
             ammo--;
