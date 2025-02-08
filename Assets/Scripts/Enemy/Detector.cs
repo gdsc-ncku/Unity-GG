@@ -1,54 +1,95 @@
+using System;
 using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 
+/// <summary>
+/// 偵測
+/// </summary>
 [ExecuteInEditMode]
 public class Detector : MonoBehaviour
 {
-    public Subject<GameObject> OnTargetGet = new();
-    public Subject<Unit> OnTargetGone = new();
-    public string targetTag { private get; set; }
-    [SerializeField]float distance = 10; //偵測距離
-    [SerializeField]float angle = 30;    //偵測角度
-    [SerializeField]bool isDebug = true;    //偵測角度
-    LayerMask layer => LayerMask.GetMask(LayerTagPack.Enemy, LayerTagPack.Player);
-    LayerMask occlusionLayers => LayerMask.GetMask(LayerTagPack.Environment);
-    Collider[] colliders = new Collider[50];
-    List<GameObject> detectedObjects = new List<GameObject>();
-    GameObject taget;
+    [SerializeField] float distance = 10;    //偵測距離
+    [SerializeField] float angle = 30;       //偵測角度
+    [SerializeField] bool isDebug = true;    //偵測角度
+    [SerializeField] LayerMask selfLayerMask;
+    LayerMask occlusionLayers => LayerMask.GetMask(LayerTagPack.Environment);       //不偵測的層
+    Collider[] colliders = new Collider[50]; //偵測到的物件(暫存器)
 
-    
-    void Update()
+    private void Start()
     {
-        Dectect();
+        selfLayerMask = LayerMask.GetMask(LayerMask.LayerToName(gameObject.layer));
     }
 
     /// <summary>
     /// 偵測
+    /// 在behavior tree的function下方可以直接丟LayerTagPack裡的layer進去或是GetMask完在丟進去
+    /// 這裡這樣做是因為敵人、玩家偵測分開才可以做不同行為，也可以傳入參數時丟LayerMask.GetMask(LayerTagPack.layer1, LayerTagPack.layer2)來偵測多種layer
     /// </summary>
-    void Dectect()
+    public GameObject Detect(LayerMask layer)
     {
-        detectedObjects.Clear();
-        var count = Physics.OverlapSphereNonAlloc(transform.position, distance, colliders, layer, QueryTriggerInteraction.Collide);
-        for(int i = 0; i < count; i++)
+        Collider[] colliders = Physics.OverlapSphere(transform.position, distance, layer, QueryTriggerInteraction.Collide);
+
+        /// <summary>
+        /// 按優先級和距離從(優先級高且近)到(優先級低且遠)排序
+        /// 主要邏輯: 因為只有三個狀態，所以把優先級最高(runAway)跟優先級最低(stay)拆出來判斷，就可以用簡單的if在O(1)解決
+        /// 先判斷優先級是否相同
+        /// 相同: 用距離判斷排序
+        /// 不相同: 是否有人優先級最低，有->無條件選另一個，無->其中必定有一人優先級最高(因為stay與優先級相等在上面被排除了)
+        /// 稍微有點Tricky，但因為這是內部的排序所以如果再用查表的方式解決問題會導致這邊變成O(n^2)解，太慢了
+        /// </summary>
+        Array.Sort(colliders, (a, b) =>
         {
-            GameObject obj = colliders[i].gameObject;
-            if(obj == transform.root.gameObject) continue;
-            if(IsVisible(obj))
+            int aFirst = -1, bFirst = 1;
+            LayerMask LayerMaskA = LayerMask.GetMask(LayerMask.LayerToName(a.gameObject.layer))
+                    , LayerMaskB = LayerMask.GetMask(LayerMask.LayerToName(b.gameObject.layer));
+            int valueA = EnemyDiagrams.enemyDiagram[selfLayerMask][LayerMaskA]
+                , valueB = EnemyDiagrams.enemyDiagram[selfLayerMask][LayerMaskB];
+            //查表狀態相同距離近的先偵測
+            if(valueA == valueB)
             {
-                detectedObjects.Add(obj);
-                if (taget != obj && obj.CompareTag(targetTag))
+                float distA = Vector3.Distance(transform.position, a.transform.position);
+                float distB = Vector3.Distance(transform.position, b.transform.position);
+                return distA.CompareTo(distB);
+            }
+            else
+            {
+                //查表狀態不同，stay優先級最低
+                if (valueA == EnemyDiagrams.stay)
                 {
-                    taget = obj;
-                    OnTargetGet.OnNext(taget);
+                    return bFirst;
+                }
+                else if(valueB == EnemyDiagrams.stay)
+                {
+                    return aFirst;
+                }
+
+                //查表狀態不同且無人是stay，runAway優先級最高
+                if(valueA == EnemyDiagrams.runAway)
+                {
+                    return aFirst;
+                }
+                else if(valueB == EnemyDiagrams.runAway)
+                {
+                    return bFirst;
                 }
             }
-        }
-        if(taget != null && !detectedObjects.Contains(taget))
+
+            //此狀況不會發生
+            return 0;
+        });
+
+        foreach (Collider collider in colliders)
         {
-            taget = null;
-            OnTargetGone.OnNext(Unit.Default);
+            GameObject obj = collider.gameObject;
+            if (obj == transform.root.gameObject) continue;
+            if (IsVisible(obj))
+            {
+                return obj;
+            }
         }
+
+        return null;
     }
 
     /// <summary>
@@ -72,7 +113,7 @@ public class Detector : MonoBehaviour
         var direction = target.transform.position - transform.position;
         direction.y = 0;
         float deltaAngle = Vector3.Angle(direction, transform.forward);
-        if(deltaAngle > angle)
+        if (deltaAngle > angle)
         {
             return false;
         }
@@ -88,21 +129,21 @@ public class Detector : MonoBehaviour
     {
         // 待修，occlusionLayers偵測不到
         // Debug.DrawLine(transform.position, target.transform.position, Color.red);
-        if(Physics.Linecast(transform.position, target.transform.position, occlusionLayers))
+        if (Physics.Linecast(transform.position, target.transform.position, occlusionLayers))
         {
             return true;
         }
         return false;
     }
 
-#region Debug
+    #region Debug
     Mesh mesh;
     Color meshColor = Color.blue;
     void OnValidate()
     {
         mesh = CreateWedgeMesh();
     }
-    
+
     void OnDrawGizmos()
     {
         if (mesh && isDebug)
@@ -162,5 +203,5 @@ public class Detector : MonoBehaviour
 
         return mesh;
     }
-#endregion
+    #endregion
 }

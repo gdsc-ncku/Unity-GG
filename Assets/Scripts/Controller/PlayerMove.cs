@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
@@ -18,6 +18,8 @@ public class PlayerMove : MonoBehaviour
     // �ƹ��F�ӫ�
     private float xRotation; // 角色的垂直旋轉
 
+    public bool isLockCursor = true;
+
     [Header("與時間放慢有關的移動設置")]
     [SerializeField] private bool isScaledByTime = true;
     [SerializeField] private Vector3 currentVelocity = Vector3.zero;
@@ -26,27 +28,17 @@ public class PlayerMove : MonoBehaviour
     //用於事件訂閱
     private CompositeDisposable disposables = new CompositeDisposable();
 
-    //private void Awake()
-    //{
-    //    playerRigibody = PlayerManager.Instance.rb;
-    //    Cursor.lockState = CursorLockMode.Locked; // ��w�ƹ�
-
-    //    maxSpeed = PlayerManager.Instance.maxSpeed;
-    //    mouseSensitivity = PlayerManager.Instance.mouseSensitivity; 
-    //    xRotation = PlayerManager.Instance.xRotation;
-
-    //    if(isLockCursor)
-    //        Cursor.lockState = CursorLockMode.Locked; // 鎖定滑鼠
-    //}
-
-    private void Start()
+    private void Awake()
     {
         playerRigibody = PlayerManager.Instance.rb;
-        Cursor.lockState = CursorLockMode.Locked; // 鎖定滑鼠到視窗中
+        Cursor.lockState = CursorLockMode.Locked; // ��w�ƹ�
 
         maxSpeed = PlayerManager.Instance.maxSpeed;
-        mouseSensitivity = PlayerManager.Instance.mouseSensitivity;
+        mouseSensitivity = PlayerManager.Instance.mouseSensitivity; 
         xRotation = PlayerManager.Instance.xRotation;
+
+        if(isLockCursor)
+            Cursor.lockState = CursorLockMode.Locked; // 鎖定滑鼠
     }
 
     private void FixedUpdate()
@@ -57,26 +49,26 @@ public class PlayerMove : MonoBehaviour
 
     private void ViewportFocus()
     {
-        // ����ƹ����ʪ���J
+        // 獲取滑鼠移動的輸入
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
-        // ��s��������A����W�U����
+        // 更新垂直旋轉，限制上下角度
         xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -70f, 70f); // ��������b-70��70�פ���
+        xRotation = Mathf.Clamp(xRotation, -70f, 70f); // 限制視角在-70到70度之間
 
-        // ��s��v��������
+        // 更新攝影機的旋轉
         Camera.main.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-        // ��s���⪺����
+        // 更新角色的旋轉
         transform.Rotate(Vector3.up * mouseX);
     }
 
     private void Movement()
     {
-        //���B���X�F(�U�h�ݭn�W�h���)�A����i��ҬO�_�NplayerControl����ScriptableObject�Ӹѽ��X
+        //此處耦合了(下層需要上層資料)，後續可思考是否將playerControl移到ScriptableObject來解耦合
         Vector2 inputVector = PlayerManager.Instance.playerControl.player.move.ReadValue<Vector2>();
 
-        // ������a���e��M�k����V
+        // 獲取玩家的前方和右側方向
         Vector3 forward = playerRigibody.transform.forward;
         Vector3 right = playerRigibody.transform.right;
 
@@ -144,30 +136,12 @@ public class PlayerMove : MonoBehaviour
             NameOfEvent.ChangeMoveMode,
             _isScaledByTime => ChangeMoveMode(_isScaledByTime)
         ));
-
-        disposables.Add(EventManager.StartListening<bool>(
-            NameOfEvent.ChangeCursorState,
-            isLocked => ChangeCursorState(isLocked)
-        ));
     }
 
     private void OnDisable()
     {
         // 取消註冊對  事件的訂閱
         disposables.Clear();
-    }
-
-    /// <summary>
-    /// 更改當前鼠標狀態
-    /// 是否鎖定到視窗中
-    /// </summary>
-    /// <param name="isLocked">是否上鎖</param>
-    private void ChangeCursorState(bool isLocked)
-    {
-        if (isLocked == true)
-            Cursor.lockState = CursorLockMode.Locked; // 鎖定滑鼠
-        else if(isLocked == false)
-            Cursor.lockState = CursorLockMode.None;
     }
 
     private void ChangeMoveMode(bool _isScaledByTime)
