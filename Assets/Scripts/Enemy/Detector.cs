@@ -14,7 +14,6 @@ public class Detector : MonoBehaviour
     [SerializeField] bool isDebug = true;    //偵測角度
     [SerializeField] LayerMask selfLayerMask;
     LayerMask occlusionLayers => LayerMask.GetMask(LayerTagPack.Environment);       //不偵測的層
-    Collider[] colliders = new Collider[50]; //偵測到的物件(暫存器)
 
     private void Start()
     {

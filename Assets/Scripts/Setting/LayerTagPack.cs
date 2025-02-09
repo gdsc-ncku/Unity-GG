@@ -23,11 +23,7 @@ public static class LayerTagPack
     public const string GPowerEnemy = "GPowerEnemy";
     public const string UndergroundDwellers = "UndergroundDwellers";
     public const string Environment = "Environment";
-        
-    static public LayerMask getEnemyLayer()
-    {
-        return LayerMask.GetMask(UndergroundDwellers, GPowerEnemy, MilitaryEnemy, BaseEnemy);
-    }
+    public static LayerMask EnemyLayer => LayerMask.GetMask(UndergroundDwellers, GPowerEnemy, MilitaryEnemy, BaseEnemy);
 
     static public void initDiagrams(Dictionary<LayerMask, Dictionary<LayerMask, int>> diagram)
     {

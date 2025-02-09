@@ -16,7 +16,7 @@ public partial class DetectorAction : Action
     protected override Status OnUpdate()
     {
         
-        LayerMask otherEnemy = LayerTagPack.getEnemyLayer(), player = LayerMask.GetMask(LayerTagPack.Player);
+        LayerMask otherEnemy = LayerTagPack.EnemyLayer, player = LayerMask.GetMask(LayerTagPack.Player);
         GameObject newTarget = Detect.Value.Detect(otherEnemy | player);
 
         if (newTarget != null)
