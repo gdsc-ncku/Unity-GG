@@ -1626,10 +1626,10 @@ MonoBehaviour:
   m_Graph: {fileID: 2244881967296739181, guid: ad1be547e837f364db5f82eaaa9db5ec, type: 2}
   m_BlackboardVariableOverridesList:
   - rid: 1880244143112323072
-  - rid: 1880244143112323612
-  - rid: 1880244147052085493
   - rid: 1880244147052085494
   - rid: 1880244216288510064
+  - rid: 1880244288411402423
+  - rid: 1880244288411402834
   m_IsInitialised: 0
   m_IsStarted: 0
   references:
@@ -1643,22 +1643,6 @@ MonoBehaviour:
           m_Value1: 0
         Name: Self
         m_Value: {fileID: 1600237178}
-    - rid: 1880244143112323612
-      type: {class: 'BlackboardVariable`1[[Detector, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 13918267316326193689
-          m_Value1: 18216168391934983038
-        Name: Detect
-        m_Value: {fileID: 1600237180}
-    - rid: 1880244147052085493
-      type: {class: 'BlackboardVariable`1[[State, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 1200447877644624504
-          m_Value1: 5660834059629644689
-        Name: currentState
-        m_Value: 1
     - rid: 1880244147052085494
       type: {class: 'BlackboardVariable`1[[System.Collections.Generic.List`1[[UnityEngine.GameObject, UnityEngine.CoreModule]], mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -1679,6 +1663,22 @@ MonoBehaviour:
           m_Value1: 12399043744619879637
         Name: disappearPosition
         m_Value: {x: -100, y: -100, z: -100}
+    - rid: 1880244288411402423
+      type: {class: 'BlackboardVariable`1[[Detector, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 11301568646613013273
+          m_Value1: 14400610010660394138
+        Name: Detect
+        m_Value: {fileID: 1600237180}
+    - rid: 1880244288411402834
+      type: {class: 'BlackboardVariable`1[[State, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 7769271397424550869
+          m_Value1: 16653445321431294113
+        Name: currentState
+        m_Value: 1
 --- !u!195 &1600237182
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2449,7 +2449,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8558407490388991683, guid: 8f04198e0f30d7044a924a23835e07d3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 7.47
+      value: 12.76
       objectReference: {fileID: 0}
     - target: {fileID: 8558407490388991683, guid: 8f04198e0f30d7044a924a23835e07d3, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2457,7 +2457,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8558407490388991683, guid: 8f04198e0f30d7044a924a23835e07d3, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -16.37
+      value: -18.79
       objectReference: {fileID: 0}
     - target: {fileID: 8558407490388991683, guid: 8f04198e0f30d7044a924a23835e07d3, type: 3}
       propertyPath: m_LocalRotation.w
