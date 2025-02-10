@@ -99,9 +99,9 @@ public class Shotgun : Weapon
     }
 
     
-    public override void Init(Transform transform, Camera camera)
+    protected override void Init()
     {
-        base.Init(transform, camera);
+        base.Init();
 
         //set value
         //keepPosition = takePosition;
@@ -113,7 +113,7 @@ public class Shotgun : Weapon
 /// <summary>
 /// 
 /// </summary>
-    public override void RightClickPerformed(InputAction.CallbackContext obj)
+    protected override void RightClickPerformed(InputAction.CallbackContext obj)
     {
         Debug.Log("Shotgun have no ability on RightClick!");
     }
@@ -122,7 +122,7 @@ public class Shotgun : Weapon
     /// 
     /// </summary>
     /// <param name="type"></param>
-    public override void LeftClickPerformed(InputAction.CallbackContext obj)
+    protected override void LeftClickPerformed(InputAction.CallbackContext obj)
     {
 
         
@@ -137,7 +137,7 @@ public class Shotgun : Weapon
         }
     }
 
-    public override void LeftClickCanceled(InputAction.CallbackContext obj)
+    protected override void LeftClickCanceled(InputAction.CallbackContext obj)
     {
 
     }
@@ -178,7 +178,7 @@ public class Shotgun : Weapon
         status = Status.hold; // 恢復狀態為持有
         Debug.Log("Reload complete!");
     }
-    public override void RClickPerformed(InputAction.CallbackContext obj)
+    protected override void RClickPerformed(InputAction.CallbackContext obj)
     {
         StartCoroutine(Reload(2f));
     }
