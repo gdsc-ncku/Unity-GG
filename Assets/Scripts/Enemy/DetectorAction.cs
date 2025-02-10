@@ -15,10 +15,11 @@ public partial class DetectorAction : Action
     [SerializeReference] public BlackboardVariable<bool> DisappearBoolean;
     protected override Status OnUpdate()
     {
-        
+        Debug.Log("test1");
         LayerMask otherEnemy = LayerTagPack.EnemyLayer, player = LayerMask.GetMask(LayerTagPack.Player);
+        Debug.Log("test2");
         GameObject newTarget = Detect.Value.Detect(otherEnemy | player);
-
+        Debug.Log("test3");
         if (newTarget != null)
         {
             LastPosition.Value = newTarget.transform.position;
@@ -29,7 +30,7 @@ public partial class DetectorAction : Action
         {
             TargetInSight.Value = false;
         }
-
+        Debug.Log("test4");
         if (Target.Value != newTarget)
         {
             Target.Value = newTarget;
