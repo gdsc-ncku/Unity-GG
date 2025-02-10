@@ -116,6 +116,8 @@ public class PlayerManager : MonoBehaviour
 
         _playerControl.player.CloseUI.performed += ctx => CloseUI();
 
+        _playerControl.player.Setting.performed += ctx => Setting();
+
         /*
         _playerControl.player.jump.Disable();
 
@@ -154,6 +156,11 @@ public class PlayerManager : MonoBehaviour
     public void Item()
     {
         GetComponent<PlayerMove>().Item();
+    }
+
+    public void Setting()
+    {
+        GetComponent<PlayerMove>().Setting();
     }
 
     public void CloseUI()

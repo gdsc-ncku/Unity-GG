@@ -137,4 +137,9 @@ public class PlayerMove : MonoBehaviour
         //CollectionUI.SetActive(false);
         //Debug.Log("test2");
     }
+
+    public void Setting()
+    {
+        
+    }
 }

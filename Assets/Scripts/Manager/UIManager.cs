@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 public class UIManager: MonoBehaviour 
 {
+    //Backpage
     public void On_pagebtn_Item_click()
     {
         Debug.Log("btnItem clicked");
@@ -15,4 +16,6 @@ public class UIManager: MonoBehaviour
     {
         Debug.Log("btnCollection clicked");
     }
+
+    //Setting
 }
