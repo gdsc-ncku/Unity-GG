@@ -1,16 +1,26 @@
+﻿using System.Numerics;
 using Unity.VisualScripting;
 using UnityEngine;
-
+using UnityEngine.InputSystem;
 public enum PlayerStatus
 {
     move,
-    sprint
+    sprint,
+    jump
 }
 
+[DefaultExecutionOrder(-100)] // 負數越小越早執行
 public class PlayerManager : MonoBehaviour
 {
     [SerializeField] int sprintFrame;
-    #region �إ߳�ҼҦ�
+
+    public float mouseSensitivity = 100f;
+
+    public float maxSpeed = 15f;
+    public float jumpforce = 200f;
+    public float xRotation = 0f;
+    public Transform playerTransform { get; private set; }
+    #region 建立單例模式
     //instance mode
     private static PlayerManager _instance;
     public static PlayerManager Instance
@@ -28,7 +38,7 @@ public class PlayerManager : MonoBehaviour
 
     #endregion
 
-    #region Rigidbody�]�w
+    #region Rigidbody設定
     private Rigidbody _rb = null;
     public Rigidbody rb
     {
@@ -48,7 +58,7 @@ public class PlayerManager : MonoBehaviour
     }
     #endregion
 
-    #region InputAction�]�w
+    #region InputAction設定
     [SerializeField] PlayerControl _playerControl;
     public PlayerControl playerControl
     {
@@ -68,11 +78,11 @@ public class PlayerManager : MonoBehaviour
     }
     #endregion
 
-    #region ���A��
+    #region 狀態機
     public PlayerStatus playerStatus;
     #endregion
 
-    #region ��l��
+    #region 初始化
     private void Awake()
     {
         Initialize();
@@ -95,11 +105,87 @@ public class PlayerManager : MonoBehaviour
         _playerControl.Enable();
         _rb = Instance.GetComponent<Rigidbody>();
         playerStatus = PlayerStatus.move;
+        playerTransform = this.transform;
+
+        _playerControl.player.rebinding.performed += ctx => Rebinding();
+
+
+        _playerControl.player.jump.performed += ctx => Jump();
+
+        _playerControl.player.Item.performed += ctx => Item();
+
+        _playerControl.player.CloseUI.performed += ctx => CloseUI();
+
+        _playerControl.player.Setting.performed += ctx => Setting();
+
+        /*
+        _playerControl.player.jump.Disable();
+
+        _playerControl.player.jump.PerformInteractiveRebinding()
+            .OnComplete(callback => {
+                Debug.Log("Rebinding complete.");
+                callback.Dispose();
+                // 在這裡查看綁定的按鍵
+                foreach (var binding in _playerControl.player.jump.bindings)
+                {
+                    Debug.Log($"Binding: {binding.path}");
+                }
+
+                // 重綁定完成後啟用 action
+                _playerControl.player.jump.Enable();
+            })
+            .Start();
+*/
+
+
     }
     #endregion
 
-    public void Sprint(Vector3 forward, float sprintDistance)
+    public void Sprint(UnityEngine.Vector3 forward, float sprintDistance)
     {
         StartCoroutine(GetComponent<PlayerMove>().Sprint(forward, sprintDistance, sprintFrame));
+    }
+
+    public void Jump()
+    {
+        
+        //跳多大力
+        GetComponent<PlayerMove>().Jump(jumpforce);
+    }
+
+    public void Item()
+    {
+        GetComponent<PlayerMove>().Item();
+    }
+
+    public void Setting()
+    {
+        GetComponent<PlayerMove>().Setting();
+    }
+
+    public void CloseUI()
+    {
+        GetComponent<PlayerMove>().CloseUI();
+    }
+
+
+    public void Rebinding()//目前只能rebinding jump這個動作的按鍵，但可以很輕鬆的改到需要的動作上
+    {
+        _playerControl.player.jump.Disable();
+
+        _playerControl.player.jump.PerformInteractiveRebinding()
+            .OnComplete(callback => {
+                Debug.Log("Rebinding complete.");
+                callback.Dispose();
+                // 在這裡查看綁定的按鍵
+                foreach (var binding in _playerControl.player.jump.bindings)
+                {
+                    Debug.Log($"Binding: {binding.path}");
+                }
+
+                // 重綁定完成後啟用 action
+                _playerControl.player.jump.Enable();
+            })
+            .Start();
     }
 }

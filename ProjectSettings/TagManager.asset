@@ -4,6 +4,9 @@
 TagManager:
   serializedVersion: 2
   tags:
+  - Environment
+  - BaseEnemy
+  - MilitaryEnemy
   - Enviroument
   layers:
   - Default
@@ -12,11 +15,11 @@ TagManager:
   - Test
   - Water
   - UI
+  - Environment
   - 
+  - Enemy
   - 
-  - 
-  - 
-  - 
+  - Player
   - 
   - 
   - 

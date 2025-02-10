@@ -9,18 +9,19 @@ public abstract class RangedWeapon : Weapon
     /// <summary>
     /// 基本設定
     /// </summary>
-    [SerializeField]protected float fireRate;
-    [SerializeField]protected int ammoCapacity;
-    [SerializeField]protected Transform firePoint;
-    [SerializeField]protected GameObject ammoPrefab;
-    float ammoSpeed = 20f;
+    [SerializeField] protected float fireRate;
+    [SerializeField] protected int ammoCapacity;
+    [SerializeField] protected Transform firePoint;
+    [SerializeField] protected GameObject ammoPrefab;
+    float ammoSpeed = 50f;
     protected int currentAmmo;
     float cooldownTimestamp;
     protected bool isAming = false;
     protected bool isReloading = false;
 
-    void Start()
+    protected override void Init()
     {
+        base.Init();
         currentAmmo = ammoCapacity;
     }
     /// <summary>
@@ -60,7 +61,7 @@ public abstract class RangedWeapon : Weapon
         currentAmmo--;
         cooldownTimestamp = Time.time + 1f / fireRate;
         var ammo = Instantiate(ammoPrefab, firePoint.position, Quaternion.identity);
-        ammo.GetComponent<Rigidbody>().velocity = direction * ammoSpeed;
+        ammo.GetComponent<Rigidbody>().linearVelocity = direction * ammoSpeed;
         Debug.Log("Fire");
     }
 
@@ -73,17 +74,20 @@ public abstract class RangedWeapon : Weapon
     {
         if (currentAmmo < ammoCapacity)
         {
-            Debug.Log("Reload");
-            currentAmmo += ammoNum;
+            Reload(ammoNum);
         }
-        if (currentAmmo >= ammoCapacity)
+        if (currentAmmo >= ammoCapacity && isReloading)
         {
-            currentAmmo = ammoCapacity;
             EndReload();
         }
     }
+    protected virtual void Reload(int ammoNum)
+    {
+        currentAmmo += ammoNum;
+    }
     protected virtual void EndReload()
     {
+        currentAmmo = ammoCapacity;
         isReloading = false;
     }
     bool HasAmmo()
