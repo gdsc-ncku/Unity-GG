@@ -98,6 +98,15 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Setting"",
+                    ""type"": ""Button"",
+                    ""id"": ""141a8b8e-e0e6-458d-a6d4-a0c34990644a"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -232,6 +241,17 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
                     ""action"": ""CloseUI"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c0516e88-5ae3-40a4-93e6-97330e6fb25f"",
+                    ""path"": ""<Keyboard>/p"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Setting"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -276,6 +296,7 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
         m_player_rebinding = m_player.FindAction("rebinding", throwIfNotFound: true);
         m_player_Item = m_player.FindAction("Item", throwIfNotFound: true);
         m_player_CloseUI = m_player.FindAction("CloseUI", throwIfNotFound: true);
+        m_player_Setting = m_player.FindAction("Setting", throwIfNotFound: true);
         // rebinding
         m_rebinding = asset.FindActionMap("rebinding", throwIfNotFound: true);
         m_rebinding_Newaction = m_rebinding.FindAction("New action", throwIfNotFound: true);
@@ -354,6 +375,7 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
     private readonly InputAction m_player_rebinding;
     private readonly InputAction m_player_Item;
     private readonly InputAction m_player_CloseUI;
+    private readonly InputAction m_player_Setting;
     public struct PlayerActions
     {
         private @PlayerControl m_Wrapper;
@@ -366,6 +388,7 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
         public InputAction @rebinding => m_Wrapper.m_player_rebinding;
         public InputAction @Item => m_Wrapper.m_player_Item;
         public InputAction @CloseUI => m_Wrapper.m_player_CloseUI;
+        public InputAction @Setting => m_Wrapper.m_player_Setting;
         public InputActionMap Get() { return m_Wrapper.m_player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -399,6 +422,9 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
             @CloseUI.started += instance.OnCloseUI;
             @CloseUI.performed += instance.OnCloseUI;
             @CloseUI.canceled += instance.OnCloseUI;
+            @Setting.started += instance.OnSetting;
+            @Setting.performed += instance.OnSetting;
+            @Setting.canceled += instance.OnSetting;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -427,6 +453,9 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
             @CloseUI.started -= instance.OnCloseUI;
             @CloseUI.performed -= instance.OnCloseUI;
             @CloseUI.canceled -= instance.OnCloseUI;
+            @Setting.started -= instance.OnSetting;
+            @Setting.performed -= instance.OnSetting;
+            @Setting.canceled -= instance.OnSetting;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -500,6 +529,7 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
         void OnRebinding(InputAction.CallbackContext context);
         void OnItem(InputAction.CallbackContext context);
         void OnCloseUI(InputAction.CallbackContext context);
+        void OnSetting(InputAction.CallbackContext context);
     }
     public interface IRebindingActions
     {
