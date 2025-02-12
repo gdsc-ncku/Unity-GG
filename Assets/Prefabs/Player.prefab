@@ -107,7 +107,6 @@ GameObject:
   - component: {fileID: 3329834593454637822}
   - component: {fileID: 1949757058107211349}
   - component: {fileID: 5722227728718821612}
-  - component: {fileID: 6531275825265128725}
   - component: {fileID: 4869848323129820729}
   m_Layer: 0
   m_Name: Player
@@ -157,6 +156,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -194,9 +196,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af2c6c2f29cbeae43999f09170ec5bb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 20
-  maxSpeed: 5
-  mouseSensitivity: 100
+  ItemUI: {fileID: 0}
+  WeaponUI: {fileID: 0}
+  CollectionUI: {fileID: 0}
+  BackMask: {fileID: 0}
+  isLockCursor: 1
+  isScaledByTime: 1
+  currentVelocity: {x: 0, y: 0, z: 0}
+  friction: 0.9
 --- !u!54 &1949757058107211349
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -247,26 +254,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &6531275825265128725
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6412160016034411745}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c6a91a6bdbd950048afd908ff38a5490, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  specialAttackDistance: 3
-  specialAttackDetectSphere: 0.1
-  detectDistance: 1
-  sprintDistance: 3
-  knockUpHeight: 1
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 8
 --- !u!114 &4869848323129820729
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -280,6 +267,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sprintFrame: 30
+  mouseSensitivity: 100
+  maxSpeed: 15
+  jumpforce: 200
+  xRotation: 0
   playerStatus: 0
 --- !u!1001 &7553208579134908960
 PrefabInstance:
