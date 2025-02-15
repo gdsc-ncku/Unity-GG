@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 646279261449002045}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.25, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -122,6 +122,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -205,6 +208,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -255,8 +261,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3703671126007883408}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.32, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -277,14 +283,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26fab7b4efc01554f8508ec5a708232a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  modelObject: {fileID: 2269430189109780834}
+  holdPoint: {fileID: 6710493406085636914}
+  aimPoint: {fileID: 3449405826596214763}
+  holdPointOffset: {x: 0.5, y: -0.2, z: 0.7}
+  aimPointOffset: {x: 0.3, y: -0.2, z: 0.7}
   fireRate: 3
   ammoCapacity: 6
   firePoint: {fileID: 7373697669258105163}
-  revolver: {fileID: 4607153054805572050}
   ammoPrefab: {fileID: 4180035959927559348, guid: f1bf9f830c6c5e74f9b89dc875d46c23, type: 3}
-  recoilForce: 5
-  aimTransform: {fileID: 3449405826596214763}
-  holdTransform: {fileID: 6710493406085636914}
+  ammoSpeed: 50
+  isAming: 0
+  normalFOV: 45
+  aimFOV: 25
+  smoothTime: 0.1
+  reloadTime: 1
+  OneTimeLoadingAmount: 1
   fulcrum: {fileID: 2852629509559909668}
   cylinder: {fileID: 294047485206856538}
 --- !u!1 &4622712917192701046
