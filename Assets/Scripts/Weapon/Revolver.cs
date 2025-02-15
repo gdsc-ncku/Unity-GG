@@ -1,7 +1,5 @@
 using System.Collections;
-using UniRx;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class Revolver : RangedWeapon
 {
