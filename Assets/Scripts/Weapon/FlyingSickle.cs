@@ -1,11 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using TMPro;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Interactions;
-using UnityEngine.Timeline;
 using UnityEngine.UI;
 
 /// <summary>
@@ -125,10 +120,10 @@ public class FlyingSickle : Weapon
         currentTarget = Vector3.zero;
 
         //掉落與碰撞相關
-        coll = flyingSickle.GetComponent<MeshCollider>();
+        coll = modelObject.GetComponent<MeshCollider>();
         coll.isTrigger = true;
 
-        rb = flyingSickle.GetComponent<Rigidbody>();
+        rb = modelObject.GetComponent<Rigidbody>();
         rb.useGravity = false;
         rb.isKinematic = true;
 
@@ -201,7 +196,7 @@ public class FlyingSickle : Weapon
             || status == FlyingSickle_Status.back)
         {
             // 使用 transform.Rotate 讓飛鐮物件每秒旋轉一定角度
-            flyingSickle.transform.Rotate(Vector3.left * rotationSpeed * Time.deltaTime);
+            modelObject.transform.Rotate(Vector3.left * rotationSpeed * Time.deltaTime);
         }
     }
 
@@ -211,10 +206,10 @@ public class FlyingSickle : Weapon
     private void Backing()
     {
         // 飛鐮移動到目標點
-        flyingSickle.transform.position = Vector3.MoveTowards(flyingSickle.transform.position, holdPoint.position, sickleSpeed * Time.deltaTime);
+        modelObject.transform.position = Vector3.MoveTowards(modelObject.transform.position, holdPoint.position, sickleSpeed * Time.deltaTime);
 
         // 檢查飛鐮是否到達目標點
-        if (Vector3.Distance(flyingSickle.transform.position, holdPoint.position) < 0.1f)
+        if (Vector3.Distance(modelObject.transform.position, holdPoint.position) < 0.1f)
         {
             lockPoint.Clear();
 
@@ -233,10 +228,10 @@ public class FlyingSickle : Weapon
     private void Tracking()
     {
         // 飛鐮移動到目標點
-        flyingSickle.transform.position = Vector3.MoveTowards(flyingSickle.transform.position, currentTarget, sickleSpeed * Time.deltaTime);
+        modelObject.transform.position = Vector3.MoveTowards(modelObject.transform.position, currentTarget, sickleSpeed * Time.deltaTime);
 
         // 檢查飛鐮是否到達目標點
-        if (Vector3.Distance(flyingSickle.transform.position, currentTarget) < 0.1f)
+        if (Vector3.Distance(modelObject.transform.position, currentTarget) < 0.1f)
         {
             // 當前目標點已到達，檢查是否還有下一個點
             if (lockPoint.Count > 0)
@@ -295,7 +290,7 @@ public class FlyingSickle : Weapon
             if(isHolding == true)
             {
                 isHolding = false;
-                flyingSickle.transform.SetParent(null);
+                modelObject.transform.SetParent(null);
             }
             
             //告訴飛鐮有目標了
@@ -378,9 +373,9 @@ public class FlyingSickle : Weapon
             isHolding = true;
 
             //回到手的準確位置
-            flyingSickle.transform.SetParent(holdPoint.parent);
-            flyingSickle.transform.position = holdPoint.position;
-            flyingSickle.transform.rotation = holdPoint.rotation;
+            modelObject.transform.SetParent(holdPoint.parent);
+            modelObject.transform.position = holdPoint.position;
+            modelObject.transform.rotation = holdPoint.rotation;
 
             ChangeGravity(false);
         }
