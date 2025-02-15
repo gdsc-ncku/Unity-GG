@@ -31,7 +31,7 @@ public class FlyingSickle : Weapon
         {
             if (!_flyingSickle)
             {
-                _flyingSickle = FindObjectOfType(typeof(FlyingSickle)) as FlyingSickle;
+                _flyingSickle = FindAnyObjectByType(typeof(FlyingSickle)) as FlyingSickle;
                 if (!_flyingSickle)
                 {
                     Debug.LogError("No script");
@@ -43,9 +43,7 @@ public class FlyingSickle : Weapon
             }
             return _flyingSickle;
         }
-
     }
-
 
     public GameObject flyingSickle; //飛鐮遊戲物件
     [Tooltip("輔助準心")] public Image targetHeart;
@@ -62,7 +60,7 @@ public class FlyingSickle : Weapon
     public float minTargetSize = 10f;   //最小準心大小
     public float maxTargetSize = 100f;  //最大準心大小
 
-    private Queue<Vector3> lockPoint = new Queue<Vector3>();    //玩家鎖定的點
+    private Queue<Vector3> lockPoint = new();    //玩家鎖定的點
 
     [Header("左鍵-鎖定飛行點")]
     public float bulletTime = 0.7f;
@@ -119,9 +117,9 @@ public class FlyingSickle : Weapon
     /// </summary>
     /// <param name="transform"></param>
     /// <param name="camera"></param>
-    protected override void Init()
+    protected override void VariableInit()
     {
-        base.Init();
+        base.VariableInit();
 
         //追蹤相關
         currentTarget = Vector3.zero;
@@ -213,10 +211,10 @@ public class FlyingSickle : Weapon
     private void Backing()
     {
         // 飛鐮移動到目標點
-        flyingSickle.transform.position = Vector3.MoveTowards(flyingSickle.transform.position, keepPosition.position, sickleSpeed * Time.deltaTime);
+        flyingSickle.transform.position = Vector3.MoveTowards(flyingSickle.transform.position, holdPoint.position, sickleSpeed * Time.deltaTime);
 
         // 檢查飛鐮是否到達目標點
-        if (Vector3.Distance(flyingSickle.transform.position, keepPosition.position) < 0.1f)
+        if (Vector3.Distance(flyingSickle.transform.position, holdPoint.position) < 0.1f)
         {
             lockPoint.Clear();
 
@@ -305,7 +303,7 @@ public class FlyingSickle : Weapon
         }
         else
         {
-            Debug.Log("FlyingSickle: Illegal control");
+            Debug.Log("FlyingSickle: illegal control");
             return;
         }
     }
@@ -380,9 +378,9 @@ public class FlyingSickle : Weapon
             isHolding = true;
 
             //回到手的準確位置
-            flyingSickle.transform.SetParent(keepPosition.parent.parent);
-            flyingSickle.transform.position = keepPosition.position;
-            flyingSickle.transform.rotation = keepPosition.rotation;
+            flyingSickle.transform.SetParent(holdPoint.parent);
+            flyingSickle.transform.position = holdPoint.position;
+            flyingSickle.transform.rotation = holdPoint.rotation;
 
             ChangeGravity(false);
         }
