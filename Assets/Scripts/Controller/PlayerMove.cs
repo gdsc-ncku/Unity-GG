@@ -8,10 +8,10 @@ public class PlayerMove : MonoBehaviour
     private float mouseSensitivity;
     private float maxSpeed;
     private Rigidbody playerRigibody;
-    public GameObject ItemUI;
-    public GameObject WeaponUI;
-    public GameObject CollectionUI;
-    public GameObject BackMask;
+    //public GameObject ItemUI;
+    //public GameObject WeaponUI;
+    //public GameObject CollectionUI;
+    //public GameObject BackMask;
     // �ƹ��F�ӫ�
     private float xRotation; // 角色的垂直旋轉
 
@@ -160,7 +160,7 @@ public class PlayerMove : MonoBehaviour
             Debug.Log("player is jumping now");
         }
     }
-
+    /*
     public void Item()
     {
         //啟用指定UI
@@ -203,4 +203,5 @@ public class PlayerMove : MonoBehaviour
     {
         
     }
+    */
 }
