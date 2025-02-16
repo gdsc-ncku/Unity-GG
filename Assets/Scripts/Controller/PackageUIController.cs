@@ -1,6 +1,9 @@
 using UniRx;
 using UnityEngine;
 
+/// <summary>
+/// 負責整個背包的控制
+/// </summary>
 public class PackageUIController : MonoBehaviour
 {
     public GameObject ItemUI;
@@ -19,6 +22,8 @@ public class PackageUIController : MonoBehaviour
 
 
         ItemUI.SetActive(true); // 切換背包顯示狀態
+        ItemUI.GetComponent<ItemUIController>().UpdateItem(); //更新item資訊
+
         BackMask.SetActive(true);
 
         // 當背包開啟時，解除鎖定滑鼠
