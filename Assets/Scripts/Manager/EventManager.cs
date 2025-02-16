@@ -22,6 +22,10 @@ public enum NameOfEvent
 
     [Header("SpawnManager_Develop")]
     ShowSpawnPoint,
+
+    [Header("PackageUIController")]
+    Item,
+    CloseUI,
 }
 
 /// <summary>

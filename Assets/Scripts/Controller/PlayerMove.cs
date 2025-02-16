@@ -8,10 +8,6 @@ public class PlayerMove : MonoBehaviour
     private float mouseSensitivity;
     private float maxSpeed;
     private Rigidbody playerRigibody;
-    public GameObject ItemUI;
-    public GameObject WeaponUI;
-    public GameObject CollectionUI;
-    public GameObject BackMask;
     // �ƹ��F�ӫ�
     private float xRotation; // 角色的垂直旋轉
 
@@ -161,43 +157,6 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    public void Item()
-    {
-        //啟用指定UI
-        if (ItemUI == null)
-        {
-            Debug.LogError("Backpack UI is not assigned!");
-            return;
-        }
-
-        
-        ItemUI.SetActive(true); // 切換背包顯示狀態
-        BackMask.SetActive(true);
-        
-        // 當背包開啟時，解除鎖定滑鼠
-        Debug.Log(ItemUI.activeSelf);
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-        //PlayerManager.Instance.playerStatus = PlayerStatus.ui; // 更新玩家狀態為 UI 模式，我只是猜你可能會這樣寫，要不要隨便你.jpg
-    
-        // 當背包關閉時，重新鎖定滑鼠
-        //Cursor.lockState = CursorLockMode.Locked;
-        //Cursor.visible = false;
-        //PlayerManager.Instance.playerStatus = PlayerStatus.move; // 恢復到移動模式，我只是猜你可能會這樣寫，要不要隨便你.jpg
-        
-    }
-
-    public void CloseUI()
-    {
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-        // 切換背包顯示狀態
-        BackMask.SetActive(false);
-        ItemUI.SetActive(false); 
-        //WeaponUI.SetActive(false);
-        //CollectionUI.SetActive(false);
-        //Debug.Log("test2");
-    }
 
     public void Setting()
     {
