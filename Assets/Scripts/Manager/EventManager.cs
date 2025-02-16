@@ -15,13 +15,16 @@ public enum NameOfEvent
 
     [Header("PlayerMove")]
     ChangeMoveMode,
-    ChangeCursorState,
 
     [Header("InventoryManager")]
     InventoryItemChange,
 
     [Header("SpawnManager_Develop")]
     ShowSpawnPoint,
+
+    [Header("PackageUIController")]
+    Item,
+    CloseUI,
 }
 
 /// <summary>
