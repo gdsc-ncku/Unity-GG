@@ -41,10 +41,12 @@ public class FlyingSickle : Weapon
     }
 
     public GameObject flyingSickle; //飛鐮遊戲物件
+    private SubSickle subSickle; //真實飛鐮道具
+
     [Tooltip("輔助準心")] public Image targetHeart;
 
     public float rotationSpeed = 100f; // 旋轉速度，單位是度/秒
-    [SerializeField] private FlyingSickle_Status status = FlyingSickle_Status.prepare;    //當前狀態
+    [SerializeField] public FlyingSickle_Status status = FlyingSickle_Status.prepare;    //當前狀態
 
     [Header("中鍵-深度控制")]
     [SerializeField] private float depth = 0f;   //目前鎖定的深度
@@ -69,7 +71,7 @@ public class FlyingSickle : Weapon
     public float dropSpeed = 5f;
 
     [Header("穿透相關")]
-    [SerializeField] private bool isLastFlyingBack = false;   //紀錄是否為右鍵觸發的返回，如果是 無法穿透
+    [SerializeField] public bool isLastFlyingBack = false;   //紀錄是否為右鍵觸發的返回，如果是 無法穿透
 
     [Header("手持相關")]
     private bool isHolding = false;
@@ -126,6 +128,10 @@ public class FlyingSickle : Weapon
         rb = modelObject.GetComponent<Rigidbody>();
         rb.useGravity = false;
         rb.isKinematic = true;
+
+        //設定子飛鐮物件腳本
+        subSickle = modelObject.GetComponent<SubSickle>();
+        subSickle.flyingSickle = this;
 
         EnterStatus(FlyingSickle_Status.hold);
     }
@@ -353,7 +359,7 @@ public class FlyingSickle : Weapon
     /// 需要做的處理
     /// </summary>
     /// <param name="_status"></param>
-    private void EnterStatus(FlyingSickle_Status _status)
+    public void EnterStatus(FlyingSickle_Status _status)
     {
         status = _status;
         hasTarget = false;
@@ -402,23 +408,23 @@ public class FlyingSickle : Weapon
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if(collision.gameObject.tag == "Player")
-        {
-            //收回
-            EnterStatus(FlyingSickle_Status.hold);
-        }
-    }
+    //private void OnCollisionEnter(Collision collision)
+    //{
+    //    if(collision.gameObject.tag == "Player")
+    //    {
+    //        //收回
+    //        EnterStatus(FlyingSickle_Status.hold);
+    //    }
+    //}
 
-    private void OnTriggerEnter(Collider collision)
-    {
-        if (collision.gameObject.tag == "Enviroument" && isLastFlyingBack == false && status != FlyingSickle_Status.hold)
-        {
-            Debug.Log("FlyingSickle: touch object");
+    //private void OnTriggerEnter(Collider collision)
+    //{
+    //    if (collision.gameObject.tag == "Enviroument" && isLastFlyingBack == false && status != FlyingSickle_Status.hold)
+    //    {
+    //        Debug.Log("FlyingSickle: touch object");
 
-            //碰撞任意物體後掉落
-            EnterStatus(FlyingSickle_Status.drop);
-        }
-    }
+    //        //碰撞任意物體後掉落
+    //        EnterStatus(FlyingSickle_Status.drop);
+    //    }
+    //}
 }
