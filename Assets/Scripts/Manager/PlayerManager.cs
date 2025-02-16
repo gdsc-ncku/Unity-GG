@@ -9,7 +9,7 @@ public enum PlayerStatus
     jump
 }
 
-[DefaultExecutionOrder(-100)] // 負數越小越早執行
+[DefaultExecutionOrder(-200)] // 負數越小越早執行
 public class PlayerManager : MonoBehaviour
 {
     [SerializeField] int sprintFrame;
@@ -112,11 +112,11 @@ public class PlayerManager : MonoBehaviour
 
         _playerControl.player.jump.performed += ctx => Jump();
 
-        _playerControl.player.Item.performed += ctx => Item();
+        //_playerControl.player.Item.performed += ctx => Item();
 
-        _playerControl.player.CloseUI.performed += ctx => CloseUI();
+        //_playerControl.player.CloseUI.performed += ctx => CloseUI();
 
-        _playerControl.player.Setting.performed += ctx => Setting();
+        //_playerControl.player.Setting.performed += ctx => Setting();
 
         /*
         _playerControl.player.jump.Disable();
@@ -152,7 +152,7 @@ public class PlayerManager : MonoBehaviour
         //跳多大力
         GetComponent<PlayerMove>().Jump(jumpforce);
     }
-
+    /*
     public void Item()
     {
         //GetComponent<PlayerMove>().Item();
@@ -169,7 +169,7 @@ public class PlayerManager : MonoBehaviour
         //GetComponent<PlayerMove>().CloseUI();
         EventManager.TriggerEvent(NameOfEvent.CloseUI);
     }
-
+    */
 
     public void Rebinding()//目前只能rebinding jump這個動作的按鍵，但可以很輕鬆的改到需要的動作上
     {
