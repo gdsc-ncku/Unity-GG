@@ -1,23 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.PlayerLoop;
-using UnityEngine.UIElements;
-using static UnityEngine.UI.Image;
 
 public class KatanaController : Weapon
 {
     [SerializeField] float specialAttackDistance, specialAttackDetectSphere, detectDistance, sprintDistance, knockUpHeight;
-    [SerializeField] LayerMask enemyLayer;
     private HashSet<GameObject> hitEnemy = new HashSet<GameObject>();
 
     protected override void RightClickPerformed(InputAction.CallbackContext obj)
     {
         Vector3 origin = Camera.main.transform.position, forward = Camera.main.transform.forward;
-        if (Physics.Raycast(origin, forward, out RaycastHit hitInfo, specialAttackDistance, enemyLayer))
+        if (Physics.Raycast(origin, forward, out RaycastHit hitInfo, specialAttackDistance, LayerTagPack.EnemyLayer))
         {
             hitEnemy.Add(hitInfo.collider.gameObject);
             //��forward���w�O����u
@@ -36,7 +30,7 @@ public class KatanaController : Weapon
     //�]���n�s�򰻴��A�ҥH�Φ��覡�קK�d�y
     private IEnumerator Teleport(Vector3 position, Vector3 forward)
     {
-        Collider[] hitColliders = Physics.OverlapSphere(position, specialAttackDetectSphere, enemyLayer);
+        Collider[] hitColliders = Physics.OverlapSphere(position, specialAttackDetectSphere, LayerTagPack.EnemyLayer);
         while(hitColliders.Length > 0)
         {
             position += forward * detectDistance;
@@ -45,7 +39,7 @@ public class KatanaController : Weapon
                 hitEnemy.Add(hitColliders[i].gameObject);
             }
             yield return null;
-            hitColliders = Physics.OverlapSphere(position, specialAttackDetectSphere, enemyLayer);
+            hitColliders = Physics.OverlapSphere(position, specialAttackDetectSphere, LayerTagPack.EnemyLayer);
         }
 
         PlayerManager.Instance.gameObject.GetComponent<Collider>().isTrigger = true;

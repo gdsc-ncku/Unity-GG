@@ -155,7 +155,8 @@ public class PlayerManager : MonoBehaviour
     /*
     public void Item()
     {
-        GetComponent<PlayerMove>().Item();
+        //GetComponent<PlayerMove>().Item();
+        EventManager.TriggerEvent(NameOfEvent.Item);
     }
 
     public void Setting()
@@ -165,7 +166,8 @@ public class PlayerManager : MonoBehaviour
 
     public void CloseUI()
     {
-        GetComponent<PlayerMove>().CloseUI();
+        //GetComponent<PlayerMove>().CloseUI();
+        EventManager.TriggerEvent(NameOfEvent.CloseUI);
     }
     */
 

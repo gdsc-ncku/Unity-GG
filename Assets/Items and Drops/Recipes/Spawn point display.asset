@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d16233458b81c04298898d53f826822, type: 3}
+  m_Name: Spawn point display
+  m_EditorClassIdentifier: 
+  isUnlocked: 1
+  requiredMaterials:
+  - {fileID: 11400000, guid: de118b2931240464b97cefa33ddbd64b, type: 2}
+  - {fileID: 11400000, guid: 4fe59b6690d8a6a42ba5295e517192a4, type: 2}
+  - {fileID: 11400000, guid: e889643f34500594f8661a1d153a11d2, type: 2}
+  resultItem: {fileID: 11400000, guid: ed878630b5461664298c6bbd633aca4d, type: 2}

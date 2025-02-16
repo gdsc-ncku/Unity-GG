@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// 物件的類別
@@ -22,7 +23,11 @@ public enum ItemName
     HoundExclusiveCameraModule,
     HoundExclusiveMemory,
     HoundExclusiveMicrophone,
-    HoundExclusiveProcessorSoC
+    HoundExclusiveProcessorSoC,
+    HumanoidExclusiveMemory,
+    StereoProjector,
+    Battery,
+    SpawnPointDisplay,
 }
 
 /// <summary>
