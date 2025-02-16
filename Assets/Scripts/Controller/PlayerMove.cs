@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UniRx;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerMove : MonoBehaviour
 {
@@ -58,53 +59,30 @@ public class PlayerMove : MonoBehaviour
 
     private void Movement()
     {
-        //此處耦合了(下層需要上層資料)，後續可思考是否將playerControl移到ScriptableObject來解耦合
+
+        if (PlayerManager.Instance.playerStatus != PlayerStatus.move)
+            return; // 只有在移動狀態時才處理移動
+
+        // 取得玩家輸入
         Vector2 inputVector = PlayerManager.Instance.playerControl.player.move.ReadValue<Vector2>();
 
-        // 獲取玩家的前方和右側方向
-        Vector3 forward = playerRigibody.transform.forward;
-        Vector3 right = playerRigibody.transform.right;
+        // 計算移動方向
+        Vector3 moveDirection = (playerRigibody.transform.forward * inputVector.y +
+                                 playerRigibody.transform.right * inputVector.x).normalized;
 
-        if (PlayerManager.Instance.playerStatus == PlayerStatus.move && inputVector != Vector2.zero && Vector3.Distance(playerRigibody.linearVelocity, Vector3.zero) < maxSpeed)
+        // 設定剛體速度
+        if(isScaledByTime == true)
         {
-            //playerRigibody.velocity = moveDirection.normalized * maxSpeed;
-
-            // 計算輸入的移動方向
-            Vector3 moveDir = (playerRigibody.transform.forward * inputVector.y + playerRigibody.transform.right * inputVector.x).normalized;
-
-            // 根據輸入更新目標速度
-            Vector3 targetVelocity = moveDir * maxSpeed;
-
-            // 使用 Lerp 模擬摩擦力，逐漸將速度拉近目標速度
-            currentVelocity = Vector3.Lerp(currentVelocity, targetVelocity, friction * (isScaledByTime ? Time.deltaTime : Time.unscaledDeltaTime));
-
-            // 計算實際移動距離
-            Vector3 moveDistance = currentVelocity * (isScaledByTime ? Time.deltaTime : Time.unscaledDeltaTime);
-
-            // 更新剛體的位置
-            playerRigibody.MovePosition(playerRigibody.position + moveDistance);
+            playerRigibody.linearVelocity = moveDirection * maxSpeed * Time.deltaTime * 25f
+                                    + new Vector3(0, playerRigibody.linearVelocity.y, 0);
         }
-        else if(PlayerManager.Instance.playerStatus == PlayerStatus.move && inputVector == Vector2.zero)
+        else if(isScaledByTime == false)
         {
-            //playerRigibody.velocity = new Vector3(0, playerRigibody.velocity.y, 0);
-
-            //手動模擬摩擦力減速效果
-            if(Vector3.Distance(currentVelocity, Vector3.zero) > 1f)
-            {
-                // 使用 Lerp 模擬摩擦力，逐漸將速度拉近目標速度
-                currentVelocity = Vector3.Lerp(currentVelocity, Vector3.zero, friction);
-
-                // 計算實際移動距離
-                Vector3 moveDistance = currentVelocity * (isScaledByTime ? Time.deltaTime : Time.unscaledDeltaTime);
-
-                // 更新剛體的位置
-                playerRigibody.MovePosition(playerRigibody.position + moveDistance);
-            }
-            else
-            {
-                currentVelocity = Vector3.zero;
-            }
+            playerRigibody.linearVelocity = moveDirection * maxSpeed * Time.unscaledDeltaTime * 25f / Time.timeScale
+                        + new Vector3(0, playerRigibody.linearVelocity.y, 0);
         }
+
+
     }
 
     public IEnumerator Sprint(Vector3 forward, float sprintDistance, int sprintFrame)
