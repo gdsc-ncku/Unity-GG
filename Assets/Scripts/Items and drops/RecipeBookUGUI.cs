@@ -11,44 +11,6 @@ using UnityEngine;
 /// </summary>
 public class RecipeBookUGUI : MonoBehaviour
 {
-    #region 建立單例模式
-    //instance mode
-    private static RecipeBookUGUI _instance;
-    public static RecipeBookUGUI Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                Debug.LogError("Can't Find RecipeBook Instance");
-            }
-            return _instance;
-        }
-
-    }
-
-    #endregion
-
-    #region 初始化
-    private void Awake()
-    {
-        Initialize();
-    }
-
-    private void Initialize()
-    {
-        if (_instance == null)
-        {
-            _instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Debug.LogError("Duplicate creating RecipeBook Instance");
-            Destroy(gameObject);
-        }
-    }
-    #endregion
 
     public GameObject recipeUIPrefab; // 單個配方的 UI 項目
     public Transform contentPanel;   // 用於顯示配方的容器
@@ -165,7 +127,7 @@ public class RecipeBookUGUI : MonoBehaviour
         // 註冊對  事件的訂閱
         disposables.Add(EventManager.StartListening(
             NameOfEvent.InventoryItemChange,
-            () => Instance.UpdateInventory()
+            () => UpdateInventory()
         ));
     }
 

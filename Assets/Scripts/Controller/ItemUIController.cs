@@ -90,6 +90,14 @@ public class ItemUIController : MonoBehaviour
             }
         }
 
+    /// <summary>
+    /// 初始化各個道具物件的UI資訊
+    /// </summary>
+    /// <param name="index"></param>
+    /// <param name="data"></param>
+    /// <param name="num"></param>
+    /// <param name="objs"></param>
+    /// <returns></returns>
     private int InitEachItemUI(int index, ItemData data, int num, List<GameObject> objs)
     {
         //圖片
