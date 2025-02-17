@@ -58,7 +58,7 @@ public class PackageUIController : MonoBehaviour
     {
         // 註冊對  事件的訂閱
         disposables.Add(EventManager.StartListening(
-            NameOfEvent.Item,
+            NameOfEvent.OpenItemPage,
             () => Item()
         ));
 

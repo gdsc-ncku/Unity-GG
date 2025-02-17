@@ -23,8 +23,11 @@ public enum NameOfEvent
     ShowSpawnPoint,
 
     [Header("PackageUIController")]
-    Item,
+    OpenItemPage,
     CloseUI,
+
+    [Header("ItemUIController")]
+    ItemChoosed,
 }
 
 /// <summary>
