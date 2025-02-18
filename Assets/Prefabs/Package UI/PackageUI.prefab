@@ -2437,6 +2437,7 @@ GameObject:
   - component: {fileID: 3684379613007651968}
   - component: {fileID: 6581479867611819342}
   - component: {fileID: 8800071283461930709}
+  - component: {fileID: 2243870235176383002}
   m_Layer: 5
   m_Name: right_chunk
   m_TagString: Untagged
@@ -2537,6 +2538,25 @@ MonoBehaviour:
   m_Spacing: {x: 0, y: 10}
   m_Constraint: 0
   m_ConstraintCount: 2
+--- !u!114 &2243870235176383002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2286968782608622371}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ebfd564855225b4f9df68879e14e7bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  notificationTexts:
+  - {fileID: 23226620748063095}
+  - {fileID: 3212379348020679660}
+  - {fileID: 191805399087668164}
+  - {fileID: 7130250316300071592}
+  displayDuration: 1
+  fadeDuration: 0.3
 --- !u!1 &2355190699329479069
 GameObject:
   m_ObjectHideFlags: 0
@@ -2910,8 +2930,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: a new gardet is obtain.
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 2c626b4b026b3b9478a55723c50abf16, type: 2}
-  m_sharedMaterial: {fileID: -4617625378494594100, guid: 2c626b4b026b3b9478a55723c50abf16, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 5a7153a5c21794040bb2d38359f87ed3, type: 2}
+  m_sharedMaterial: {fileID: 8382604650994500044, guid: 5a7153a5c21794040bb2d38359f87ed3, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4020,8 +4040,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: a new gardet is obtain.
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 2c626b4b026b3b9478a55723c50abf16, type: 2}
-  m_sharedMaterial: {fileID: -4617625378494594100, guid: 2c626b4b026b3b9478a55723c50abf16, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 5a7153a5c21794040bb2d38359f87ed3, type: 2}
+  m_sharedMaterial: {fileID: 8382604650994500044, guid: 5a7153a5c21794040bb2d38359f87ed3, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4849,8 +4869,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: a new gardet is obtain.
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 2c626b4b026b3b9478a55723c50abf16, type: 2}
-  m_sharedMaterial: {fileID: -4617625378494594100, guid: 2c626b4b026b3b9478a55723c50abf16, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 5a7153a5c21794040bb2d38359f87ed3, type: 2}
+  m_sharedMaterial: {fileID: 8382604650994500044, guid: 5a7153a5c21794040bb2d38359f87ed3, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5525,8 +5545,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: a new gardet is obtain.
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 2c626b4b026b3b9478a55723c50abf16, type: 2}
-  m_sharedMaterial: {fileID: -4617625378494594100, guid: 2c626b4b026b3b9478a55723c50abf16, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 5a7153a5c21794040bb2d38359f87ed3, type: 2}
+  m_sharedMaterial: {fileID: 8382604650994500044, guid: 5a7153a5c21794040bb2d38359f87ed3, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
