@@ -1,18 +1,20 @@
-using UnityEngine;
 using UnityEngine.AI;
 
 namespace FSM
 {
-    [CreateAssetMenu(menuName = "FSM/Actions/Patrol")]
-    public class Patrol : Action
-    {
-        public override void Execute(FSM stateMachine)
-        {
-            var navMeshAgent = stateMachine.GetComponent<NavMeshAgent>();
-            var patrolPoints = stateMachine.GetComponent<PatrolPoints>();
-
-            if (patrolPoints.HasReached(navMeshAgent))
-                navMeshAgent.SetDestination(patrolPoints.GetNext().position);
-        }
-    }
+    // public class Patrol : BaseState
+    // {
+    //     NavMeshAgent navMeshAgent;
+    //     PatrolPoints patrolPoints;
+    //     public override void OnStateEnter(StateMachine stateMachine)
+    //     {
+    //         navMeshAgent = stateMachine.GetComponent<NavMeshAgent>();
+    //         patrolPoints = stateMachine.GetComponent<PatrolPoints>();
+    //     }
+    //     public override void OnStateUpdate(StateMachine stateMachine)
+    //     {
+    //         if (patrolPoints.HasReached(navMeshAgent))
+    //             navMeshAgent.SetDestination(patrolPoints.GetNext().position);
+    //     }
+    // }
 }

@@ -1,20 +1,22 @@
-using UnityEngine;
-
 namespace FSM
 {
-    [CreateAssetMenu(menuName = "FSM/Transition")]
-    public sealed class Transition : ScriptableObject
+    /// <summary>
+    /// 定義轉換
+    /// </summary>
+    public interface ITransition
     {
-        public Decision Decision;
-        public BaseState TrueState;
-        public BaseState FalseState;
+        IState NextState { get; }
+        ICondition Condition { get; }
+    }
+    public class Transition : ITransition
+    {
+        public IState NextState { get; }
+        public ICondition Condition { get; }
 
-        public void Execute(FSM stateMachine)
+        public Transition(IState nextState, ICondition condition)
         {
-            if(Decision.Decide(stateMachine) && !(TrueState is RemainInState))
-                stateMachine.SetState(TrueState);
-            else if(!(FalseState is RemainInState))
-                stateMachine.SetState(FalseState);
+            NextState = nextState;
+            Condition = condition;
         }
     }
 }
