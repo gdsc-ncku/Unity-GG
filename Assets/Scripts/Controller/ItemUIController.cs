@@ -4,14 +4,18 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using TMPro;
 using UniRx;
+using System;
+using System.Security.Cryptography;
+using NUnit.Framework.Interfaces;
 
 /// <summary>
-/// 負責道具背包的控制
+/// 負責道具背包的UI控制
 /// </summary>
 public class ItemUIController : MonoBehaviour
 {
     [Header("Overview")]
     public Image itemImage;
+    public TextMeshProUGUI itemText;
 
     [Header("Gadgets")]
     public GameObject gadgetParent;
@@ -25,12 +29,37 @@ public class ItemUIController : MonoBehaviour
     public GameObject craftablesParent;
     public List<GameObject> craftables= new List<GameObject>();
 
+    //資料來源
+    [HideInInspector] public Dictionary<ItemName, ItemData> itemEnumName_itemsData_illustratedBook = new Dictionary<ItemName, ItemData>(); //所有的item資訊
+
     private void Start()
     {
+        //抓取當前有幾個可顯示位置
         GetEachObject(gadgetParent, gadgets);
         GetEachObject(resourceParent, resources);
         GetEachObject(craftablesParent, craftables);
 
+        //設定道具資料來源
+        itemEnumName_itemsData_illustratedBook = ItemManager.Instance.itemEnumName_itemsData_illustratedBook;
+    }
+
+    /// <summary>
+    /// 暫時性的把按鍵功能綁到這裡
+    /// </summary>
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.X)){
+            ItemTrigger();
+        }
+    }
+
+    /// <summary>
+    /// 觸發道具
+    /// </summary>
+    public void ItemTrigger()
+    {
+        ItemManager.Instance.ItemTrigger();
+        UpdateItem();
     }
 
     /// <summary>
@@ -38,10 +67,16 @@ public class ItemUIController : MonoBehaviour
     /// </summary>
     public void ItemChoosed(int index)
     {
-        if (0 <= index && index < ItemManager.Instance.itemEnumName_itemsData_illustratedBook.Count)
+        if (0 <= index && index < itemEnumName_itemsData_illustratedBook.Count)
         {
             ItemName choosed = (ItemName)index;
-            Debug.Log($"ItemUIController: 選擇道具 {ItemManager.Instance.itemEnumName_itemsData_illustratedBook[choosed].itemName}");
+            ItemData itemData = itemEnumName_itemsData_illustratedBook[choosed];
+
+            itemImage.sprite = itemData.itemSprite;
+            itemText.text = $"道具名稱: {itemData.itemName}\n" +
+                $"道具描述: {itemData.itemDescription}\n";
+
+            Debug.Log($"ItemUIController: 選擇道具 {itemData.itemName}");
         }
         else
         {
@@ -50,9 +85,12 @@ public class ItemUIController : MonoBehaviour
     }
 
     /// <summary>
-    /// 更新item的顯示資訊 圖片
+    /// 更新item在背包的顯示資訊 圖片
     /// </summary>
     public void UpdateItem() {
+        //顯示之前 先清空舊資料
+        CleanAllUIData();
+
         Dictionary<ItemData, int> inventory = InventoryManager.Instance.inventory;
 
         int gadgetIndex, craftableIndex;
@@ -91,6 +129,45 @@ public class ItemUIController : MonoBehaviour
         }
 
     /// <summary>
+    /// 清空所有的舊資訊
+    /// </summary>
+    private void CleanAllUIData()
+    {
+        CleanEachUI(gadgets);
+        CleanEachUI(craftables);
+        CleanEachUI(resources);
+
+        itemImage.sprite = null;
+        itemText.text = $"道具名稱: \n" +
+            $"道具描述: \n";
+    }
+
+    /// <summary>
+    /// 清空單種類別的舊資訊
+    /// </summary>
+    /// <param name="objs"></param>
+    private void CleanEachUI(List<GameObject> objs)
+    {
+        foreach (var obj in objs)
+        {
+            //圖片
+            Image img = obj.transform.GetChild(0).GetComponent<Image>();
+            img.sprite = null;
+
+            //數量
+            TextMeshProUGUI text = obj.transform.GetChild(1).GetComponentInChildren<TextMeshProUGUI>();
+            text.text = "x";
+
+            //按鍵
+            if(obj.transform.childCount >= 3)
+            {
+                ItemBtn btn = obj.transform.GetChild(2).GetComponentInChildren<ItemBtn>();
+                btn.isSetting = false;
+            }
+        }
+    }
+
+    /// <summary>
     /// 初始化各個道具物件的UI資訊
     /// </summary>
     /// <param name="index"></param>
@@ -100,6 +177,9 @@ public class ItemUIController : MonoBehaviour
     /// <returns></returns>
     private int InitEachItemUI(int index, ItemData data, int num, List<GameObject> objs)
     {
+        //超過顯示上限
+        if (index >= objs.Count) return index;
+
         //圖片
         Image img = objs[index].transform.GetChild(0).GetComponent<Image>();
         img.sprite = data.itemSprite;

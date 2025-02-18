@@ -54,10 +54,7 @@ public class UIDevelopeTester : MonoBehaviour
         for (int i = 0; i < itemEnumName_itemsPrefabs_illustratedBook.Count; i++)
         {
             ItemData data = itemEnumName_itemsData_illustratedBook[(ItemName)i];
-            if (data.itemType == ItemType.Drop)
-            {
-                InventoryManager.Instance.AddItem(data.itemEnumName, 1);
-            }
+            InventoryManager.Instance.AddItem(data.itemEnumName, 1);
         }
     }
 

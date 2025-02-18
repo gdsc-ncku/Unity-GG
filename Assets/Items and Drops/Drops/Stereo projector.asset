@@ -16,3 +16,4 @@ MonoBehaviour:
   itemName: "\u7ACB\u9AD4\u6295\u5F71\u6A5F"
   itemSprite: {fileID: 21300000, guid: b510deb155efddf49bc1d00839a57356, type: 3}
   itemType: 0
+  itemDescription: "\u53EF\u4EE5\u6295\u5F71"
