@@ -56,6 +56,9 @@ public class UIDevelopeTester : MonoBehaviour
             ItemData data = itemEnumName_itemsData_illustratedBook[(ItemName)i];
             InventoryManager.Instance.AddItem(data.itemEnumName, 1);
         }
+
+        //更新道具顯示介面
+        EventManager.TriggerEvent(NameOfEvent.UpdateItem);
     }
 
     /// <summary>

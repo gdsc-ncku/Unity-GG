@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using NUnit.Framework.Interfaces;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -104,6 +105,7 @@ public class ItemManager : MonoBehaviour
         else if(item.itemType == ItemType.Drop)
         {
             Debug.LogWarning("ItemManager: 掉落物無法被直接使用");
+            EventManager.TriggerEvent(NameOfEvent.ShowMessage, $"掉落物無法被直接使用");
         }
     }
 

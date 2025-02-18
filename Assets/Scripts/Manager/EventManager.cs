@@ -28,6 +28,10 @@ public enum NameOfEvent
 
     [Header("ItemUIController")]
     ItemChoosed,
+    UpdateItem,
+
+    [Header("NotificationTeller")]
+    ShowMessage,
 }
 
 /// <summary>

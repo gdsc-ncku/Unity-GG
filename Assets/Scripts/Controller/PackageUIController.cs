@@ -22,7 +22,9 @@ public class PackageUIController : MonoBehaviour
 
 
         ItemUI.SetActive(true); // 切換背包顯示狀態
-        ItemUI.GetComponent<ItemUIController>().UpdateItem(); //更新item資訊
+        
+        //更新item資訊
+        EventManager.TriggerEvent(NameOfEvent.UpdateItem);
 
         BackMask.SetActive(true);
 

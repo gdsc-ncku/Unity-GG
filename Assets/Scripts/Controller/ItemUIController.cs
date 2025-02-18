@@ -56,7 +56,7 @@ public class ItemUIController : MonoBehaviour
     /// <summary>
     /// 觸發道具
     /// </summary>
-    public void ItemTrigger()
+    private void ItemTrigger()
     {
         ItemManager.Instance.ItemTrigger();
         UpdateItem();
@@ -77,17 +77,19 @@ public class ItemUIController : MonoBehaviour
                 $"道具描述: {itemData.itemDescription}\n";
 
             Debug.Log($"ItemUIController: 選擇道具 {itemData.itemName}");
+            EventManager.TriggerEvent(NameOfEvent.ShowMessage, $"選擇道具 {itemData.itemName}");
         }
         else
         {
             Debug.LogWarning("ItemUIController: 選擇不存在的道具");
+            EventManager.TriggerEvent(NameOfEvent.ShowMessage, "選擇不存在的道具");
         }
     }
 
     /// <summary>
     /// 更新item在背包的顯示資訊 圖片
     /// </summary>
-    public void UpdateItem() {
+    private void UpdateItem() {
         //顯示之前 先清空舊資料
         CleanAllUIData();
 
@@ -98,7 +100,7 @@ public class ItemUIController : MonoBehaviour
 
         foreach (var entry in inventory)
         {
-            Debug.Log($"- {entry.Key.itemName}: {entry.Value}");
+            //Debug.Log($"- {entry.Key.itemName}: {entry.Value}");
             ItemData data = entry.Key;
             int num = entry.Value;
             
@@ -206,6 +208,11 @@ public class ItemUIController : MonoBehaviour
         disposables.Add(EventManager.StartListening<int>(
             NameOfEvent.ItemChoosed,
             (index) => ItemChoosed(index)
+        ));
+
+        disposables.Add(EventManager.StartListening(
+            NameOfEvent.UpdateItem,
+            () => UpdateItem()
         ));
     }
 
