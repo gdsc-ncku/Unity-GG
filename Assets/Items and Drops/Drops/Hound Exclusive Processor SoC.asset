@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemEnumName: 5
   itemName: "\u7375\u72AC\u5C08\u5C6C\u8655\u7406\u5668SoC"
-  itemSprite: {fileID: 0}
+  itemSprite: {fileID: 21300000, guid: b510deb155efddf49bc1d00839a57356, type: 3}
   itemType: 0
+  itemDescription: "\u300C...system.io.process...\u300D"

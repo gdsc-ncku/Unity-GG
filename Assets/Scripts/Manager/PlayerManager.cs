@@ -156,7 +156,7 @@ public class PlayerManager : MonoBehaviour
     public void Item()
     {
         //GetComponent<PlayerMove>().Item();
-        EventManager.TriggerEvent(NameOfEvent.Item);
+        EventManager.TriggerEvent(NameOfEvent.OpenItemPage);
     }
 
     public void Setting()

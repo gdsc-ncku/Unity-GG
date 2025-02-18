@@ -44,4 +44,6 @@ public class ItemData : ScriptableObject
     public Sprite itemSprite;   //物品圖片
 
     public ItemType itemType;   //物品的類別
+
+    [Multiline] public string itemDescription; //物品描述
 }
