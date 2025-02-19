@@ -85,7 +85,6 @@ public class UIDevelopeTester : MonoBehaviour
                 GameObject canva = Instantiate(itemCanva, obj.transform);
                 canva.transform.localPosition = new Vector3(0, 1f, 0);
                 canva.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = obj.GetComponent<Item>().itemData.itemName;
-
             }
         }
     }

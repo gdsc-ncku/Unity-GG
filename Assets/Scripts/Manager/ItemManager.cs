@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
 using TMPro;
+using UniRx;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -25,7 +26,11 @@ public class ItemManager : MonoBehaviour
 
     #endregion
 
-    private ItemName choosed;
+    private ItemName choosed; //當前選中的道具
+    public float dropRegion = 2f; //道具丟棄範圍
+
+    [SerializeField] private GameObject particalEffect;
+    [SerializeField] private GameObject itemCanva;
 
     #region 建立單例模式
     //instance mode
@@ -110,6 +115,38 @@ public class ItemManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 丟棄道具
+    /// </summary>
+    private void ItemDrop()
+    {
+        BoolWrapper isDropSuccess = new BoolWrapper(false);
+
+        //inventory manager deal with item drop...
+        EventManager.TriggerEvent(NameOfEvent.DropItem, choosed, isDropSuccess);
+
+        if(isDropSuccess.Value == true)
+        {
+            //base on item name find object, than ini. it near player
+
+            Debug.Log("ItemManager: 丟棄成功 生成掉落物");
+
+            GameObject obj = Instantiate(itemEnumName_itemsPrefabs_illustratedBook[choosed], PlayerManager.Instance.transform);
+            obj.transform.localPosition = new Vector3(Random.Range(-dropRegion, dropRegion),
+                                                    Random.Range(1, dropRegion),
+                                                    Random.Range(-dropRegion, dropRegion));
+            obj.transform.SetParent(null);
+
+            //設置特效
+            GameObject partical = Instantiate(particalEffect, obj.transform);
+
+            //設置名稱
+            GameObject canva = Instantiate(itemCanva, obj.transform);
+            canva.transform.localPosition = new Vector3(0, 1f, 0);
+            canva.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = obj.GetComponent<Item>().itemData.itemName;
+        }
+    }
+
+    /// <summary>
     /// 根據index 去選擇指定的物品
     /// 跟UI那邊應該是生成UI的時候 要順便在UI那邊儲存index
     /// </summary>
@@ -142,4 +179,22 @@ public class ItemManager : MonoBehaviour
             Debug.LogWarning("ItemManager: 添加不存在的道具");
         }
     }
+
+    #region event
+    private CompositeDisposable disposables = new CompositeDisposable();
+
+    private void OnEnable()
+    {
+        // 註冊對  事件的訂閱
+        disposables.Add(EventManager.StartListening(
+            NameOfEvent.DropItem_ItemManager,
+            () => ItemDrop()
+        ));
+    }
+
+    private void OnDisable()
+    {
+        disposables.Clear(); // 自動取消所有事件訂閱
+    }
+    #endregion
 }

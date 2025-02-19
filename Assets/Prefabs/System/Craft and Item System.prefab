@@ -70,6 +70,9 @@ MonoBehaviour:
   - {fileID: 4304153885923936629, guid: 9aaf50209bcb2614ca4000696dabee70, type: 3}
   - {fileID: 5112940854752406638, guid: 8ec2690243bbdd343a4a3b020c836222, type: 3}
   - {fileID: 2442039053955424891, guid: c116d65cc06b5834a845b09417210e6b, type: 3}
+  dropRegion: 2
+  particalEffect: {fileID: 566186692400281684, guid: ba3361043a0968349b038e739b206e43, type: 3}
+  itemCanva: {fileID: 411650476652700673, guid: b7b1b1fc57658844d9aa7906e1834248, type: 3}
 --- !u!114 &807457028659668868
 MonoBehaviour:
   m_ObjectHideFlags: 0
