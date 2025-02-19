@@ -67,7 +67,7 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
                     ""name"": ""jump"",
                     ""type"": ""Button"",
                     ""id"": ""4d47b331-05c8-48ec-a0a8-cd7e29ffbe5a"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -201,7 +201,7 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""881c52c8-543c-49c0-9090-fa72cc29d591"",
-                    ""path"": ""<Keyboard>/z"",
+                    ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
