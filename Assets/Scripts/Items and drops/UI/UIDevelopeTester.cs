@@ -76,6 +76,7 @@ public class UIDevelopeTester : MonoBehaviour
                 obj.transform.localPosition = new Vector3(Random.Range(-range, range),
                                                         Random.Range(1, range),
                                                         Random.Range(-range, range));
+                obj.transform.SetParent(null);
 
                 //³]¸m¯S®Ä
                 GameObject partical = Instantiate(particalEffect, obj.transform);
