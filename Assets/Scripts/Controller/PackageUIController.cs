@@ -11,6 +11,9 @@ public class PackageUIController : MonoBehaviour
     public GameObject CollectionUI;
     public GameObject BackMask;
 
+    /// <summary>
+    /// 打開道具介面
+    /// </summary>
     public void Item()
     {
         //啟用指定UI
@@ -41,6 +44,9 @@ public class PackageUIController : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// 關上道具介面
+    /// </summary>
     public void CloseUI()
     {
         Cursor.lockState = CursorLockMode.Locked;

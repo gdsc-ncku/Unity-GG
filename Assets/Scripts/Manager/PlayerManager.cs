@@ -100,9 +100,9 @@ public class PlayerManager : MonoBehaviour
 
         _playerControl.player.jump.performed += ctx => Jump();
 
-        //_playerControl.player.Item.performed += ctx => Item();
+        _playerControl.player.Item.performed += ctx => Item();
 
-        //_playerControl.player.CloseUI.performed += ctx => CloseUI();
+        _playerControl.player.CloseUI.performed += ctx => CloseUI();
 
         //_playerControl.player.Setting.performed += ctx => Setting();
 
@@ -139,24 +139,24 @@ public class PlayerManager : MonoBehaviour
         //跳多大力
         GetComponent<PlayerMove>().Jump(jumpHeight);
     }
-    /*
+    
     public void Item()
     {
         //GetComponent<PlayerMove>().Item();
         EventManager.TriggerEvent(NameOfEvent.OpenItemPage);
     }
 
-    public void Setting()
-    {
-        GetComponent<PlayerMove>().Setting();
-    }
+    //public void Setting()
+    //{
+    //    GetComponent<PlayerMove>().Setting();
+    //}
 
     public void CloseUI()
     {
         //GetComponent<PlayerMove>().CloseUI();
         EventManager.TriggerEvent(NameOfEvent.CloseUI);
     }
-    */
+    
 
     public void Rebinding()//目前只能rebinding jump這個動作的按鍵，但可以很輕鬆的改到需要的動作上
     {

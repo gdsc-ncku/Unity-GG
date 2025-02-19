@@ -48,6 +48,10 @@ public class NotificationTeller : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 處理訊息顯示的邏輯
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator DisplayMessages()
     {
         while (messageQueue.Count > 0)
@@ -84,6 +88,14 @@ public class NotificationTeller : MonoBehaviour
         displayCoroutine = null; // 結束 Coroutine
     }
 
+    /// <summary>
+    /// 文字淡化效果
+    /// </summary>
+    /// <param name="text"></param>
+    /// <param name="startAlpha"></param>
+    /// <param name="endAlpha"></param>
+    /// <param name="duration"></param>
+    /// <returns></returns>
     private IEnumerator FadeText(TextMeshProUGUI text, float startAlpha, float endAlpha, float duration)
     {
         float elapsedTime = 0;
