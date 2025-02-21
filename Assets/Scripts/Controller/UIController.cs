@@ -2,14 +2,49 @@ using UnityEngine;
 
 public class UIController : MonoBehaviour
 {
-    public GameObject ItemUI;
-    public GameObject WeaponUI;
-    public GameObject CollectionUI;
-    public GameObject BackMask;
-    public GameObject GameplayUI;
-    public GameObject ConfigurationUI;
-    public GameObject GraphicUI;
-    public GameObject AudioUI;
+    // 以下這些變數在 Inspector 中被設定為 prefab
+    public GameObject ItemUIPrefab;
+    public GameObject WeaponUIPrefab;
+    public GameObject CollectionUIPrefab;
+    public GameObject BackMaskPrefab;
+    public GameObject GameplayUIPrefab;
+    public GameObject ConfigurationUIPrefab;
+    public GameObject GraphicUIPrefab;
+    public GameObject AudioUIPrefab;
+
+    // 生成後的實例
+    private GameObject ItemUI;
+    private GameObject WeaponUI;
+    private GameObject CollectionUI;
+    private GameObject BackMask;
+    private GameObject GameplayUI;
+    private GameObject ConfigurationUI;
+    private GameObject GraphicUI;
+    private GameObject AudioUI;
+
+    public void Start()
+    {
+        // 產生 prefab 的實例並保存在變數中
+        ItemUI = Instantiate(ItemUIPrefab);
+        WeaponUI = Instantiate(WeaponUIPrefab);
+        CollectionUI = Instantiate(CollectionUIPrefab);
+        BackMask = Instantiate(BackMaskPrefab);
+        GameplayUI = Instantiate(GameplayUIPrefab);
+        ConfigurationUI = Instantiate(ConfigurationUIPrefab);
+        GraphicUI = Instantiate(GraphicUIPrefab);
+        AudioUI = Instantiate(AudioUIPrefab);
+
+        ItemUIPrefab.SetActive(false);
+        WeaponUIPrefab.SetActive(false);
+        CollectionUIPrefab.SetActive(false);
+        BackMaskPrefab.SetActive(false);
+        GameplayUIPrefab.SetActive(false);
+        ConfigurationUIPrefab.SetActive(false);
+        GraphicUIPrefab.SetActive(false);
+        AudioUIPrefab.SetActive(false);
+        // 確保所有 UI 預設為隱藏
+        Reset();
+    }
 
     public void Reset()
     {
@@ -21,33 +56,29 @@ public class UIController : MonoBehaviour
         ConfigurationUI.SetActive(false);
         GraphicUI.SetActive(false);
         AudioUI.SetActive(false);
+        Debug.Log("test1");
     }
+
     public void Item()
     {
-        //啟用指定UI
         if (ItemUI == null)
         {
-            Debug.LogError("Backpack UI is not assigned!");
+            Debug.LogError("Item UI instance is not created!");
             return;
         }
 
-        
-        ItemUI.SetActive(true); // 切換背包顯示狀態
+        ItemUI.SetActive(true);
         BackMask.SetActive(true);
-        
-        // 當背包開啟時，解除鎖定滑鼠
-        Debug.Log(ItemUI.activeSelf);
+
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        
     }
 
     public void ToItem()
     {
-        //啟用指定UI
         if (ItemUI == null)
         {
-            Debug.LogError("Item UI is not assigned!");
+            Debug.LogError("Item UI instance is not created!");
             return;
         }
 
@@ -55,18 +86,17 @@ public class UIController : MonoBehaviour
         WeaponUI.SetActive(false);
         CollectionUI.SetActive(false);
         BackMask.SetActive(true);
-        
-        
-        
+
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
+
+    // 其他函數（ToWeapon、ToCollection 等）同樣使用實例變數
     public void ToWeapon()
     {
-        //啟用指定UI
         if (WeaponUI == null)
         {
-            Debug.LogError("Weapon UI is not assigned!");
+            Debug.LogError("Weapon UI instance is not created!");
             return;
         }
 
@@ -74,18 +104,16 @@ public class UIController : MonoBehaviour
         WeaponUI.SetActive(true);
         CollectionUI.SetActive(false);
         BackMask.SetActive(true);
-        
-        
-        
+
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
+
     public void ToCollection()
     {
-        //啟用指定UI
         if (CollectionUI == null)
         {
-            Debug.LogError("Collection UI is not assigned!");
+            Debug.LogError("Collection UI instance is not created!");
             return;
         }
 
@@ -93,37 +121,54 @@ public class UIController : MonoBehaviour
         WeaponUI.SetActive(false);
         CollectionUI.SetActive(true);
         BackMask.SetActive(true);
-        
-        // 當背包開啟時，解除鎖定滑鼠
-        Debug.Log(ItemUI.activeSelf);
+
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
+
     public void CloseUI()
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = false;
-        // 切換背包顯示狀態
+
         BackMask.SetActive(false);
-        ItemUI.SetActive(false); 
+        ItemUI.SetActive(false);
         WeaponUI.SetActive(false);
         CollectionUI.SetActive(false);
-        //Debug.Log("test2");
     }
 
     public void Setting()
     {
         if (GameplayUI == null)
         {
-            Debug.LogError("Gameplay UI is not assigned!");
+            Debug.LogError("Gameplay UI instance is not created!");
             return;
         }
-        GameplayUI.SetActive(true); // 切換背包顯示狀態
+
+        GameplayUI.SetActive(true);
+        ConfigurationUI.SetActive(false);
+        GraphicUI.SetActive(false);
+        AudioUI.SetActive(false);
         BackMask.SetActive(true);
-        
-        // 當背包開啟時，解除鎖定滑鼠
+
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+    }
+
+    public void Setting_Back()
+    {
+        GameplayUI.SetActive(false);
+        ConfigurationUI.SetActive(false);
+        GraphicUI.SetActive(false);
+        AudioUI.SetActive(false);
+        BackMask.SetActive(false);
+        Debug.Log(GameplayUI.activeSelf);
+        Debug.Log(ConfigurationUI.activeSelf);
+        Debug.Log(GraphicUI.activeSelf);
+        Debug.Log(AudioUI.activeSelf);
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     public void ToGameplay()
@@ -195,17 +240,5 @@ public class UIController : MonoBehaviour
         // 當背包開啟時，解除鎖定滑鼠
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-    }
-
-    public void Setting_Back()
-    {
-        GameplayUI.SetActive(false);
-        ConfigurationUI.SetActive(false);
-        GraphicUI.SetActive(false);
-        AudioUI.SetActive(false);
-        BackMask.SetActive(false);
-        
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
     }
 }
