@@ -5,11 +5,25 @@ using System.Collections.Generic;
 public class EnemyData : ScriptableObject
 {
     // 敵人名稱
-    public string enemyName => name;
+    public string enemyName;
+    
+    public Weakness weakness;
+
     // 陣營
     public Faction faction;
-    // 陣營關係
     public Dictionary<Faction, Relation> relations => faction.GetRelations();
-    // 攻擊種類
-    public AttackType attackType;
+
+    // // 偵測: 為了預覽效果，先由Detector設定
+    // public float detectDistance;
+    // public float detectAngle;
+
+    // // 攻擊: 改用碰撞判定比較精準
+    // public float attackDistance;
+    // public float attackAngle;
+}
+public enum Weakness
+{
+    Head,
+    Body,
+    Leg
 }

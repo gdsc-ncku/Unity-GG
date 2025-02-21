@@ -12,5 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22e971642578042499bc989cb03cb222, type: 3}
   m_Name: Humanoid
   m_EditorClassIdentifier: 
-  faction: 0
-  attackType: 0
+  enemyName: 
+  weakness: 0
+  faction: 1
+  detectDistance: 0
+  detectAngle: 0
+  attackDistance: 0
+  attackAngle: 0
