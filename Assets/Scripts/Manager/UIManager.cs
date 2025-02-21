@@ -45,15 +45,15 @@ public class UIManager: MonoBehaviour
     //Backpage
     public void On_pagebtn_Item_click()
     {
-        Debug.Log("btnItem clicked");
+        GetComponent<UIController>().ToItem();
     }
     public void On_pagebtn_Weapon_click()
     {
-        Debug.Log("btnWeapon clicked");
+        GetComponent<UIController>().ToWeapon();
     }
     public void On_pagebtn_Collection_click()
     {
-        Debug.Log("btnCollection clicked");
+        GetComponent<UIController>().ToCollection();
     }
 
     //Setting
