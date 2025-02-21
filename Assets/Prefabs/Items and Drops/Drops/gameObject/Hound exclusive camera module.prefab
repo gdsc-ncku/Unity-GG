@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 1826184873785256641}
   - component: {fileID: 639054031553880421}
   - component: {fileID: 6428505436623385895}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Hound exclusive camera module
-  m_TagString: Untagged
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -60,6 +60,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -119,5 +122,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemData: {fileID: 11400000, guid: 6e6fb5b7720268245bb1df7fa4559a08, type: 2}
-  body: {fileID: 0}
-  collider: {fileID: 0}

@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 4395307432877360756}
   - component: {fileID: 4259318466923354909}
   - component: {fileID: 7504496558972047626}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Hound Exclusive Processor SoC
-  m_TagString: Untagged
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -60,6 +60,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:

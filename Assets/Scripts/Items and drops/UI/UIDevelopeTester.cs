@@ -69,23 +69,7 @@ public class UIDevelopeTester : MonoBehaviour
         int range = instantiateRange;
         for (int i = 0; i < itemEnumName_itemsPrefabs_illustratedBook.Count; i++)
         {
-            ItemData data = itemEnumName_itemsData_illustratedBook[(ItemName)i];
-            if (data.itemType == ItemType.Drop)
-            {
-                GameObject obj = Instantiate(itemEnumName_itemsPrefabs_illustratedBook[(ItemName)i], itemInstantiatePoint);
-                obj.transform.localPosition = new Vector3(Random.Range(-range, range),
-                                                        Random.Range(1, range),
-                                                        Random.Range(-range, range));
-                obj.transform.SetParent(null);
-
-                //設置特效
-                GameObject partical = Instantiate(particalEffect, obj.transform);
-
-                //設置名稱
-                GameObject canva = Instantiate(itemCanva, obj.transform);
-                canva.transform.localPosition = new Vector3(0, 1f, 0);
-                canva.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = obj.GetComponent<Item>().itemData.itemName;
-            }
+            ItemManager.Instance.InstantiateItemObject((ItemName)i);
         }
     }
 

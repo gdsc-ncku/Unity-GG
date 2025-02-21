@@ -15,9 +15,9 @@ GameObject:
   - component: {fileID: 3351369049441392795}
   - component: {fileID: -5528020698658809922}
   - component: {fileID: 3459574187550853525}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Reducer
-  m_TagString: Untagged
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -22,21 +22,23 @@ public class UIManager: MonoBehaviour
 
         _playerControl.player.Setting.performed += ctx => Setting();
     }
-    
+
     //UIController
     public void Item()
     {
-        GetComponent<UIController>().Item();
+        //GetComponent<PlayerMove>().Item();
+        EventManager.TriggerEvent(NameOfEvent.OpenItemPage);
     }
 
     public void CloseUI()
     {
-        GetComponent<UIController>().CloseUI();
+        //GetComponent<PlayerMove>().CloseUI();
+        EventManager.TriggerEvent(NameOfEvent.CloseUI);
     }
 
     public void Setting()
     {
-        GetComponent<UIController>().Setting();
+        //GetComponent<UIController>().Setting();
     }
     
 

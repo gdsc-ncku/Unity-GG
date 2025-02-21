@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 3129563065551480267}
   - component: {fileID: 8288772194910132276}
   - component: {fileID: 7349444455362959106}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Hound exclusive microphone
-  m_TagString: Untagged
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -60,6 +60,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:

@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 2157327048330282593}
   - component: {fileID: 6505267828153301934}
   - component: {fileID: -7281297440182449213}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Matrix Eyes
-  m_TagString: Untagged
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

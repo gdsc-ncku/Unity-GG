@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 2864157543921424699}
   - component: {fileID: 282945440594005250}
   - component: {fileID: 6217390651093465320}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Stereo projector
-  m_TagString: Untagged
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

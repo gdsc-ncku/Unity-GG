@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 4474397736348963168}
   - component: {fileID: 6683311446962370657}
   - component: {fileID: 1374288961009440980}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Humanoid exclusive memory
-  m_TagString: Untagged
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

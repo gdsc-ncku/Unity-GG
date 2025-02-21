@@ -27,8 +27,9 @@ public class UIController : MonoBehaviour
     }
     public void CloseUI()
     {
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
         // 切換背包顯示狀態
         BackMask.SetActive(false);
         ItemUI.SetActive(false); 

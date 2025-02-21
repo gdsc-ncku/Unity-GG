@@ -51,6 +51,7 @@ public class PackageUIController : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
         // ¤Á´«­I¥]Åã¥Üª¬ºA
         BackMask.SetActive(false);
         ItemUI.SetActive(false);
