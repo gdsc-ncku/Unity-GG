@@ -1,34 +1,26 @@
 ﻿using System.Collections;
 using UniRx;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class PlayerMove : MonoBehaviour
 {
-    //public float speed = 20f;
     private float mouseSensitivity;
     private float maxSpeed;
-    private Rigidbody playerRigibody;
-    //public GameObject ItemUI;
-    //public GameObject WeaponUI;
-    //public GameObject CollectionUI;
-    //public GameObject BackMask;
-    // �ƹ��F�ӫ�
     private float xRotation; // 角色的垂直旋轉
 
     public bool isLockCursor = true;
 
     [Header("與時間放慢有關的移動設置")]
     [SerializeField] private bool isScaledByTime = true;
-    [SerializeField] private Vector3 currentVelocity = Vector3.zero;
-    public float friction = 0.9f; // 摩擦力係數（值越小減速越慢）
 
     //用於事件訂閱
     private CompositeDisposable disposables = new CompositeDisposable();
 
+    private CharacterController characterController;
+    private Vector3 velocity; // 控制角色的重力影響
+
     private void Awake()
     {
-        playerRigibody = PlayerManager.Instance.rb;
         Cursor.lockState = CursorLockMode.Locked; // ��w�ƹ�
 
         maxSpeed = PlayerManager.Instance.maxSpeed;
@@ -37,6 +29,11 @@ public class PlayerMove : MonoBehaviour
 
         if(isLockCursor)
             Cursor.lockState = CursorLockMode.Locked; // 鎖定滑鼠
+    }
+
+    private void Start()
+    {
+        characterController = PlayerManager.Instance.characterController;
     }
 
     private void FixedUpdate()
@@ -63,35 +60,31 @@ public class PlayerMove : MonoBehaviour
 
     private void Movement()
     {
-
-        if (PlayerManager.Instance.playerStatus != PlayerStatus.move)
-            return; // 只有在移動狀態時才處理移動
-
         // 取得玩家輸入
         Vector2 inputVector = PlayerManager.Instance.playerControl.player.move.ReadValue<Vector2>();
 
         // 計算移動方向
-        Vector3 moveDirection = (playerRigibody.transform.forward * inputVector.y +
-                                 playerRigibody.transform.right * inputVector.x).normalized;
+        Vector3 moveDirection = (transform.forward * inputVector.y +
+                                 transform.right * inputVector.x).normalized;
+        Vector3 newVelocity = moveDirection * maxSpeed * (isScaledByTime ? Time.deltaTime : Time.unscaledDeltaTime / Time.timeScale);
+        characterController.Move(newVelocity);
 
-        // 設定剛體速度
-        if(isScaledByTime == true)
+        if (!characterController.isGrounded)
         {
-            playerRigibody.linearVelocity = moveDirection * maxSpeed * Time.deltaTime * 25f
-                                    + new Vector3(0, playerRigibody.linearVelocity.y, 0);
+            velocity.y -= GameManager.Instance.playerGravity * Time.deltaTime;
+            characterController.Move(velocity * Time.deltaTime);
         }
-        else if(isScaledByTime == false)
+        else
         {
-            playerRigibody.linearVelocity = moveDirection * maxSpeed * Time.unscaledDeltaTime * 25f / Time.timeScale
-                        + new Vector3(0, playerRigibody.linearVelocity.y, 0);
+            velocity.y = -0.1f; // 避免角色浮空
         }
-
-
     }
+
+
 
     public IEnumerator Sprint(Vector3 forward, float sprintDistance, int sprintFrame)
     {
-        PlayerManager.Instance.playerStatus = PlayerStatus.sprint;
+        /*PlayerManager.Instance.playerStatus = PlayerStatus.sprint;
         PlayerManager.Instance.rb.linearVelocity = Vector3.zero;
         yield return new WaitForFixedUpdate();
         PlayerManager.Instance.rb.AddForce(2 * PlayerManager.Instance.rb.mass * sprintDistance / (Time.fixedDeltaTime * sprintFrame) * forward, ForceMode.Impulse);
@@ -100,7 +93,7 @@ public class PlayerMove : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
         PlayerManager.Instance.rb.linearVelocity = Vector3.zero;
-        PlayerManager.Instance.playerStatus = PlayerStatus.move;
+        PlayerManager.Instance.playerStatus = PlayerStatus.move;*/
         yield break;
     }
 
@@ -125,13 +118,13 @@ public class PlayerMove : MonoBehaviour
         isScaledByTime = _isScaledByTime;
     }
 
-    public void Jump(float jumpforce)
+    public void Jump(float jumpHeight)
     {
-        if(PlayerManager.Instance.playerStatus == PlayerStatus.move)
+        if(characterController.isGrounded)
         {
             Debug.Log("Jump!");
-            PlayerManager.Instance.playerStatus = PlayerStatus.jump;  
-            PlayerManager.Instance.rb.AddForce(Vector3.up * jumpforce, ForceMode.Impulse);
+            velocity.y = Mathf.Sqrt(jumpHeight * 2f * GameManager.Instance.playerGravity);
+            characterController.Move(velocity * Time.deltaTime);
         }
         else
         {

@@ -18,6 +18,10 @@ public enum NameOfEvent
 
     [Header("InventoryManager")]
     InventoryItemChange,
+    DropItem,
+
+    [Header("ItemManager")]
+    DropItem_ItemManager,
 
     [Header("SpawnManager_Develop")]
     ShowSpawnPoint,
@@ -32,6 +36,10 @@ public enum NameOfEvent
 
     [Header("NotificationTeller")]
     ShowMessage,
+
+    [Header("UIController")]
+    ToConfiguration,
+
 }
 
 /// <summary>
@@ -151,4 +159,17 @@ public class EventManager
     }
     #endregion
 
+}
+
+/// <summary>
+/// 布林值包裝
+/// </summary>
+public class BoolWrapper
+{
+    public bool Value;
+
+    public BoolWrapper(bool value)
+    {
+        Value = value;
+    }
 }

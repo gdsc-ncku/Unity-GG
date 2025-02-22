@@ -48,9 +48,24 @@ public class ItemUIController : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.X)){
+        if (Input.GetKeyDown(KeyCode.F)){
             ItemTrigger();
         }
+
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            ItemDrop();
+        }
+    }
+
+    /// <summary>
+    /// ¥á±ó¹D¨ã
+    /// </summary>
+    private void ItemDrop()
+    {
+        //item manager executes item drop...
+        EventManager.TriggerEvent(NameOfEvent.DropItem_ItemManager);
+        UpdateItem();
     }
 
     /// <summary>

@@ -24,16 +24,18 @@ public class UIManager: MonoBehaviour
 
         //GetComponent<UIController>().Reset();
     }
-    
+
     //UIController
     public void Item()
     {
         GetComponent<UIController>().Item();
+        //EventManager.TriggerEvent(NameOfEvent.OpenItemPage);
     }
 
     public void CloseUI()
     {
         GetComponent<UIController>().CloseUI();
+        //EventManager.TriggerEvent(NameOfEvent.CloseUI);
     }
 
     public void Setting()

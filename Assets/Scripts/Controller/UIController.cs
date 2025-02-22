@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using UniRx;
 public class UIController : MonoBehaviour
 {
     // 以下這些變數在 Inspector 中被設定為 prefab
@@ -12,6 +12,8 @@ public class UIController : MonoBehaviour
     public GameObject GraphicUIPrefab;
     public GameObject AudioUIPrefab;
 
+    public GameObject parentCanvas;
+
     // 生成後的實例
     private GameObject ItemUI;
     private GameObject WeaponUI;
@@ -22,18 +24,22 @@ public class UIController : MonoBehaviour
     private GameObject GraphicUI;
     private GameObject AudioUI;
 
+
+
     public void Start()
     {
         // 產生 prefab 的實例並保存在變數中
-        ItemUI = Instantiate(ItemUIPrefab);
-        WeaponUI = Instantiate(WeaponUIPrefab);
-        CollectionUI = Instantiate(CollectionUIPrefab);
-        BackMask = Instantiate(BackMaskPrefab);
-        GameplayUI = Instantiate(GameplayUIPrefab);
-        ConfigurationUI = Instantiate(ConfigurationUIPrefab);
-        GraphicUI = Instantiate(GraphicUIPrefab);
-        AudioUI = Instantiate(AudioUIPrefab);
+        BackMask = Instantiate(BackMaskPrefab,parentCanvas.transform);
 
+        ItemUI = Instantiate(ItemUIPrefab,parentCanvas.transform);
+        WeaponUI = Instantiate(WeaponUIPrefab,parentCanvas.transform);
+        CollectionUI = Instantiate(CollectionUIPrefab,parentCanvas.transform);
+        
+        GameplayUI = Instantiate(GameplayUIPrefab,parentCanvas.transform);
+        ConfigurationUI = Instantiate(ConfigurationUIPrefab,parentCanvas.transform);
+        GraphicUI = Instantiate(GraphicUIPrefab,parentCanvas.transform);
+        AudioUI = Instantiate(AudioUIPrefab,parentCanvas.transform);
+        /*
         ItemUIPrefab.SetActive(false);
         WeaponUIPrefab.SetActive(false);
         CollectionUIPrefab.SetActive(false);
@@ -42,6 +48,7 @@ public class UIController : MonoBehaviour
         ConfigurationUIPrefab.SetActive(false);
         GraphicUIPrefab.SetActive(false);
         AudioUIPrefab.SetActive(false);
+        */
         // 確保所有 UI 預設為隱藏
         Reset();
     }
@@ -241,4 +248,28 @@ public class UIController : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
+
+    #region event
+    private CompositeDisposable disposables = new CompositeDisposable();
+
+    private void OnEnable()
+    {
+        /*
+        disposables.Add(EventManager.StartListening<int>(
+            NameOfEvent.ItemChoosed,
+            (index) => ItemChoosed(index)
+        ));
+        */
+
+        disposables.Add(EventManager.StartListening(
+            NameOfEvent.ToConfiguration,
+            () => ToConfiguration()
+        ));
+    }
+
+    private void OnDisable()
+    {
+        disposables.Clear(); 
+    }
+    #endregion
 }
