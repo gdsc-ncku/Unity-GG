@@ -21,43 +21,70 @@ public class UIManager: MonoBehaviour
         _playerControl.player.CloseUI.performed += ctx => CloseUI();
 
         _playerControl.player.Setting.performed += ctx => Setting();
+
+        //GetComponent<UIController>().Reset();
     }
 
     //UIController
     public void Item()
     {
-        //GetComponent<PlayerMove>().Item();
-        EventManager.TriggerEvent(NameOfEvent.OpenItemPage);
+        GetComponent<UIController>().Item();
+        //EventManager.TriggerEvent(NameOfEvent.OpenItemPage);
     }
 
     public void CloseUI()
     {
-        //GetComponent<PlayerMove>().CloseUI();
-        EventManager.TriggerEvent(NameOfEvent.CloseUI);
+        GetComponent<UIController>().CloseUI();
+        //EventManager.TriggerEvent(NameOfEvent.CloseUI);
     }
 
     public void Setting()
     {
-        //GetComponent<UIController>().Setting();
+        GetComponent<UIController>().Setting();
     }
     
 
     //Backpage
     public void On_pagebtn_Item_click()
     {
-        Debug.Log("btnItem clicked");
+        GetComponent<UIController>().ToItem();
     }
     public void On_pagebtn_Weapon_click()
     {
-        Debug.Log("btnWeapon clicked");
+        GetComponent<UIController>().ToWeapon();
     }
     public void On_pagebtn_Collection_click()
     {
-        Debug.Log("btnCollection clicked");
+        GetComponent<UIController>().ToCollection();
     }
 
     //Setting
+    public void On_Gameplay_click()
+    {
+        GetComponent<UIController>().ToGameplay();
+    }
+
+    public void On_Configuration_click()
+    {
+        GetComponent<UIController>().ToConfiguration();
+    }
+
+    public void On_Graphic_click()
+    {
+        GetComponent<UIController>().ToGraphic();
+    }
+
+    public void On_Audio_click()
+    {
+        GetComponent<UIController>().ToAudio();
+    }
+    public void On_Back_click()
+    {
+        GetComponent<UIController>().Setting_Back();
+    }
     
+
+    //Rebinding
     public void On_Rebinding_Move_Forward_click(Button btn)
     {
         _playerControl.player.move.Disable();

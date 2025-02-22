@@ -36,6 +36,10 @@ public enum NameOfEvent
 
     [Header("NotificationTeller")]
     ShowMessage,
+
+    [Header("UIController")]
+    ToConfiguration,
+
 }
 
 /// <summary>
