@@ -128,7 +128,7 @@ public class UIController : MonoBehaviour
 
     public void CloseUI()
     {
-        Cursor.lockState = CursorLockMode.None;
+        Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
         BackMask.SetActive(false);
