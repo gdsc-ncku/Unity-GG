@@ -5,6 +5,7 @@ using System.Collections.Generic;
 /// </summary>
 public enum Faction
 {
+    None,
     Player,
     MilitaryEnemy,
     GPowerEnemy,
@@ -17,9 +18,9 @@ public enum Faction
 /// </summary>
 public enum Relation
 {
-    Friendly,
-    Neutral,
-    Hostile
+    Neutral = 0,
+    Hate = 1,
+    Affraid = 2,
 }
 
 /// <summary>
@@ -34,40 +35,40 @@ public static class FactionRelationData
         {
             Faction.Player, new Dictionary<Faction, Relation>
             {
-                { Faction.Player, Relation.Friendly },
-                { Faction.MilitaryEnemy, Relation.Hostile },
-                { Faction.GPowerEnemy, Relation.Hostile },
-                { Faction.BaseEnemy, Relation.Hostile },
+                { Faction.Player, Relation.Affraid },
+                { Faction.MilitaryEnemy, Relation.Hate },
+                { Faction.GPowerEnemy, Relation.Hate },
+                { Faction.BaseEnemy, Relation.Hate },
                 { Faction.UndergroundDwellers, Relation.Neutral }
             }
         },
         {
             Faction.MilitaryEnemy, new Dictionary<Faction, Relation>
             {
-                { Faction.Player, Relation.Hostile },
-                { Faction.MilitaryEnemy, Relation.Friendly },
+                { Faction.Player, Relation.Hate },
+                { Faction.MilitaryEnemy, Relation.Affraid },
                 { Faction.GPowerEnemy, Relation.Neutral },
                 { Faction.BaseEnemy, Relation.Neutral },
-                { Faction.UndergroundDwellers, Relation.Hostile }
+                { Faction.UndergroundDwellers, Relation.Hate }
             }
         },
         {
             Faction.GPowerEnemy, new Dictionary<Faction, Relation>
             {
-                { Faction.Player, Relation.Hostile },
+                { Faction.Player, Relation.Hate },
                 { Faction.MilitaryEnemy, Relation.Neutral },
-                { Faction.GPowerEnemy, Relation.Friendly },
+                { Faction.GPowerEnemy, Relation.Affraid },
                 { Faction.BaseEnemy, Relation.Neutral },
-                { Faction.UndergroundDwellers, Relation.Hostile }
+                { Faction.UndergroundDwellers, Relation.Hate }
             }
         },
         {
             Faction.BaseEnemy, new Dictionary<Faction, Relation>
             {
-                { Faction.Player, Relation.Hostile },
+                { Faction.Player, Relation.Hate },
                 { Faction.MilitaryEnemy, Relation.Neutral },
                 { Faction.GPowerEnemy, Relation.Neutral },
-                { Faction.BaseEnemy, Relation.Friendly },
+                { Faction.BaseEnemy, Relation.Affraid },
                 { Faction.UndergroundDwellers, Relation.Neutral }
             }
         },
@@ -75,10 +76,10 @@ public static class FactionRelationData
             Faction.UndergroundDwellers, new Dictionary<Faction, Relation>
             {
                 { Faction.Player, Relation.Neutral },
-                { Faction.MilitaryEnemy, Relation.Hostile },
-                { Faction.GPowerEnemy, Relation.Hostile },
+                { Faction.MilitaryEnemy, Relation.Hate },
+                { Faction.GPowerEnemy, Relation.Hate },
                 { Faction.BaseEnemy, Relation.Neutral },
-                { Faction.UndergroundDwellers, Relation.Friendly }
+                { Faction.UndergroundDwellers, Relation.Affraid }
             }
         }
     };

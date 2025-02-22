@@ -4,14 +4,10 @@ using System.Collections.Generic;
 [CreateAssetMenu(fileName = "NewEnemyData", menuName = "ScriptableObjects/Data/EnemyData")]
 public class EnemyData : ScriptableObject
 {
-    // 敵人名稱
     public string enemyName;
-    
-    public Weakness weakness;
-
-    // 陣營
     public Faction faction;
-    public Dictionary<Faction, Relation> relations => faction.GetRelations();
+    public Weakness weakness;
+    public float AttackRange;
 
     // // 偵測: 為了預覽效果，先由Detector設定
     // public float detectDistance;

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
@@ -11,12 +10,11 @@ public class Detector : MonoBehaviour
 {
     [SerializeField] float distance = 10;    //偵測距離
     [SerializeField] float angle = 30;       //偵測角度
-    [SerializeField] bool isDebug = true;    //偵測角度
+    [SerializeField] bool isDebug = true;    //Debug模式
     LayerMask layer => LayerMask.GetMask(LayerTagPack.Enemy, LayerTagPack.Player);
     LayerMask occlusionLayers => LayerMask.GetMask(LayerTagPack.Environment);
-    Collider[] colliders = new Collider[50];
-    List<GameObject> detectedObjects = new List<GameObject>();
-    GameObject taget;
+    HashSet<GameObject> detectedObjects = new();
+    public Subject<HashSet<GameObject>> OnDetectedChange = new();
 
     
     void Update()
@@ -29,20 +27,22 @@ public class Detector : MonoBehaviour
     /// </summary>
     void Dectect()
     {
-        detectedObjects.Clear();
-        var count = Physics.OverlapSphereNonAlloc(transform.position, distance, colliders, layer, QueryTriggerInteraction.Collide);
-        for(int i = 0; i < count; i++)
+        var currentDetectedObjects = new HashSet<GameObject>();
+        var colliders = Physics.OverlapSphere(transform.position, distance, layer, QueryTriggerInteraction.Collide);
+        foreach (var collider in colliders)
         {
-            GameObject obj = colliders[i].gameObject;
-            if(obj == transform.root.gameObject) continue;
-            if(IsVisible(obj))
+            var obj = collider.gameObject;
+            if (obj == transform.root.gameObject) continue;
+            if (IsVisible(obj))
             {
-                detectedObjects.Add(obj);
+                currentDetectedObjects.Add(obj);
             }
         }
-        if(taget != null && !detectedObjects.Contains(taget))
+        if (!detectedObjects.SetEquals(currentDetectedObjects))
         {
-            taget = null;
+            detectedObjects = currentDetectedObjects;
+            OnDetectedChange.OnNext(detectedObjects);
+            Debug.Log("Detect: " + detectedObjects.Count);
         }
     }
 

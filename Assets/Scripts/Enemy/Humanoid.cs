@@ -1,9 +1,8 @@
-using UnityEngine;
 using FSM;
 
 public class Humanoid : EnemyBase
 {
-    void Start()
+    protected override void Init()
     {
         var Patrol = new Patrol(this);
         var Chase = new Chase(this);

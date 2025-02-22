@@ -4,17 +4,17 @@ using UnityEngine.AI;
 public class Chase : BaseState
 {
     private NavMeshAgent navMeshAgent;
-    private Transform target;
+    private GameObject target;
 
     public Chase(EnemyBase enemy)
     {
         navMeshAgent = enemy.GetComponent<NavMeshAgent>();
-        target = enemy.target;
+        target = enemy.Target;
     }
 
     public override void OnStateUpdate()
     {
         if (target == null) return;
-            navMeshAgent.SetDestination(target.position);
+            navMeshAgent.SetDestination(target.transform.position);
     }
 }
