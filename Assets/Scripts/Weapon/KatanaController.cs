@@ -11,7 +11,7 @@ public class KatanaController : Weapon
     protected override void RightClickPerformed(InputAction.CallbackContext obj)
     {
         Vector3 origin = Camera.main.transform.position, forward = Camera.main.transform.forward;
-        if (Physics.Raycast(origin, forward, out RaycastHit hitInfo, specialAttackDistance, LayerTagPack.EnemyLayer))
+        if (Physics.Raycast(origin, forward, out RaycastHit hitInfo, specialAttackDistance, LayerMask.GetMask(LayerTagPack.Enemy)))
         {
             hitEnemy.Add(hitInfo.collider.gameObject);
             //��forward���w�O����u
@@ -30,7 +30,7 @@ public class KatanaController : Weapon
     //�]���n�s�򰻴��A�ҥH�Φ��覡�קK�d�y
     private IEnumerator Teleport(Vector3 position, Vector3 forward)
     {
-        Collider[] hitColliders = Physics.OverlapSphere(position, specialAttackDetectSphere, LayerTagPack.EnemyLayer);
+        Collider[] hitColliders = Physics.OverlapSphere(position, specialAttackDetectSphere, LayerMask.GetMask(LayerTagPack.Enemy));
         while(hitColliders.Length > 0)
         {
             position += forward * detectDistance;
@@ -39,7 +39,7 @@ public class KatanaController : Weapon
                 hitEnemy.Add(hitColliders[i].gameObject);
             }
             yield return null;
-            hitColliders = Physics.OverlapSphere(position, specialAttackDetectSphere, LayerTagPack.EnemyLayer);
+            hitColliders = Physics.OverlapSphere(position, specialAttackDetectSphere, LayerMask.GetMask(LayerTagPack.Enemy));
         }
 
         PlayerManager.Instance.gameObject.GetComponent<Collider>().isTrigger = true;
