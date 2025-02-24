@@ -8,13 +8,14 @@ public class Humanoid : EnemyBase
         var chase = new Chase(this);
         var attack = new Attack(this);
         var flee = new Flee(this);
-        var find = new Find(this);
+        var lookAround = new LookAround(this);
 
         stateMachine.AddTransition(patrol, chase, new FuncCondition(() => relation == Relation.Hate));
         stateMachine.AddTransition(chase, attack, new FuncCondition(() => CanAttack(Target)));
         stateMachine.AddTransition(attack, chase, new FuncCondition(() => !CanAttack(Target)));
-        stateMachine.AddTransition(chase, find, new FuncCondition(() => relation == Relation.None));
-        stateMachine.AddTransition(find, patrol, new FuncCondition(() => relation == Relation.None));
+        stateMachine.AddTransition(chase, lookAround, new FuncCondition(() => relation == Relation.None));
+        stateMachine.AddTransition(lookAround, chase, new FuncCondition(() => relation == Relation.Hate));
+        stateMachine.AddTransition(lookAround, patrol, new FuncCondition(() => lookAround.IsFinished));
         stateMachine.AddTransition(chase, flee, new FuncCondition(() => relation == Relation.Affraid));
 
         stateMachine.AddTransition(patrol, flee, new FuncCondition(() => relation == Relation.Affraid));
