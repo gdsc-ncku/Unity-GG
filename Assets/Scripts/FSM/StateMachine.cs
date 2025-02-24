@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace FSM
 {
@@ -7,10 +8,6 @@ namespace FSM
     {
         StateNode currentNode;
         Dictionary<Type, StateNode> nodes = new();
-        public StateMachine(IState initialState)
-        {
-            currentNode = new(initialState);
-        }
 
         public void Update()
         {
@@ -19,14 +16,15 @@ namespace FSM
             {
                 SetState(transition.NextState);
             }
-            currentNode.State?.OnStateUpdate();
+            currentNode.State.OnStateUpdate();
         }
-        
+
         public void SetState(IState state)
         {
-            currentNode.State?.OnStateExit();
-            currentNode = nodes[state.GetType()];
+            currentNode?.State.OnStateExit();
+            currentNode = GetNode(state);
             currentNode.State.OnStateEnter();
+            Debug.Log($"currentState: {currentNode.State}");
         }
 
         public void AddTransition(IState fromState, IState nextState, ICondition condition)
