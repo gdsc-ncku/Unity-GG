@@ -108,7 +108,7 @@ GameObject:
   - component: {fileID: 1949757058107211349}
   - component: {fileID: 5722227728718821612}
   - component: {fileID: 4869848323129820729}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -196,10 +196,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af2c6c2f29cbeae43999f09170ec5bb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ItemUI: {fileID: 0}
-  WeaponUI: {fileID: 0}
-  CollectionUI: {fileID: 0}
-  BackMask: {fileID: 0}
   isLockCursor: 1
   isScaledByTime: 1
   currentVelocity: {x: 0, y: 0, z: 0}
