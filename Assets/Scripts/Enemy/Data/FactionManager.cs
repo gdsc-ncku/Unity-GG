@@ -18,8 +18,8 @@ public static class FactionManager
         factionCache.Remove(obj);
     }
 
-    public static Faction GetFaction(GameObject obj)
+    public static Faction GetFaction(this GameObject obj)
     {
-        return factionCache.TryGetValue(obj, out Faction faction) ? faction : Faction.None;
+        return factionCache.GetValueOrDefault(obj, Faction.None);
     }
 }

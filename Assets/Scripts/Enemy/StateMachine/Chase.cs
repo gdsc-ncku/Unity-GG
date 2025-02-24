@@ -1,12 +1,12 @@
 using FSM;
 using UnityEngine;
 using UnityEngine.AI;
-public class Chase : BaseState
+public class Chase : EnemyState
 {
     private NavMeshAgent navMeshAgent;
     private GameObject target;
 
-    public Chase(EnemyBase enemy)
+    public Chase(EnemyBase enemy) : base(enemy)
     {
         navMeshAgent = enemy.GetComponent<NavMeshAgent>();
         target = enemy.Target;

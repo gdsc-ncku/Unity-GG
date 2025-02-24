@@ -1,11 +1,11 @@
 using UnityEngine.AI;
 using FSM;
 
-public class Patrol : BaseState
+public class Patrol : EnemyState
 {
     NavMeshAgent navMeshAgent;
     PatrolPoints patrolPoints;
-    public Patrol(EnemyBase enemy)
+    public Patrol(EnemyBase enemy) : base(enemy)
     {
         navMeshAgent = enemy.GetComponent<NavMeshAgent>();
         patrolPoints = enemy.GetComponent<PatrolPoints>();

@@ -8,6 +8,7 @@ public class EnemyData : ScriptableObject
     public Faction faction;
     public Weakness weakness;
     public float AttackRange;
+    public float FleeRange;
 
     // // 偵測: 為了預覽效果，先由Detector設定
     // public float detectDistance;

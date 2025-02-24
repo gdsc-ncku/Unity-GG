@@ -3,21 +3,26 @@ using FSM;
 using UniRx;
 using System.Linq;
 using System.Collections.Generic;
+using System;
 
 public abstract class EnemyBase : MonoBehaviour
 {
     [SerializeField]protected EnemyData enemyData;
     [SerializeField]protected Detector detector;
-    protected Dictionary<Faction, Relation> relations => enemyData.faction.GetRelations();
-    protected StateMachine stateMachine;
     public GameObject Target { get; private set; }
-    public Relation Relation { get; private set; }
+    protected StateMachine stateMachine;
+    protected Dictionary<Faction, Relation> relations => enemyData.faction.GetRelations();
+    protected Relation relation => relations.GetValueOrDefault(Target.GetFaction(), Relation.Neutral);
 
     void Start()
     {
         FactionManager.Register(gameObject, enemyData.faction);
-        detector.OnDetectedChange.Subscribe(Decide).AddTo(this);
+        detector.OnDetectedChange.Subscribe(DecideTarget).AddTo(this);
         Init();
+    }
+    void Update()
+    {
+        stateMachine.Update();
     }
 
     /// <summary>
@@ -25,10 +30,25 @@ public abstract class EnemyBase : MonoBehaviour
     /// </summary>
     protected virtual void Init() { }
 
+    protected bool CanAttack(GameObject target)
+    {
+        return Vector3.Distance(transform.position, target.transform.position) <= enemyData.AttackRange;
+    }
+    
+    /// <summary>
+    /// 攻擊
+    /// </summary>
+    protected virtual void Attack() { }
+
+    protected bool OutOfFleeRange(GameObject target)
+    {
+        return Vector3.Distance(transform.position, target.transform.position) > enemyData.FleeRange;
+    }
+
     /// <summary>
     /// 決定目標
     /// </summary>
-    void Decide(HashSet<GameObject> detectedObjects)
+    void DecideTarget(HashSet<GameObject> detectedObjects)
     {
         Debug.Log("Decide: " + detectedObjects.Count);
         Target = detectedObjects
@@ -36,19 +56,13 @@ public abstract class EnemyBase : MonoBehaviour
                 .Select(obj => new
                 {
                     GameObject = obj,
-                    RelationPriority = (int)relations.GetValueOrDefault(FactionManager.GetFaction(obj), Relation.Neutral),
+                    RelationPriority = (int)relations.GetValueOrDefault(obj.GetFaction(), Relation.Neutral),
                     Distance = Vector3.Distance(transform.position, obj.transform.position)
                 })
                 .OrderBy(t => t.RelationPriority)
                 .ThenBy(t => t.Distance)
                 .Select(t => t.GameObject)
                 .FirstOrDefault();
-        if (Target == null)
-        {
-            Relation = Relation.Neutral;
-            return;
-        }
-        Relation = relations.GetValueOrDefault(FactionManager.GetFaction(Target), Relation.Neutral);
     }
     
     void OnDestroy()

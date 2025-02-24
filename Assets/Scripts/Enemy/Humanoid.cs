@@ -1,13 +1,31 @@
 using FSM;
+using UnityEngine;
 
 public class Humanoid : EnemyBase
 {
     protected override void Init()
     {
-        var Patrol = new Patrol(this);
-        var Chase = new Chase(this);
+        var patrol = new Patrol(this);
+        var chase = new Chase(this);
+        var attack = new Attack(this);
+        var flee = new Flee(this);
+        var find = new Find(this);
 
-        stateMachine = new StateMachine(Patrol);
-        // stateMachine.AddTransition(Patrol, Chase, new FuncCondition(() => Vector3.Distance(transform.position, target.position) < enemyData.detectDistance));
+        stateMachine = new StateMachine(patrol);
+
+        stateMachine.AddTransition(patrol, chase, new FuncCondition(() => relation == Relation.Hate));
+        stateMachine.AddTransition(patrol, flee, new FuncCondition(() => relation == Relation.Affraid));
+
+        stateMachine.AddTransition(flee, patrol, new FuncCondition(() => OutOfFleeRange(flee.fleeFromTarget)));
+
+        stateMachine.AddTransition(chase, attack, new FuncCondition(() => CanAttack(Target)));
+        stateMachine.AddTransition(chase, flee, new FuncCondition(() => relation == Relation.Affraid));
+        stateMachine.AddTransition(chase, find, new FuncCondition(() =>relation == Relation.Neutral));
+
+        stateMachine.AddTransition(attack, chase, new FuncCondition(() => !CanAttack(Target)));
+    }
+    protected override void Attack()
+    {
+        base.Attack();
     }
 }

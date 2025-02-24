@@ -1,6 +1,6 @@
-using UnityEngine;
+using FSM;
 
-public enum EnemyState
+public enum State
 {
     Idle,
     Patrol,
@@ -8,4 +8,11 @@ public enum EnemyState
     Attack,
     Flee,
     Find
+}
+public class EnemyState : IState
+{
+    public EnemyState(EnemyBase enemy) { }
+    public virtual void OnStateEnter() { }
+    public virtual void OnStateUpdate() { }
+    public virtual void OnStateExit() { }
 }

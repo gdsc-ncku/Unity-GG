@@ -9,10 +9,4 @@ namespace FSM
         void OnStateUpdate();
         void OnStateExit();
     }
-    public class BaseState : IState
-    {
-        public virtual void OnStateEnter() { }
-        public virtual void OnStateUpdate() { }
-        public virtual void OnStateExit() { }
-    }
 }
