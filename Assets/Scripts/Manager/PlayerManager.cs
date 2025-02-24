@@ -99,6 +99,7 @@ public class PlayerManager : MonoBehaviour
 
 
         _playerControl.player.jump.performed += ctx => Jump();
+        gameObject.Register(Faction.Player);
 
         //_playerControl.player.Item.performed += ctx => Item();
 
@@ -176,5 +177,9 @@ public class PlayerManager : MonoBehaviour
                 _playerControl.player.jump.Enable();
             })
             .Start();
+    }
+    void OnDestroy()
+    {
+        gameObject.Unregister();
     }
 }
