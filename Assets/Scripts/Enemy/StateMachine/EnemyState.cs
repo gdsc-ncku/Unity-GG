@@ -11,7 +11,11 @@ public enum State
 }
 public class EnemyState : IState
 {
-    public EnemyState(EnemyBase enemy) { }
+    protected EnemyBase enemy;
+    public EnemyState(EnemyBase enemy)
+    {
+        this.enemy = enemy;
+    }
     public virtual void OnStateEnter() { }
     public virtual void OnStateUpdate() { }
     public virtual void OnStateExit() { }

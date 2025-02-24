@@ -5,7 +5,7 @@ public static class FactionManager
 {
     private static Dictionary<GameObject, Faction> factionCache = new();
 
-    public static void Register(GameObject obj, Faction faction)
+    public static void Register(this GameObject obj, Faction faction)
     {
         if (!factionCache.ContainsKey(obj))
         {
@@ -13,13 +13,14 @@ public static class FactionManager
         }
     }
 
-    public static void Unregister(GameObject obj)
+    public static void Unregister(this GameObject obj)
     {
         factionCache.Remove(obj);
     }
 
     public static Faction GetFaction(this GameObject obj)
     {
+        if (obj == null) return Faction.None;
         return factionCache.GetValueOrDefault(obj, Faction.None);
     }
 }

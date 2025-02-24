@@ -104,6 +104,7 @@ public class PlayerManager : MonoBehaviour
         _playerControl = new();
         _playerControl.Enable();
         _rb = Instance.GetComponent<Rigidbody>();
+        gameObject.Register(Faction.Player);
         playerStatus = PlayerStatus.move;
         playerTransform = this.transform;
 
@@ -189,5 +190,9 @@ public class PlayerManager : MonoBehaviour
                 _playerControl.player.jump.Enable();
             })
             .Start();
+    }
+    void OnDestroy()
+    {
+        gameObject.Unregister();
     }
 }

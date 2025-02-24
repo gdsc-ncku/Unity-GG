@@ -42,7 +42,6 @@ public class Detector : MonoBehaviour
         {
             detectedObjects = currentDetectedObjects;
             OnDetectedChange.OnNext(detectedObjects);
-            Debug.Log("Detect: " + detectedObjects.Count);
         }
     }
 

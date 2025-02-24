@@ -3,26 +3,21 @@ using FSM;
 using UniRx;
 using System.Linq;
 using System.Collections.Generic;
-using System;
 
 public abstract class EnemyBase : MonoBehaviour
 {
     [SerializeField]protected EnemyData enemyData;
     [SerializeField]protected Detector detector;
     public GameObject Target { get; private set; }
-    protected StateMachine stateMachine;
+    protected StateMachine stateMachine = new();
     protected Dictionary<Faction, Relation> relations => enemyData.faction.GetRelations();
-    protected Relation relation => relations.GetValueOrDefault(Target.GetFaction(), Relation.Neutral);
+    protected Relation relation => relations.GetValueOrDefault(Target.GetFaction(), Relation.None);
 
     void Start()
     {
-        FactionManager.Register(gameObject, enemyData.faction);
+        gameObject.Register(enemyData.faction);
         detector.OnDetectedChange.Subscribe(DecideTarget).AddTo(this);
         Init();
-    }
-    void Update()
-    {
-        stateMachine.Update();
     }
 
     /// <summary>
@@ -30,7 +25,18 @@ public abstract class EnemyBase : MonoBehaviour
     /// </summary>
     protected virtual void Init() { }
 
+    void Update()
+    {
+        stateMachine.Update();
+    }
+
     protected bool CanAttack(GameObject target)
+    {
+        if (target == null) return false;
+        return IsInAttackRange(target);
+    }
+
+    bool IsInAttackRange(GameObject target)
     {
         return Vector3.Distance(transform.position, target.transform.position) <= enemyData.AttackRange;
     }
@@ -38,11 +44,11 @@ public abstract class EnemyBase : MonoBehaviour
     /// <summary>
     /// 攻擊
     /// </summary>
-    protected virtual void Attack() { }
+    public virtual void Attack() { }
 
-    protected bool OutOfFleeRange(GameObject target)
+    protected bool IsInFleeRange(GameObject target)
     {
-        return Vector3.Distance(transform.position, target.transform.position) > enemyData.FleeRange;
+        return Vector3.Distance(transform.position, target.transform.position) <= enemyData.FleeRange;
     }
 
     /// <summary>
@@ -50,23 +56,23 @@ public abstract class EnemyBase : MonoBehaviour
     /// </summary>
     void DecideTarget(HashSet<GameObject> detectedObjects)
     {
-        Debug.Log("Decide: " + detectedObjects.Count);
         Target = detectedObjects
                 .Where(obj => obj != null)
                 .Select(obj => new
                 {
                     GameObject = obj,
-                    RelationPriority = (int)relations.GetValueOrDefault(obj.GetFaction(), Relation.Neutral),
+                    RelationPriority = (int)relations.GetValueOrDefault(obj.GetFaction(), Relation.None),
                     Distance = Vector3.Distance(transform.position, obj.transform.position)
                 })
                 .OrderBy(t => t.RelationPriority)
                 .ThenBy(t => t.Distance)
                 .Select(t => t.GameObject)
                 .FirstOrDefault();
+        Debug.Log($"{Target?.name}: {relation}");
     }
     
     void OnDestroy()
     {
-        FactionManager.Unregister(gameObject);
+        gameObject.Unregister();
     }
 }
