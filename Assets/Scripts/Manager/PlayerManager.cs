@@ -77,6 +77,10 @@ public class PlayerManager : MonoBehaviour
     {
         Initialize();
     }
+    void Start()
+    {
+        FactionManager.Instance.Register(gameObject, Faction.Player);
+    }
 
     private void Initialize()
     {
@@ -99,7 +103,6 @@ public class PlayerManager : MonoBehaviour
 
 
         _playerControl.player.jump.performed += ctx => Jump();
-        gameObject.Register(Faction.Player);
 
         //_playerControl.player.Item.performed += ctx => Item();
 
@@ -180,6 +183,6 @@ public class PlayerManager : MonoBehaviour
     }
     void OnDestroy()
     {
-        gameObject.Unregister();
+        FactionManager.Instance.Unregister(gameObject);
     }
 }
