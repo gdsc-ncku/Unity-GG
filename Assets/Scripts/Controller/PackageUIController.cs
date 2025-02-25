@@ -11,6 +11,9 @@ public class PackageUIController : MonoBehaviour
     public GameObject CollectionUI;
     public GameObject BackMask;
 
+    /// <summary>
+    /// 打開道具介面
+    /// </summary>
     public void Item()
     {
         //啟用指定UI
@@ -22,7 +25,9 @@ public class PackageUIController : MonoBehaviour
 
 
         ItemUI.SetActive(true); // 切換背包顯示狀態
-        ItemUI.GetComponent<ItemUIController>().UpdateItem(); //更新item資訊
+        
+        //更新item資訊
+        EventManager.TriggerEvent(NameOfEvent.UpdateItem);
 
         BackMask.SetActive(true);
 
@@ -39,10 +44,14 @@ public class PackageUIController : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// 關上道具介面
+    /// </summary>
     public void CloseUI()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
         // 切換背包顯示狀態
         BackMask.SetActive(false);
         ItemUI.SetActive(false);
@@ -58,7 +67,7 @@ public class PackageUIController : MonoBehaviour
     {
         // 註冊對  事件的訂閱
         disposables.Add(EventManager.StartListening(
-            NameOfEvent.Item,
+            NameOfEvent.OpenItemPage,
             () => Item()
         ));
 

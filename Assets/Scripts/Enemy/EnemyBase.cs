@@ -11,11 +11,11 @@ public abstract class EnemyBase : MonoBehaviour
     public GameObject Target { get; private set; }
     protected StateMachine stateMachine = new();
     protected Dictionary<Faction, Relation> relations => enemyData.faction.GetRelations();
-    protected Relation relation => relations.GetValueOrDefault(Target.GetFaction(), Relation.None);
+    protected Relation relation => relations.GetValueOrDefault(FactionManager.Instance.GetFaction(Target), Relation.None);
 
     void Start()
     {
-        gameObject.Register(enemyData.faction);
+        FactionManager.Instance.Register(gameObject, enemyData.faction);
         detector.OnDetectedChange.Subscribe(DecideTarget).AddTo(this);
         Init();
     }
@@ -61,7 +61,7 @@ public abstract class EnemyBase : MonoBehaviour
                 .Select(obj => new
                 {
                     GameObject = obj,
-                    RelationPriority = (int)relations.GetValueOrDefault(obj.GetFaction(), Relation.None),
+                    RelationPriority = (int)relations.GetValueOrDefault(FactionManager.Instance.GetFaction(obj), Relation.None),
                     Distance = Vector3.Distance(transform.position, obj.transform.position)
                 })
                 .OrderBy(t => t.RelationPriority)
@@ -73,6 +73,6 @@ public abstract class EnemyBase : MonoBehaviour
     
     void OnDestroy()
     {
-        gameObject.Unregister();
+        FactionManager.Instance.Unregister(gameObject);
     }
 }

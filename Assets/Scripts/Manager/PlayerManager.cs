@@ -1,59 +1,36 @@
-﻿using System.Numerics;
-using Unity.VisualScripting;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
-public enum PlayerStatus
-{
-    move,
-    sprint,
-    jump
-}
 
 [DefaultExecutionOrder(-200)] // 負數越小越早執行
-public class PlayerManager : MonoBehaviour
+public class PlayerManager : MonoSingleton<PlayerManager>
 {
     [SerializeField] int sprintFrame;
 
-    public float mouseSensitivity = 100f;
+    #region 變數封裝(封裝後要更改需要用function)
+    [SerializeField] float jumpHeight;
 
-    public float maxSpeed = 15f;
-    public float jumpforce = 200f;
-    public float xRotation = 0f;
-    public Transform playerTransform { get; private set; }
-    #region 建立單例模式
-    //instance mode
-    private static PlayerManager _instance;
-    public static PlayerManager Instance
+    [SerializeField] float _maxSpeed;
+    public float maxSpeed
     {
         get
         {
-            if (_instance == null)
-            {
-                Debug.LogError("Can't Find Player Manager Instance");
-            }
-            return _instance;
+            return _maxSpeed;
         }
-
     }
-
     #endregion
 
-    #region Rigidbody設定
-    private Rigidbody _rb = null;
-    public Rigidbody rb
+    public float mouseSensitivity = 100f;
+    public float xRotation = 0f;
+    
+    public Transform playerTransform { get; private set; }
+
+    #region CharacterController設定
+    [SerializeField] CharacterController _characterController;
+    public CharacterController characterController
     {
         get
         {
-            if (_rb == null)
-            {
-                Debug.LogError("Havn't setting player rigidbody");
-            }
-            return _rb;
-        }
-
-        set
-        {
-            Debug.LogError("You can't directly set player rigidbody, you should using function to set");
+            return _characterController;
         }
     }
     #endregion
@@ -78,34 +55,21 @@ public class PlayerManager : MonoBehaviour
     }
     #endregion
 
-    #region 狀態機
-    public PlayerStatus playerStatus;
-    #endregion
-
     #region 初始化
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         Initialize();
+    }
+    void Start()
+    {
+        FactionManager.Instance.Register(gameObject, Faction.Player);
     }
 
     private void Initialize()
     {
-        if (_instance == null)
-        {   
-            _instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Debug.LogError("Duplicate creating PlayerManager Instance");
-            Destroy(gameObject);
-        }
-
         _playerControl = new();
         _playerControl.Enable();
-        _rb = Instance.GetComponent<Rigidbody>();
-        gameObject.Register(Faction.Player);
-        playerStatus = PlayerStatus.move;
         playerTransform = this.transform;
 
         _playerControl.player.rebinding.performed += ctx => Rebinding();
@@ -149,28 +113,27 @@ public class PlayerManager : MonoBehaviour
 
     public void Jump()
     {
-        
         //跳多大力
-        GetComponent<PlayerMove>().Jump(jumpforce);
+        GetComponent<PlayerMove>().Jump(jumpHeight);
     }
-    /*
-    public void Item()
-    {
-        //GetComponent<PlayerMove>().Item();
-        EventManager.TriggerEvent(NameOfEvent.Item);
-    }
+    
+    //public void Item()
+    //{
+    //    //GetComponent<PlayerMove>().Item();
+    //    EventManager.TriggerEvent(NameOfEvent.OpenItemPage);
+    //}
 
-    public void Setting()
-    {
-        GetComponent<PlayerMove>().Setting();
-    }
+    //public void Setting()
+    //{
+    //    GetComponent<PlayerMove>().Setting();
+    //}
 
-    public void CloseUI()
-    {
-        //GetComponent<PlayerMove>().CloseUI();
-        EventManager.TriggerEvent(NameOfEvent.CloseUI);
-    }
-    */
+    //public void CloseUI()
+    //{
+    //    //GetComponent<PlayerMove>().CloseUI();
+    //    EventManager.TriggerEvent(NameOfEvent.CloseUI);
+    //}
+    
 
     public void Rebinding()//目前只能rebinding jump這個動作的按鍵，但可以很輕鬆的改到需要的動作上
     {
@@ -193,6 +156,6 @@ public class PlayerManager : MonoBehaviour
     }
     void OnDestroy()
     {
-        gameObject.Unregister();
+        FactionManager.Instance.Unregister(gameObject);
     }
 }
