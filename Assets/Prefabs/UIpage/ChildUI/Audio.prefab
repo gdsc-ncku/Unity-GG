@@ -1327,9 +1327,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: On_Audio_click
+      - m_Target: {fileID: 5236629411270643437}
+        m_TargetAssemblyTypeName: SettingPage, Assembly-CSharp
+        m_MethodName: Audio_OnClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1460,9 +1460,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: On_Back_click
+      - m_Target: {fileID: 5236629411270643437}
+        m_TargetAssemblyTypeName: SettingPage, Assembly-CSharp
+        m_MethodName: Back_OnClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2116,6 +2116,7 @@ GameObject:
   - component: {fileID: 7552934533103731224}
   - component: {fileID: 144265029431791321}
   - component: {fileID: 5419638882812824229}
+  - component: {fileID: 5236629411270643437}
   m_Layer: 5
   m_Name: Audio
   m_TagString: Untagged
@@ -2208,6 +2209,18 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &5236629411270643437
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3468468373419670465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b37eec2b3988c64428ef0f95d93c92c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4718677181644203605
 GameObject:
   m_ObjectHideFlags: 0
@@ -2863,9 +2876,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: On_Gameplay_click
+      - m_Target: {fileID: 5236629411270643437}
+        m_TargetAssemblyTypeName: SettingPage, Assembly-CSharp
+        m_MethodName: Gameplay_OnClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4170,9 +4183,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: On_Graphic_click
+      - m_Target: {fileID: 5236629411270643437}
+        m_TargetAssemblyTypeName: SettingPage, Assembly-CSharp
+        m_MethodName: Graphic_OnClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4909,9 +4922,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: On_Configuration_click
+      - m_Target: {fileID: 5236629411270643437}
+        m_TargetAssemblyTypeName: SettingPage, Assembly-CSharp
+        m_MethodName: Configuration_OnClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

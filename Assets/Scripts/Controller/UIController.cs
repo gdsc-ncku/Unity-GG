@@ -249,6 +249,8 @@ public class UIController : MonoBehaviour
         Cursor.visible = true;
     }
 
+
+    
     #region event
     private CompositeDisposable disposables = new CompositeDisposable();
 
@@ -262,8 +264,36 @@ public class UIController : MonoBehaviour
         */
 
         disposables.Add(EventManager.StartListening(
+            NameOfEvent.ToGameplay,
+            () => ToGameplay()
+        ));
+        disposables.Add(EventManager.StartListening(
             NameOfEvent.ToConfiguration,
             () => ToConfiguration()
+        ));
+        disposables.Add(EventManager.StartListening(
+            NameOfEvent.ToGraphic,
+            () => ToGraphic()
+        ));
+        disposables.Add(EventManager.StartListening(
+            NameOfEvent.ToAudio,
+            () => ToAudio()
+        ));
+        disposables.Add(EventManager.StartListening(
+            NameOfEvent.Setting_Back,
+            () => Setting_Back()
+        ));
+        disposables.Add(EventManager.StartListening(
+            NameOfEvent.ToItem,
+            () => ToItem()
+        ));
+        disposables.Add(EventManager.StartListening(
+            NameOfEvent.ToWeapon,
+            () => ToWeapon()
+        ));
+        disposables.Add(EventManager.StartListening(
+            NameOfEvent.ToCollection,
+            () => ToCollection()
         ));
     }
 
