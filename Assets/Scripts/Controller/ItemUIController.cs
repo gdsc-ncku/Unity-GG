@@ -49,11 +49,13 @@ public class ItemUIController : MonoBehaviour
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.F)){
+            Debug.Log("ItemUIController 使用道具");
             ItemTrigger();
         }
 
         if (Input.GetKeyDown(KeyCode.X))
         {
+            Debug.Log("ItemUIController 丟棄道具");
             ItemDrop();
         }
     }

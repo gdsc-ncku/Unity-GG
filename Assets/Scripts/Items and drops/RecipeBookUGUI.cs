@@ -7,7 +7,7 @@ using UnityEngine;
 
 /// <summary>
 /// 用於在遊戲中顯示合成圖的UGUI腳本
-/// 測試用
+/// 測試用腳本
 /// </summary>
 public class RecipeBookUGUI : MonoBehaviour
 {

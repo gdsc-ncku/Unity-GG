@@ -2,6 +2,8 @@ using UniRx;
 using UnityEngine;
 
 /// <summary>
+/// 舊版腳本 目前暫停使用
+/// 先保留 避免移除造成的相關問題
 /// 負責整個背包的控制
 /// </summary>
 public class PackageUIController : MonoBehaviour
