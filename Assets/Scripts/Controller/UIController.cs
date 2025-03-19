@@ -74,6 +74,9 @@ public class UIController : MonoBehaviour
             return;
         }
 
+        //更新item資訊
+        EventManager.TriggerEvent(NameOfEvent.UpdateItem);
+
         ItemUI.SetActive(true);
         BackMask.SetActive(true);
 
