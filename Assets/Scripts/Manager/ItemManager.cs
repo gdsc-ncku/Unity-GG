@@ -26,7 +26,7 @@ public class ItemManager : MonoBehaviour
 
     #endregion
 
-    private ItemName choosed; //當前選中的道具
+    private ItemName choosed = ItemName.None; //當前選中的道具
 
     [Header("物件掉落相關")]
     public float dropRegion = 2f; //道具丟棄範圍
@@ -178,6 +178,7 @@ public class ItemManager : MonoBehaviour
             {
                 //成功觸發效果
                 itemEnumName_items_illustratedBook[item.itemEnumName].ItemUsing();
+                choosed = ItemName.None;
             }
         }
         else if(item.itemType == ItemType.Drop)
@@ -204,6 +205,7 @@ public class ItemManager : MonoBehaviour
             Debug.Log("ItemManager: 丟棄成功 生成掉落物");
 
             InstantiateItemObject(choosed);
+            choosed = ItemName.None;
         }
     }
 
