@@ -27,12 +27,15 @@ public class ItemUIController : MonoBehaviour
 
     [Header("Craftables")]
     public GameObject craftablesParent;
-    public List<GameObject> craftables= new List<GameObject>();
+    public List<GameObject> craftables = new List<GameObject>();
 
     //資料來源
     [HideInInspector] public Dictionary<ItemName, ItemData> itemEnumName_itemsData_illustratedBook = new Dictionary<ItemName, ItemData>(); //所有的item資訊
 
-    private void Start()
+    [Header("quick list")]
+    public Image[] quickPropBox = new Image[4];
+
+    private void Awake()
     {
         //抓取當前有幾個可顯示位置
         GetEachObject(gadgetParent, gadgets);
@@ -61,6 +64,34 @@ public class ItemUIController : MonoBehaviour
     }
 
     /// <summary>
+    /// 設置快捷道具
+    /// </summary>
+    public void SetQuickProp_Button(int index) { 
+        ItemManager.Instance.SetQuickProp(index);
+        UpdateQuickProp();
+    }
+
+    /// <summary>
+    /// 更新快捷道具的顯示UI
+    /// </summary>
+    private void UpdateQuickProp()
+    {
+        for(int i = 0;i<4;i++) {
+            ItemName item = PropsQuickUseSystem.Instance.quickProps[i];
+            Debug.Log(item);
+            if(item == ItemName.None)
+            {
+                quickPropBox[i].sprite = null;
+            }
+            else
+            {
+                ItemData itemData = ItemManager.Instance.GetItemData(item);
+                quickPropBox[i].sprite = itemData.itemSprite;
+            }
+        }
+    }
+
+    /// <summary>
     /// 丟棄道具
     /// </summary>
     private void ItemDrop()
@@ -82,25 +113,17 @@ public class ItemUIController : MonoBehaviour
     /// <summary>
     /// UI顯示更換為指定的物件
     /// </summary>
-    public void ItemChoosed(int index)
+    public void ItemChoosed(ItemName itemName)
     {
-        if (0 <= index && index < itemEnumName_itemsData_illustratedBook.Count)
-        {
-            ItemName choosed = (ItemName)index;
-            ItemData itemData = itemEnumName_itemsData_illustratedBook[choosed];
+        ItemName choosed = itemName;
+        ItemData itemData = itemEnumName_itemsData_illustratedBook[choosed];
 
-            itemImage.sprite = itemData.itemSprite;
-            itemText.text = $"道具名稱: {itemData.itemName}\n" +
-                $"道具描述: {itemData.itemDescription}\n";
+        itemImage.sprite = itemData.itemSprite;
+        itemText.text = $"道具名稱: {itemData.itemName}\n" +
+            $"道具描述: {itemData.itemDescription}\n";
 
-            Debug.Log($"ItemUIController: 選擇道具 {itemData.itemName}");
-            EventManager.TriggerEvent(NameOfEvent.ShowMessage, $"選擇道具 {itemData.itemName}");
-        }
-        else
-        {
-            Debug.LogWarning("ItemUIController: 選擇不存在的道具");
-            EventManager.TriggerEvent(NameOfEvent.ShowMessage, "選擇不存在的道具");
-        }
+        Debug.Log($"ItemUIController: 選擇道具 {itemData.itemName}");
+        EventManager.TriggerEvent(NameOfEvent.ShowMessage, $"選擇道具 {itemData.itemName}");
     }
 
     /// <summary>
@@ -117,7 +140,7 @@ public class ItemUIController : MonoBehaviour
 
         foreach (var entry in inventory)
         {
-            //Debug.Log($"- {entry.Key.itemName}: {entry.Value}");
+            Debug.Log($"- {entry.Key.itemName}: {entry.Value}");
             ItemData data = entry.Key;
             int num = entry.Value;
             
@@ -131,7 +154,7 @@ public class ItemUIController : MonoBehaviour
             }
         }
 
-
+        UpdateQuickProp();
     }
 
     /// <summary>
@@ -197,7 +220,11 @@ public class ItemUIController : MonoBehaviour
     private int InitEachItemUI(int index, ItemData data, int num, List<GameObject> objs)
     {
         //超過顯示上限
-        if (index >= objs.Count) return index;
+        if (index >= objs.Count)
+        {
+            Debug.Log("ItemUIController out of bound");
+            return index;
+        }
 
         //圖片
         Image img = objs[index].transform.GetChild(0).GetComponent<Image>();
@@ -222,9 +249,9 @@ public class ItemUIController : MonoBehaviour
     private void OnEnable()
     {
         // 註冊對  事件的訂閱
-        disposables.Add(EventManager.StartListening<int>(
+        disposables.Add(EventManager.StartListening<ItemName>(
             NameOfEvent.ItemChoosed,
-            (index) => ItemChoosed(index)
+            (itemName) => ItemChoosed(itemName)
         ));
 
         disposables.Add(EventManager.StartListening(

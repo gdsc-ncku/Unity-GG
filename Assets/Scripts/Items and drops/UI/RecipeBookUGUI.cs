@@ -108,13 +108,13 @@ public class RecipeBookUGUI : MonoBehaviour
     /// </summary>
     private void ShowDevelopWindow()
     {
-        if (developCanvas.activeSelf == true && Input.GetKeyDown(KeyCode.P))
+        if (developCanvas.activeSelf == true && Input.GetKeyDown(KeyCode.O))
         {
             developCanvas.SetActive(false);
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
-        else if (developCanvas.activeSelf == false && Input.GetKeyDown(KeyCode.P))
+        else if (developCanvas.activeSelf == false && Input.GetKeyDown(KeyCode.O))
         {
             developCanvas.SetActive(true);
             Cursor.lockState = CursorLockMode.None;
