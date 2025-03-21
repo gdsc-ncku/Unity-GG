@@ -1,5 +1,9 @@
 using UnityEngine;
 using UniRx;
+using System.Collections.Generic;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+
 public class UIController : MonoBehaviour
 {
     // 以下這些變數在 Inspector 中被設定為 prefab
@@ -25,6 +29,9 @@ public class UIController : MonoBehaviour
     private GameObject AudioUI;
 
 
+    //用於動畫
+    //private GraphicRaycaster raycaster;
+    //private GameObject canvas;
 
     public void Start()
     {
@@ -39,6 +46,9 @@ public class UIController : MonoBehaviour
         ConfigurationUI = Instantiate(ConfigurationUIPrefab,parentCanvas.transform);
         GraphicUI = Instantiate(GraphicUIPrefab,parentCanvas.transform);
         AudioUI = Instantiate(AudioUIPrefab,parentCanvas.transform);
+
+        
+        
         /*
         ItemUIPrefab.SetActive(false);
         WeaponUIPrefab.SetActive(false);
@@ -64,6 +74,11 @@ public class UIController : MonoBehaviour
         GraphicUI.SetActive(false);
         AudioUI.SetActive(false);
         Debug.Log("test1");
+    }
+
+    public void Pack_spin_animate()
+    {
+
     }
 
     public void Item()
