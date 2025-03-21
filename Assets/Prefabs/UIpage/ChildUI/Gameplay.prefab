@@ -3845,8 +3845,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1374357925231730340}
-        m_TargetAssemblyTypeName: SettingPage, Assembly-CSharp
-        m_MethodName: Audio_OnClick
+        m_TargetAssemblyTypeName: UIPage_BtnEvent, Assembly-CSharp
+        m_MethodName: Back_OnClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
