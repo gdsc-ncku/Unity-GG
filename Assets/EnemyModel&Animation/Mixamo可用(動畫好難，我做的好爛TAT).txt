@@ -1,0 +1,1 @@
+可在mixamo官網上上傳模型(upload character)後，再下載動畫(有in place可打勾的記得打勾)
