@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ba5499ed825afb4ebf6db664960cfcb, type: 3}
   m_Name: Reducer
   m_EditorClassIdentifier: 
-  itemEnumName: 1
+  itemEnumName: 2
   itemName: "\u6E1B\u901F\u5668"
-  itemSprite: {fileID: 21300000, guid: 6808bbc971123c049ab9551510a21177, type: 3}
+  itemSprite: {fileID: 21300000, guid: 6c92b467003c74b479f43eff9b185b71, type: 3}
   itemType: 1
   itemDescription: "\u53EF\u4EE5\u6E1B\u6162\u4E16\u754C\u7684\u6642\u9593\u6D41\u901F"

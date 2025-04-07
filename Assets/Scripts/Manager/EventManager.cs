@@ -47,6 +47,8 @@ public enum NameOfEvent
     ToWeapon,
     ToCollection,
 
+    [Header("PropsQuickUseSystem")]
+    SetQuickProp,
 }
 
 /// <summary>
