@@ -16,6 +16,8 @@ public class UIController : MonoBehaviour
     public GameObject GraphicUIPrefab;
     public GameObject AudioUIPrefab;
 
+    public GameObject BulletUIPrefab;
+
     public GameObject parentCanvas;
 
     // 生成後的實例
@@ -27,6 +29,7 @@ public class UIController : MonoBehaviour
     private GameObject ConfigurationUI;
     private GameObject GraphicUI;
     private GameObject AudioUI;
+    private GameObject BulletUI;
 
 
     //用於動畫
@@ -46,8 +49,10 @@ public class UIController : MonoBehaviour
         ConfigurationUI = Instantiate(ConfigurationUIPrefab,parentCanvas.transform);
         GraphicUI = Instantiate(GraphicUIPrefab,parentCanvas.transform);
         AudioUI = Instantiate(AudioUIPrefab,parentCanvas.transform);
+        BulletUI = Instantiate(BulletUIPrefab,parentCanvas.transform);
 
-        
+        BulletUI_Selecting script = BulletUI.GetComponent<BulletUI_Selecting>();
+        script.BulletUI = BulletUI;
         
         /*
         ItemUIPrefab.SetActive(false);
@@ -73,6 +78,7 @@ public class UIController : MonoBehaviour
         ConfigurationUI.SetActive(false);
         GraphicUI.SetActive(false);
         AudioUI.SetActive(false);
+        BulletUI.SetActive(true);
         Debug.Log("test1");
     }
 
@@ -117,6 +123,28 @@ public class UIController : MonoBehaviour
 
         //更新item資訊
         EventManager.TriggerEvent(NameOfEvent.UpdateItem);
+    }
+    public void Selecting()
+    {
+        Debug.Log("Selecting");
+        Cursor.lockState = CursorLockMode.None;
+        
+        BulletUI_Selecting script = BulletUI.GetComponent<BulletUI_Selecting>();
+
+        script.startselect = true;
+          
+    }
+
+    public void SelectItem()
+    {
+        Debug.Log("Select fin");
+        Cursor.lockState = CursorLockMode.Locked;
+        
+        BulletUI_Selecting script = BulletUI.GetComponent<BulletUI_Selecting>();
+        //script.isselecting = false;
+        script.startselect = false;
+
+
     }
 
     // 其他函數（ToWeapon、ToCollection 等）同樣使用實例變數
@@ -270,6 +298,7 @@ public class UIController : MonoBehaviour
         Cursor.visible = true;
     }
 
+    
 
     
     #region event
