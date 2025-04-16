@@ -15,10 +15,38 @@ public enum NameOfEvent
 
     [Header("PlayerMove")]
     ChangeMoveMode,
-    ChangeCursorState,
 
     [Header("InventoryManager")]
-    InventoryItemChange
+    InventoryItemChange,
+    DropItem,
+
+    [Header("ItemManager")]
+    DropItem_ItemManager,
+
+    [Header("SpawnManager_Develop")]
+    ShowSpawnPoint,
+
+    [Header("PackageUIController")]
+    OpenItemPage,
+    CloseUI,
+
+    [Header("ItemUIController")]
+    ItemChoosed,
+    UpdateItem,
+
+    [Header("NotificationTeller")]
+    ShowMessage,
+
+    [Header("UIController")]
+    ToGameplay,
+    ToConfiguration,
+    ToGraphic,
+    ToAudio,
+    Setting_Back,
+    ToItem,
+    ToWeapon,
+    ToCollection,
+
 }
 
 /// <summary>
@@ -138,4 +166,17 @@ public class EventManager
     }
     #endregion
 
+}
+
+/// <summary>
+/// 布林值包裝
+/// </summary>
+public class BoolWrapper
+{
+    public bool Value;
+
+    public BoolWrapper(bool value)
+    {
+        Value = value;
+    }
 }

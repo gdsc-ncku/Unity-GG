@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// 物件的類別
@@ -22,7 +23,11 @@ public enum ItemName
     HoundExclusiveCameraModule,
     HoundExclusiveMemory,
     HoundExclusiveMicrophone,
-    HoundExclusiveProcessorSoC
+    HoundExclusiveProcessorSoC,
+    HumanoidExclusiveMemory,
+    StereoProjector,
+    Battery,
+    SpawnPointDisplay,
 }
 
 /// <summary>
@@ -39,4 +44,6 @@ public class ItemData : ScriptableObject
     public Sprite itemSprite;   //物品圖片
 
     public ItemType itemType;   //物品的類別
+
+    [Multiline] public string itemDescription; //物品描述
 }
