@@ -36,18 +36,18 @@ public class Item : MonoBehaviour
         }
     }
 
-    ///// <summary>
-    ///// 如果是掉落物可以撿取
-    ///// </summary>
-    //public void DropPicking()
-    //{
-    //    Debug.Log($"Item: picking drop: {itemData.itemName}");
-    //    if (itemData.itemType == ItemType.Drop)
-    //    {
-    //        InventoryManager.Instance.AddItem(itemData.itemEnumName);
-    //        Destroy(this.gameObject);
-    //    }
-    //}
+    /// <summary>
+    /// 如果是掉落物可以撿取
+    /// </summary>
+    public void DropPicking()
+    {
+        Debug.Log($"Item: picking drop: {itemData.itemName}");
+        if (itemData.itemType == ItemType.Drop)
+        {
+            InventoryManager.Instance.AddItem(itemData.itemEnumName);
+            Destroy(this.gameObject);
+        }
+    }
 
     /// <summary>
     /// 如果是道具 可以使用
@@ -61,14 +61,16 @@ public class Item : MonoBehaviour
         //UI特效觸發
     }
 
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    if(itemData.itemType == ItemType.Drop && collision.gameObject.tag == "Player")
-    //    {
-    //        DropPicking();
-    //        Debug.Log($"Item: {itemData.itemName} is touched by player");
-    //    }
-    //}
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(itemData.itemType == ItemType.Drop && collision.gameObject.tag == "Player")
+        {
+            DropPicking();
+            Debug.Log($"Item: {itemData.itemName} is touched by player");
+        }
+
+
+    }
 
     private void OnDestroy()
     {

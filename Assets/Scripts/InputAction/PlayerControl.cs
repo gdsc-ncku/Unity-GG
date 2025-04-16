@@ -67,7 +67,7 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
                     ""name"": ""jump"",
                     ""type"": ""Button"",
                     ""id"": ""4d47b331-05c8-48ec-a0a8-cd7e29ffbe5a"",
-                    ""expectedControlType"": """",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -103,15 +103,6 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
                     ""name"": ""Setting"",
                     ""type"": ""Button"",
                     ""id"": ""141a8b8e-e0e6-458d-a6d4-a0c34990644a"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""SelectItem"",
-                    ""type"": ""Button"",
-                    ""id"": ""00638d09-2552-44c6-af5a-3df38bf99876"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -210,7 +201,7 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""881c52c8-543c-49c0-9090-fa72cc29d591"",
-                    ""path"": ""<Keyboard>/space"",
+                    ""path"": ""<Keyboard>/z"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -261,17 +252,6 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
                     ""action"": ""Setting"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""2608025f-f2d0-4159-a37d-5e0fb8bb1151"",
-                    ""path"": ""<Keyboard>/q"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""SelectItem"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -283,7 +263,7 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
                     ""name"": ""New action"",
                     ""type"": ""Button"",
                     ""id"": ""bb8729ed-7000-49f6-89d2-6828a29e646c"",
-                    ""expectedControlType"": """",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -317,7 +297,6 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
         m_player_Item = m_player.FindAction("Item", throwIfNotFound: true);
         m_player_CloseUI = m_player.FindAction("CloseUI", throwIfNotFound: true);
         m_player_Setting = m_player.FindAction("Setting", throwIfNotFound: true);
-        m_player_SelectItem = m_player.FindAction("SelectItem", throwIfNotFound: true);
         // rebinding
         m_rebinding = asset.FindActionMap("rebinding", throwIfNotFound: true);
         m_rebinding_Newaction = m_rebinding.FindAction("New action", throwIfNotFound: true);
@@ -397,7 +376,6 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
     private readonly InputAction m_player_Item;
     private readonly InputAction m_player_CloseUI;
     private readonly InputAction m_player_Setting;
-    private readonly InputAction m_player_SelectItem;
     public struct PlayerActions
     {
         private @PlayerControl m_Wrapper;
@@ -411,7 +389,6 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
         public InputAction @Item => m_Wrapper.m_player_Item;
         public InputAction @CloseUI => m_Wrapper.m_player_CloseUI;
         public InputAction @Setting => m_Wrapper.m_player_Setting;
-        public InputAction @SelectItem => m_Wrapper.m_player_SelectItem;
         public InputActionMap Get() { return m_Wrapper.m_player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -448,9 +425,6 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
             @Setting.started += instance.OnSetting;
             @Setting.performed += instance.OnSetting;
             @Setting.canceled += instance.OnSetting;
-            @SelectItem.started += instance.OnSelectItem;
-            @SelectItem.performed += instance.OnSelectItem;
-            @SelectItem.canceled += instance.OnSelectItem;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -482,9 +456,6 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
             @Setting.started -= instance.OnSetting;
             @Setting.performed -= instance.OnSetting;
             @Setting.canceled -= instance.OnSetting;
-            @SelectItem.started -= instance.OnSelectItem;
-            @SelectItem.performed -= instance.OnSelectItem;
-            @SelectItem.canceled -= instance.OnSelectItem;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -559,7 +530,6 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
         void OnItem(InputAction.CallbackContext context);
         void OnCloseUI(InputAction.CallbackContext context);
         void OnSetting(InputAction.CallbackContext context);
-        void OnSelectItem(InputAction.CallbackContext context);
     }
     public interface IRebindingActions
     {

@@ -1,7 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using NUnit.Framework.Interfaces;
-using UniRx;
 using UnityEngine;
 using static UnityEditor.Progress;
 
@@ -78,39 +76,6 @@ public class InventoryManager : MonoBehaviour
         EventManager.TriggerEvent(NameOfEvent.InventoryItemChange);
 
         Debug.Log($"InventoryManager: Added {quantity} x {item.itemName} to inventory.");
-        EventManager.TriggerEvent(NameOfEvent.ShowMessage, $"獲得 {quantity} x {item.itemName}");
-    }
-
-    /// <summary>
-    /// 丟棄道具
-    /// </summary>
-    /// <param name="itemName"></param>
-    private void DropItem(ItemName itemName, BoolWrapper isDropSuc)
-    {
-        ItemData item = ItemManager.Instance.itemEnumName_itemsData_illustratedBook[itemName];
-
-        if (inventory.ContainsKey(item) && inventory[item] > 0)
-        {
-            inventory[item]--;
-            Debug.Log($"InventoryManager: Drop 1 x {item.itemName}. Remaining: {inventory[item]}");
-            EventManager.TriggerEvent(NameOfEvent.ShowMessage, $"丟棄 1 x {item.itemName}. 剩下: {inventory[item]}");
-
-            if (inventory[item] <= 0)
-            {
-                inventory.Remove(item);
-            }
-
-            EventManager.TriggerEvent(NameOfEvent.InventoryItemChange);
-
-            isDropSuc.Value = true;
-        }
-        else
-        {
-            Debug.LogWarning($"InventoryManager: No {item.itemName} left to drop!");
-            EventManager.TriggerEvent(NameOfEvent.ShowMessage, $"{item.itemName} 沒有剩餘數量所以無法丟棄!");
-
-            isDropSuc.Value = false;
-        }
     }
 
     /// <summary>
@@ -125,7 +90,6 @@ public class InventoryManager : MonoBehaviour
         {
             inventory[item]--;
             Debug.Log($"InventoryManager: Used 1 x {item.itemName}. Remaining: {inventory[item]}");
-            EventManager.TriggerEvent(NameOfEvent.ShowMessage, $"使用 1 x {item.itemName}. 剩下: {inventory[item]}");
 
             if (inventory[item] <= 0)
             {
@@ -139,7 +103,6 @@ public class InventoryManager : MonoBehaviour
         else
         {
             Debug.LogWarning($"InventoryManager: No {item.itemName} left to use!");
-            EventManager.TriggerEvent(NameOfEvent.ShowMessage, $"{item.itemName} 沒有剩餘數量所以無法使用!");
             return false;
         }
     }
@@ -205,22 +168,4 @@ public class InventoryManager : MonoBehaviour
             Debug.LogWarning($"InventoryManager: Item consume {quantity} x {item.itemName} failure.");
         }
     }
-
-    #region event
-    private CompositeDisposable disposables = new CompositeDisposable();
-
-    private void OnEnable()
-    {
-        // 註冊對  事件的訂閱
-        disposables.Add(EventManager.StartListening<ItemName, BoolWrapper>(
-            NameOfEvent.DropItem,
-            (itemName, isDropSuc) => DropItem(itemName, isDropSuc)
-        ));
-    }
-
-    private void OnDisable()
-    {
-        disposables.Clear(); // 自動取消所有事件訂閱
-    }
-    #endregion
 }

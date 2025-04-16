@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 402135662273465276}
   - component: {fileID: 6824829529949116950}
   m_Layer: 0
-  m_Name: Main Camera(Weapon point)
+  m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -105,9 +105,11 @@ GameObject:
   - component: {fileID: 2261110272733526625}
   - component: {fileID: 8523442862084163987}
   - component: {fileID: 3329834593454637822}
+  - component: {fileID: 1949757058107211349}
+  - component: {fileID: 5722227728718821612}
+  - component: {fileID: 6531275825265128725}
   - component: {fileID: 4869848323129820729}
-  - component: {fileID: 1579581232914020162}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -155,9 +157,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -195,28 +194,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af2c6c2f29cbeae43999f09170ec5bb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isLockCursor: 1
-  isScaledByTime: 1
---- !u!114 &4869848323129820729
-MonoBehaviour:
+  speed: 20
+  maxSpeed: 5
+  mouseSensitivity: 100
+--- !u!54 &1949757058107211349
+Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6412160016034411745}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3539fbbf13a0ae24b80de6268e28c02b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sprintFrame: 30
-  jumpHeight: 1
-  _maxSpeed: 5
-  mouseSensitivity: 100
-  xRotation: 0
-  _characterController: {fileID: 1579581232914020162}
---- !u!143 &1579581232914020162
-CharacterController:
+  serializedVersion: 4
+  m_Mass: 60
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
+--- !u!136 &5722227728718821612
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -230,16 +239,48 @@ CharacterController:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Height: 2
+  serializedVersion: 2
   m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
+  m_Height: 2
+  m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6531275825265128725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6412160016034411745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6a91a6bdbd950048afd908ff38a5490, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  specialAttackDistance: 3
+  specialAttackDetectSphere: 0.1
+  detectDistance: 1
+  sprintDistance: 3
+  knockUpHeight: 1
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 8
+--- !u!114 &4869848323129820729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6412160016034411745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3539fbbf13a0ae24b80de6268e28c02b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprintFrame: 30
+  playerStatus: 0
 --- !u!1001 &7553208579134908960
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -296,40 +337,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Katana_TestModel
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 69e4879e6105c804f8809fa92027972d, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 69e4879e6105c804f8809fa92027972d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 429562166043186372}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 69e4879e6105c804f8809fa92027972d, type: 3}
---- !u!1 &7211119517706606449 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 69e4879e6105c804f8809fa92027972d, type: 3}
-  m_PrefabInstance: {fileID: 7553208579134908960}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &429562166043186372
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7211119517706606449}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c6a91a6bdbd950048afd908ff38a5490, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  modelObject: {fileID: 0}
-  holdPoint: {fileID: 0}
-  aimPoint: {fileID: 0}
-  holdPointOffset: {x: 0, y: 0, z: 0}
-  aimPointOffset: {x: 0, y: 0, z: 0}
 --- !u!4 &8023402783484513739 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 69e4879e6105c804f8809fa92027972d, type: 3}

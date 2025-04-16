@@ -1,8 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using NUnit.Framework.Interfaces;
 using TMPro;
-using UniRx;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -26,21 +24,17 @@ public class ItemManager : MonoBehaviour
 
     #endregion
 
-    private ItemName choosed; //當前選中的道具
+    private ItemName choosed;
 
-    [Header("物件掉落相關")]
-    public float dropRegion = 2f; //道具丟棄範圍
-
+    [Header("For develop")]
+    //開發使用區
+    [SerializeField] private ItemName wantAddItem;
+    [SerializeField] private TMP_InputField wantedAddIndex;
+    [SerializeField] private TMP_InputField inputChooseIndex;
+    [SerializeField] private Transform itemInstantiatePoint;    //物件生成位置
+    [SerializeField] private int instantiateRange = 5;
     [SerializeField] private GameObject particalEffect;
     [SerializeField] private GameObject itemCanva;
-
-    [Header("物件拾取相關")]
-    public float pickupRange = 2f; // 拾取範圍
-    public LayerMask pickupLayer;  // 只檢測掉落物的 Layer
-    public GameObject pickupText; // UI 提示（"按 F 拾取"）
-
-    private Transform mainCamera;
-    private GameObject currentItem; // 當前可拾取的物品
 
     #region 建立單例模式
     //instance mode
@@ -92,10 +86,6 @@ public class ItemManager : MonoBehaviour
                 itemEnumName_itemsData_illustratedBook[itemEnumName] = data;
                 itemEnumName_items_illustratedBook[itemEnumName] = item;
             }
-
-            //拾取相關初始化
-            mainCamera = Camera.main.transform;
-            pickupText.gameObject.SetActive(false);
         }
         else
         {
@@ -104,65 +94,6 @@ public class ItemManager : MonoBehaviour
         }
     }
     #endregion
-
-    void Update()
-    {
-        PickDetection();
-    }
-
-    /// <summary>
-    /// 拾取物品檢測
-    /// </summary>
-    private void PickDetection()
-    {
-        RaycastHit hit;
-        if (Physics.Raycast(mainCamera.position, mainCamera.forward, out hit, pickupRange, pickupLayer))
-        {
-            // 如果射線擊中掉落物
-            if (hit.collider.CompareTag("Item"))
-            {
-                //清除舊選取物的外框
-                if(currentItem != null && currentItem != hit.collider.gameObject)
-                    currentItem.GetComponent<Outline>().enabled = false;
-
-                currentItem = hit.collider.gameObject;
-
-                Item item = currentItem.GetComponent<Item>();
-
-
-                pickupText.SetActive(true); // 顯示 UI 提示
-                pickupText.GetComponentInChildren<TextMeshProUGUI>().text = $"按\"F\"拾取 {item.itemData.itemName}";
-                item.gameObject.GetComponent<Outline>().enabled = true;
-
-                if (Input.GetKeyDown(KeyCode.F))
-                {
-                    PickupItem(item);
-                }
-            }
-        }
-        else
-        {
-            // 射線沒有碰到可拾取物品
-            if(currentItem != null)
-                currentItem.GetComponent<Outline>().enabled = false;
-
-            currentItem = null;
-            pickupText.SetActive(false); // 隱藏 UI
-        }
-    }
-
-    /// <summary>
-    /// 拾取掉落物
-    /// </summary>
-    private void PickupItem(Item item)
-    {
-        Debug.Log("ItemManager: 拾取道具");
-
-        ItemName itemName = item.itemData.itemEnumName;
-        Destroy(item.gameObject);
-
-        AddItem(itemName);
-    }
 
     /// <summary>
     /// 觸發道具
@@ -183,55 +114,7 @@ public class ItemManager : MonoBehaviour
         else if(item.itemType == ItemType.Drop)
         {
             Debug.LogWarning("ItemManager: 掉落物無法被直接使用");
-            EventManager.TriggerEvent(NameOfEvent.ShowMessage, $"掉落物無法被直接使用");
         }
-    }
-
-    /// <summary>
-    /// 丟棄道具
-    /// </summary>
-    private void ItemDrop()
-    {
-        BoolWrapper isDropSuccess = new BoolWrapper(false);
-
-        //inventory manager deal with item drop...
-        EventManager.TriggerEvent(NameOfEvent.DropItem, choosed, isDropSuccess);
-
-        if(isDropSuccess.Value == true)
-        {
-            //base on item name find object, than ini. it near player
-
-            Debug.Log("ItemManager: 丟棄成功 生成掉落物");
-
-            InstantiateItemObject(choosed);
-        }
-    }
-
-    /// <summary>
-    /// 生成指定的道具遊戲物件
-    /// </summary>
-    /// <param name="choosed"></param>
-    public void InstantiateItemObject(ItemName choosed)
-    {
-        GameObject obj = Instantiate(itemEnumName_itemsPrefabs_illustratedBook[choosed], PlayerManager.Instance.transform);
-        obj.transform.localPosition = new Vector3(Random.Range(-dropRegion, dropRegion),
-                                                Random.Range(1, dropRegion),
-                                                Random.Range(-dropRegion, dropRegion));
-        obj.transform.SetParent(null);
-
-        //設置特效
-        GameObject partical = Instantiate(particalEffect, obj.transform);
-
-        //設置名稱
-        GameObject canva = Instantiate(itemCanva, obj.transform);
-        canva.transform.localPosition = new Vector3(0, 1f, 0);
-        canva.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = obj.GetComponent<Item>().itemData.itemName;
-
-        //設置選取外框
-        Outline outline = obj.AddComponent<Outline>();
-        outline.OutlineWidth = 5;
-        outline.enabled = false;
-        outline.OutlineColor = Color.red;
     }
 
     /// <summary>
@@ -268,30 +151,64 @@ public class ItemManager : MonoBehaviour
         }
     }
 
+
+    #region 開發區域
+
     /// <summary>
-    /// 添加指定編號的物件進入manager
+    /// 開發者用的多載 載入指定輸入框的index
     /// </summary>
-    private void AddItem(ItemName itemName)
+    /// <param name="index">選擇的編號</param>
+    public void ItemChoosed()
     {
-        int index = (int)itemName;
+        //如果index 是-1 代表是由開發者藉由測試觸發 載入測試面板的資訊
+        int index = int.Parse(inputChooseIndex.text);
+
+        ItemChoosed(index);
+    }
+
+
+    /// <summary>
+    /// 生成當前所有的道具到場上 用於開發者DEBUG
+    /// </summary>
+    public void RandomInstantiateItem()
+    {
+        int range = instantiateRange;
+        for(int i = 0; i < itemEnumName_itemsPrefabs_illustratedBook.Count; i++)
+        {
+            ItemData data = itemEnumName_itemsData_illustratedBook[(ItemName)i];
+            if(data.itemType == ItemType.Drop)
+            {
+                GameObject obj = Instantiate(itemEnumName_itemsPrefabs_illustratedBook[(ItemName)i], itemInstantiatePoint);
+                obj.transform.localPosition = new Vector3(Random.Range(-range, range),
+                                                        Random.Range(1, range),
+                                                        Random.Range(-range, range));
+
+                //設置特效
+                GameObject partical = Instantiate(particalEffect, obj.transform);
+
+                //設置名稱
+                GameObject canva = Instantiate(itemCanva, obj.transform);
+                canva.transform.localPosition = new Vector3(0, 1f, 0);
+                canva.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = obj.GetComponent<Item>().itemData.itemName;
+
+            }
+        }
+    }
+
+    /// <summary>
+    /// 測試用函數
+    /// 添加一個物件進入manager
+    /// </summary>
+    public void AddItem()
+    {
+        //GameObject obj = itemEnumName_items_illustratedBook[wantAddItem];
+        //GameObject item = Instantiate(obj, this.transform);
+
+        //package.Add(item);
+
+        int index = int.Parse(wantedAddIndex.text);
+
         AddItem(index);
-    }
-
-    #region event
-    private CompositeDisposable disposables = new CompositeDisposable();
-
-    private void OnEnable()
-    {
-        // 註冊對  事件的訂閱
-        disposables.Add(EventManager.StartListening(
-            NameOfEvent.DropItem_ItemManager,
-            () => ItemDrop()
-        ));
-    }
-
-    private void OnDisable()
-    {
-        disposables.Clear(); // 自動取消所有事件訂閱
     }
     #endregion
 }
