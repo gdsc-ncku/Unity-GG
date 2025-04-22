@@ -66,6 +66,7 @@ MonoBehaviour:
   ConfigurationUIPrefab: {fileID: 9126576128588691695, guid: 4cf0696834ff6184a892380ccd183158, type: 3}
   GraphicUIPrefab: {fileID: 7914603958811048765, guid: 441d7df9b6eaaf74cbb558b45cf2c180, type: 3}
   AudioUIPrefab: {fileID: 3468468373419670465, guid: ef08c6c80a17a214f81d954dec59fbbd, type: 3}
+  BulletUIPrefab: {fileID: 3468468373419670465, guid: 992257bd6ca118f40bc71abbde27c2f1, type: 3}
   parentCanvas: {fileID: 4858976747081228202}
 --- !u!1 &4858976747081228202
 GameObject:

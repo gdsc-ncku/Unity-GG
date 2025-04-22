@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: befbf5fb8409f5e46bba97447e03317b
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - BulletUI: {instanceID: 0}
+  - up_quar: {instanceID: 0}
+  - down_quar: {instanceID: 0}
+  - left_quar: {instanceID: 0}
+  - right_quar: {instanceID: 0}
+  - select_sprite: {fileID: 21300000, guid: 3c9e03a3c5fd0084881b342656ef7ff5, type: 3}
+  - dark_sprite: {fileID: 21300000, guid: 01a41a8601223cc4092225d574a4ca6c, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
