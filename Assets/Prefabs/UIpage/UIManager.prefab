@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1372758283836681962
 Transform:
   m_ObjectHideFlags: 0
@@ -58,7 +58,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb39d926963b88a419c4d6de06adf466, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ItemUIPrefab: {fileID: 560879440707492889, guid: a2d6e79151014c04587c03e2bb2d9501, type: 3}
+  ItemUIPrefab: {fileID: 562034689590557799, guid: 56f7a952882619e49bbc480b20cde866, type: 3}
   WeaponUIPrefab: {fileID: 8444401105966282238, guid: 6afd10aa2ecb92f4689a6583be213d41, type: 3}
   CollectionUIPrefab: {fileID: 8618542523189769280, guid: 0e9136fadeee05d4eb59856f10a890ea, type: 3}
   BackMaskPrefab: {fileID: 6505503613412809582, guid: e2d69a7166136994b9022bbae932accc, type: 3}

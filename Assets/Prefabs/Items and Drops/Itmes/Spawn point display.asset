@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ba5499ed825afb4ebf6db664960cfcb, type: 3}
   m_Name: Spawn point display
   m_EditorClassIdentifier: 
-  itemEnumName: 9
+  itemEnumName: 10
   itemName: "\u91CD\u751F\u9EDE\u986F\u793A"
-  itemSprite: {fileID: 21300000, guid: 6808bbc971123c049ab9551510a21177, type: 3}
+  itemSprite: {fileID: 21300000, guid: 9fea80079988b9e43b1c0b95274cd5b9, type: 3}
   itemType: 1
   itemDescription: "\u5728\u4E00\u5B9A\u7BC4\u570D\u5167\uFF0C\u986F\u793A\u5468\u908A\u91CD\u751F\u9EDE\u4F4D\u7F6E"

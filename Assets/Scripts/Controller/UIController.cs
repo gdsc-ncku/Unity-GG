@@ -100,6 +100,9 @@ public class UIController : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+
+        //更新item資訊
+        EventManager.TriggerEvent(NameOfEvent.UpdateItem);
     }
 
     public void ToItem()
@@ -117,6 +120,31 @@ public class UIController : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+
+        //更新item資訊
+        EventManager.TriggerEvent(NameOfEvent.UpdateItem);
+    }
+    public void Selecting()
+    {
+        Debug.Log("Selecting");
+        Cursor.lockState = CursorLockMode.None;
+        
+        BulletUI_Selecting script = BulletUI.GetComponent<BulletUI_Selecting>();
+
+        script.startselect = true;
+          
+    }
+
+    public void SelectItem()
+    {
+        Debug.Log("Select fin");
+        Cursor.lockState = CursorLockMode.Locked;
+        
+        BulletUI_Selecting script = BulletUI.GetComponent<BulletUI_Selecting>();
+        //script.isselecting = false;
+        script.startselect = false;
+
+
     }
     public void Selecting()
     {

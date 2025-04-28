@@ -6,50 +6,8 @@ using UnityEngine;
 /// <summary>
 /// 掌控遊戲中跟時間有關的事物
 /// </summary>
-public class TimeManager : MonoBehaviour
+public class TimeManager : MonoSingleton<TimeManager>
 {
-
-    #region 建立單例模式
-    //instance mode
-    private static TimeManager _instance;
-    public static TimeManager Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                Debug.LogError("Can't Find TimeManager Instance");
-            }
-            return _instance;
-        }
-
-    }
-
-    #endregion
-
-    #region 初始化
-    private void Awake()
-    {
-        Initialize();
-    }
-
-    private void Initialize()
-    {
-        if (_instance == null)
-        {
-            _instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Debug.LogError("Duplicate creating TimeManager Instance");
-            Destroy(gameObject);
-        }
-    }
-    #endregion
-
-
-
     private CompositeDisposable disposables = new CompositeDisposable();
 
     bool isTimeControled = false;   //如果時間已經被某個東西操控 則後來者無法操控
