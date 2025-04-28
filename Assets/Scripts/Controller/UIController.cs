@@ -100,6 +100,9 @@ public class UIController : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+
+        //更新item資訊
+        EventManager.TriggerEvent(NameOfEvent.UpdateItem);
     }
 
     public void ToItem()
@@ -117,6 +120,9 @@ public class UIController : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+
+        //更新item資訊
+        EventManager.TriggerEvent(NameOfEvent.UpdateItem);
     }
     public void Selecting()
     {
@@ -140,6 +146,7 @@ public class UIController : MonoBehaviour
 
 
     }
+    
 
     // 其他函數（ToWeapon、ToCollection 等）同樣使用實例變數
     public void ToWeapon()

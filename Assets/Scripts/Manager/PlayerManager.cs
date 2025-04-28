@@ -2,7 +2,7 @@
 using UnityEngine.InputSystem;
 
 [DefaultExecutionOrder(-200)] // 負數越小越早執行
-public class PlayerManager : MonoBehaviour
+public class PlayerManager : MonoSingleton<PlayerManager>
 {
     [SerializeField] int sprintFrame;
 
@@ -23,23 +23,6 @@ public class PlayerManager : MonoBehaviour
     public float xRotation = 0f;
     
     public Transform playerTransform { get; private set; }
-    #region 建立單例模式
-    //instance mode
-    private static PlayerManager _instance;
-    public static PlayerManager Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                Debug.LogError("Can't Find Player Manager Instance");
-            }
-            return _instance;
-        }
-
-    }
-
-    #endregion
 
     #region CharacterController設定
     [SerializeField] CharacterController _characterController;
@@ -73,24 +56,18 @@ public class PlayerManager : MonoBehaviour
     #endregion
 
     #region 初始化
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         Initialize();
+    }
+    void Start()
+    {
+        FactionManager.Instance.Register(gameObject, Faction.Player);
     }
 
     private void Initialize()
     {
-        if (_instance == null)
-        {   
-            _instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Debug.LogError("Duplicate creating PlayerManager Instance");
-            Destroy(gameObject);
-        }
-
         _playerControl = new();
         _playerControl.Enable();
         playerTransform = this.transform;
@@ -176,5 +153,9 @@ public class PlayerManager : MonoBehaviour
                 _playerControl.player.jump.Enable();
             })
             .Start();
+    }
+    void OnDestroy()
+    {
+        FactionManager.Instance.Unregister(gameObject);
     }
 }

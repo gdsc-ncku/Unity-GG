@@ -17,12 +17,12 @@ TagManager:
   - Water
   - UI
   - Environment
-  - BaseEnemy
   - 
-  - MilitaryEnemy
+  - 
+  - Enemy
   - Player
-  - GPowerEnemy
-  - UndergroundDwellers
+  - 
+  - 
   - 
   - PickupLayer
   - 

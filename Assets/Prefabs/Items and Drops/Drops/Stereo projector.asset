@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ba5499ed825afb4ebf6db664960cfcb, type: 3}
   m_Name: Stereo projector
   m_EditorClassIdentifier: 
-  itemEnumName: 7
+  itemEnumName: 8
   itemName: "\u7ACB\u9AD4\u6295\u5F71\u6A5F"
   itemSprite: {fileID: 21300000, guid: b510deb155efddf49bc1d00839a57356, type: 3}
   itemType: 0

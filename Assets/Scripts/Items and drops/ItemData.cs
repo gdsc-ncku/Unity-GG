@@ -18,6 +18,7 @@ public enum ItemType
 /// </summary>
 public enum ItemName
 {
+    None,
     MatrixEyes,
     Reducer,
     HoundExclusiveCameraModule,
