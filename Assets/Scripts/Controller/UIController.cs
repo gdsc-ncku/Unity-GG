@@ -146,28 +146,6 @@ public class UIController : MonoBehaviour
 
 
     }
-    public void Selecting()
-    {
-        Debug.Log("Selecting");
-        Cursor.lockState = CursorLockMode.None;
-        
-        BulletUI_Selecting script = BulletUI.GetComponent<BulletUI_Selecting>();
-
-        script.startselect = true;
-          
-    }
-
-    public void SelectItem()
-    {
-        Debug.Log("Select fin");
-        Cursor.lockState = CursorLockMode.Locked;
-        
-        BulletUI_Selecting script = BulletUI.GetComponent<BulletUI_Selecting>();
-        //script.isselecting = false;
-        script.startselect = false;
-
-
-    }
 
     // 其他函數（ToWeapon、ToCollection 等）同樣使用實例變數
     public void ToWeapon()
