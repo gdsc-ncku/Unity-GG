@@ -1325,6 +1325,11 @@ MonoBehaviour:
   resources: []
   craftablesParent: {fileID: 4413982183353227440}
   craftables: []
+  quickPropBox:
+  - {fileID: 7076244296682654200}
+  - {fileID: 5378345615020444222}
+  - {fileID: 7240375420526312734}
+  - {fileID: 887700552590941411}
 --- !u!114 &323968052264204917
 MonoBehaviour:
   m_ObjectHideFlags: 0
