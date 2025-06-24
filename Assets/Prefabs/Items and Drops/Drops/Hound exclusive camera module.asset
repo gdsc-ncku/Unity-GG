@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ba5499ed825afb4ebf6db664960cfcb, type: 3}
   m_Name: Hound exclusive camera module
   m_EditorClassIdentifier: 
-  itemEnumName: 2
+  itemEnumName: 3
   itemName: "\u7375\u72AC\u5C08\u5C6C\u651D\u50CF\u982D\u6A21\u7D44"
   itemSprite: {fileID: 21300000, guid: b510deb155efddf49bc1d00839a57356, type: 3}
   itemType: 0

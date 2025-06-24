@@ -15,10 +15,10 @@ public class ItemBtn : MonoBehaviour
             Debug.Log("ItemBtn: trigger");
 
             //程式控制面向
-            ItemManager.Instance.ItemChoosed((int)nameIndex);
+            ItemManager.Instance.ItemChoosed(nameIndex);
 
             //UI控制面
-            EventManager.TriggerEvent(NameOfEvent.ItemChoosed, (int)nameIndex);
+            EventManager.TriggerEvent(NameOfEvent.ItemChoosed, nameIndex);
         }
     }
 }

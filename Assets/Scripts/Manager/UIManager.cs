@@ -22,6 +22,10 @@ public class UIManager: MonoBehaviour
 
         _playerControl.player.Setting.performed += ctx => Setting();
 
+        _playerControl.player.SelectItem.performed += ctx => Selecting();
+
+        _playerControl.player.SelectItem.canceled += ctx => SelectItem();
+
         //GetComponent<UIController>().Reset();
     }
 
@@ -83,6 +87,15 @@ public class UIManager: MonoBehaviour
         GetComponent<UIController>().Setting_Back();
     }
     
+    public void Selecting()
+    {
+        GetComponent<UIController>().Selecting();
+    }
+
+    public void SelectItem()
+    {
+        GetComponent<UIController>().SelectItem();
+    }
 
     //Rebinding
     public void On_Rebinding_Move_Forward_click(Button btn)

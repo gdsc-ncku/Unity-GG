@@ -42,8 +42,9 @@ public class UIDevelopeTester : MonoBehaviour
     {
         //如果index 是-1 代表是由開發者藉由測試觸發 載入測試面板的資訊
         int index = int.Parse(inputChooseIndex.text);
+        ItemName itemName = (ItemName)index;
 
-        ItemManager.Instance.ItemChoosed(index);
+        ItemManager.Instance.ItemChoosed(itemName);
     }
 
     /// <summary>
@@ -51,10 +52,13 @@ public class UIDevelopeTester : MonoBehaviour
     /// </summary>
     public void RandomInitItemInPackage()
     {
-        for (int i = 0; i < itemEnumName_itemsPrefabs_illustratedBook.Count; i++)
+        foreach(var dataPair in ItemManager.Instance.itemEnumName_itemsData_illustratedBook)
         {
-            ItemData data = itemEnumName_itemsData_illustratedBook[(ItemName)i];
-            InventoryManager.Instance.AddItem(data.itemEnumName, 1);
+            ItemData data = dataPair.Value;
+            if (data != null)
+            {
+                InventoryManager.Instance.AddItem(data.itemEnumName, 1);
+            }
         }
 
         //更新道具顯示介面
@@ -67,9 +71,10 @@ public class UIDevelopeTester : MonoBehaviour
     public void RandomInstantiateItem()
     {
         int range = instantiateRange;
-        for (int i = 0; i < itemEnumName_itemsPrefabs_illustratedBook.Count; i++)
+        foreach (var dataPair in ItemManager.Instance.itemEnumName_itemsData_illustratedBook)
         {
-            ItemManager.Instance.InstantiateItemObject((ItemName)i);
+            ItemName itemName = dataPair.Key;
+            ItemManager.Instance.InstantiateItemObject(itemName);
         }
     }
 
@@ -85,7 +90,7 @@ public class UIDevelopeTester : MonoBehaviour
         //package.Add(item);
 
         int index = int.Parse(wantedAddIndex.text);
-
-        ItemManager.Instance.AddItem(index);
+        ItemName itemName = (ItemName)index;
+        ItemManager.Instance.AddItem(itemName);
     }
 }

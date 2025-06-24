@@ -38,8 +38,17 @@ public enum NameOfEvent
     ShowMessage,
 
     [Header("UIController")]
+    ToGameplay,
     ToConfiguration,
+    ToGraphic,
+    ToAudio,
+    Setting_Back,
+    ToItem,
+    ToWeapon,
+    ToCollection,
 
+    [Header("PropsQuickUseSystem")]
+    SetQuickProp,
 }
 
 /// <summary>

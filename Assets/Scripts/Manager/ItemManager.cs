@@ -1,9 +1,8 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using NUnit.Framework.Interfaces;
+using NUnit.Framework.Constraints;
 using TMPro;
 using UniRx;
-using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -26,7 +25,7 @@ public class ItemManager : MonoBehaviour
 
     #endregion
 
-    private ItemName choosed; //當前選中的道具
+    private ItemName choosed = ItemName.None; //當前選中的道具
 
     [Header("物件掉落相關")]
     public float dropRegion = 2f; //道具丟棄範圍
@@ -111,6 +110,25 @@ public class ItemManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 快捷設定道具
+    /// </summary>
+    /// <param name="index"></param>
+    public void SetQuickProp(int index)
+    {
+        if(choosed == ItemName.None)
+        {
+            Debug.LogWarning("ItemManager: None choose item");
+            return;
+        }
+        EventManager.TriggerEvent(NameOfEvent.SetQuickProp, index, choosed);
+
+        //處理當前已經選擇的欄位
+        choosed = ItemName.None;
+
+        Debug.Log($"ItemManager: set quick item {choosed.ToString()} at {index}");
+    }
+
+    /// <summary>
     /// 拾取物品檢測
     /// </summary>
     private void PickDetection()
@@ -178,6 +196,7 @@ public class ItemManager : MonoBehaviour
             {
                 //成功觸發效果
                 itemEnumName_items_illustratedBook[item.itemEnumName].ItemUsing();
+                choosed = ItemName.None;
             }
         }
         else if(item.itemType == ItemType.Drop)
@@ -204,6 +223,7 @@ public class ItemManager : MonoBehaviour
             Debug.Log("ItemManager: 丟棄成功 生成掉落物");
 
             InstantiateItemObject(choosed);
+            choosed = ItemName.None;
         }
     }
 
@@ -214,9 +234,9 @@ public class ItemManager : MonoBehaviour
     public void InstantiateItemObject(ItemName choosed)
     {
         GameObject obj = Instantiate(itemEnumName_itemsPrefabs_illustratedBook[choosed], PlayerManager.Instance.transform);
-        obj.transform.localPosition = new Vector3(Random.Range(-dropRegion, dropRegion),
-                                                Random.Range(1, dropRegion),
-                                                Random.Range(-dropRegion, dropRegion));
+        obj.transform.localPosition = new Vector3(UnityEngine.Random.Range(-dropRegion, dropRegion),
+                                                UnityEngine.Random.Range(1, dropRegion),
+                                                UnityEngine.Random.Range(-dropRegion, dropRegion));
         obj.transform.SetParent(null);
 
         //設置特效
@@ -238,43 +258,19 @@ public class ItemManager : MonoBehaviour
     /// 根據index 去選擇指定的物品
     /// 跟UI那邊應該是生成UI的時候 要順便在UI那邊儲存index
     /// </summary>
-    /// <param name="index">選擇的編號</param>
-    public void ItemChoosed(int index)
+    /// <param name="itemName">選擇的道具名稱</param>
+    public void ItemChoosed(ItemName itemName)
     {
-        if(0 <= index && index < itemEnumName_itemsData_illustratedBook.Count)
-        {
-            choosed = (ItemName)index;
-            Debug.Log($"ItemManager: 選擇道具 {itemEnumName_itemsData_illustratedBook[choosed].itemName}");
-        }
-        else
-        {
-            Debug.LogWarning("ItemManager: 選擇不存在的道具");
-        }
-    }
-
-
-    /// <summary>
-    /// 添加指定編號的物件進入manager
-    /// </summary>
-    public void AddItem(int index)
-    {
-        if (0 <= index && index < itemEnumName_itemsData_illustratedBook.Count)
-        {
-            InventoryManager.Instance.AddItem((ItemName)index);
-        }
-        else
-        {
-            Debug.LogWarning("ItemManager: 添加不存在的道具");
-        }
+        choosed = itemName;
+        Debug.Log($"ItemManager: 選擇道具 {itemEnumName_itemsData_illustratedBook[choosed].itemName}");
     }
 
     /// <summary>
     /// 添加指定編號的物件進入manager
     /// </summary>
-    private void AddItem(ItemName itemName)
+    public void AddItem(ItemName itemName)
     {
-        int index = (int)itemName;
-        AddItem(index);
+        InventoryManager.Instance.AddItem(itemName);
     }
 
     #region event
@@ -294,4 +290,46 @@ public class ItemManager : MonoBehaviour
         disposables.Clear(); // 自動取消所有事件訂閱
     }
     #endregion
+
+    // 存取 itemEnumName_itemsPrefabs_illustratedBook 的函式
+    public GameObject GetItemPrefab(ItemName itemName)
+    {
+        if (itemEnumName_itemsPrefabs_illustratedBook.ContainsKey(itemName))
+        {
+            return itemEnumName_itemsPrefabs_illustratedBook[itemName];
+        }
+        else
+        {
+            Debug.LogError($"Item prefab for {itemName} not found.");
+            return null;
+        }
+    }
+
+    // 存取 itemEnumName_itemsData_illustratedBook 的函式
+    public ItemData GetItemData(ItemName itemName)
+    {
+        if (itemEnumName_itemsData_illustratedBook.ContainsKey(itemName))
+        {
+            return itemEnumName_itemsData_illustratedBook[itemName];
+        }
+        else
+        {
+            Debug.LogError($"Item data for {itemName} not found.");
+            return null;
+        }
+    }
+
+    // 存取 itemEnumName_items_illustratedBook 的函式
+    public Item GetItemScript(ItemName itemName)
+    {
+        if (itemEnumName_items_illustratedBook.ContainsKey(itemName))
+        {
+            return itemEnumName_items_illustratedBook[itemName];
+        }
+        else
+        {
+            Debug.LogError($"Item script for {itemName} not found.");
+            return null;
+        }
+    }
 }
